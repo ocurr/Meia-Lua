@@ -13,9 +13,6 @@
 #include <locale.h>
 #include <string.h>
 
-//XXX
-#include <stdio.h>
-
 #include "lua.h"
 
 #include "lctype.h"
@@ -44,7 +41,7 @@ static const char *const luaX_tokens [] = {
     "and", "break", "do", "else", "elseif",
     "end", "false", "for", "function", "goto", "if",
     "in", "local", "nil", "not", "or", "repeat",
-    "return", "then", "true", "until", "while", "int", "float",
+    "return", "then", "true", "until", "while",
     "//", "..", "...", "==", ">=", "<=", "~=",
     "<<", ">>", "::", "<eof>",
     "<number>", "<integer>", "<name>", "<string>"
@@ -532,15 +529,9 @@ static int llex (LexState *ls, SemInfo *seminfo) {
           ts = luaX_newstring(ls, luaZ_buffer(ls->buff),
                                   luaZ_bufflen(ls->buff));
           seminfo->ts = ts;
-          if (isreserved(ts)) {  /* reserved word? */
-              printf("saw reserved word: ");
-              unsigned int i;
-              for (i = 0; i < luaZ_bufflen(ls->buff); i++) {
-                  printf("%c", luaZ_buffer(ls->buff)[i]);
-              }
-              printf("\n");
+          if (isreserved(ts))  /* reserved word? */
             return ts->extra - 1 + FIRST_RESERVED;
-          } else {
+          else {
             return TK_NAME;
           }
         }

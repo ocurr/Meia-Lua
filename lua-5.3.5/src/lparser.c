@@ -12,9 +12,6 @@
 
 #include <string.h>
 
-//XXX
-#include <stdio.h>
-
 #include "lua.h"
 
 #include "lcode.h"
@@ -176,13 +173,6 @@ static int registerlocalvar (LexState *ls, TString *varname) {
 
 
 static void new_localvar (LexState *ls, TString *name) {
-  printf("setting up new local variable: ");
-  int i;
-  char* s = getstr(name);
-  for (i = 0; i < tsslen(name); i++) {
-      printf("%c", s[i]);
-  }
-  printf("\n");
   FuncState *fs = ls->fs;
   Dyndata *dyd = ls->dyd;
   int reg = registerlocalvar(ls, name);
@@ -948,7 +938,6 @@ static void simpleexp (LexState *ls, expdesc *v) {
       break;
     }
     case TK_INT: {
-      printf("we saw an int! with value: %d\n", ls->t.seminfo.i);
       init_exp(v, VKINT, 0);
       v->u.ival = ls->t.seminfo.i;
       break;
@@ -1062,17 +1051,15 @@ static BinOpr subexpr (LexState *ls, expdesc *v, int limit) {
   enterlevel(ls);
   uop = getunopr(ls->t.token);
   if (uop != OPR_NOUNOPR) {
-    printf("it's a OPR_NOUNOPR\n");
     int line = ls->linenumber;
     luaX_next(ls);
     subexpr(ls, v, UNARY_PRIORITY);
     luaK_prefix(ls->fs, uop, v, line);
   }
-  else { simpleexp(ls, v); printf("it's a simpleexp\n"); }
+  else simpleexp(ls, v);
   /* expand while operators have priorities higher than 'limit' */
   op = getbinopr(ls->t.token);
   while (op != OPR_NOBINOPR && priority[op].left > limit) {
-    printf("it's a different op\n");
     expdesc v2;
     BinOpr nextop;
     int line = ls->linenumber;
@@ -1581,20 +1568,12 @@ static void statement (LexState *ls) {
       funcstat(ls, line);
       break;
     }
-    case TK_INT_T: {
-      printf("saw an int_t expression\n");
-      break;
-    }
     case TK_LOCAL: {  /* stat -> localstat */
-      printf("saw a local expression\n");
       luaX_next(ls);  /* skip LOCAL */
-      if (testnext(ls, TK_FUNCTION)) {  /* local function? */
-        printf("local function\n");
+      if (testnext(ls, TK_FUNCTION))  /* local function? */
         localfunc(ls);
-      } else {
-        printf("local statement\n");
+      else
         localstat(ls);
-      }
       break;
     }
     case TK_DBCOLON: {  /* stat -> label */
@@ -1613,7 +1592,6 @@ static void statement (LexState *ls) {
       break;
     }
     default: {  /* stat -> func | assignment */
-      printf("saw a default expression\n");
       exprstat(ls);
       break;
     }
