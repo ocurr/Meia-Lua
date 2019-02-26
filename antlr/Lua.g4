@@ -48,7 +48,7 @@ block
 
 stat
     : ';'
-    | varlist '=' explist
+    | typedvarlist '=' explist
     | functioncall
     | label
     | 'break'
@@ -77,7 +77,12 @@ funcname
     ;
 
 varlist
-    : var (',' var)*
+    : varId (',' varId)*
+    ;
+
+typedvarlist
+    : typedvar (',' typedvar)*
+    | typeLiteral varId (',' varId)*
     ;
 
 namelist
@@ -90,8 +95,8 @@ explist
 
 exp
     : 'nil' | 'false' | 'true'
-    | number
-    | string
+    | numberLiteral
+    | stringLiteral
     | '...'
     | functiondef
     | prefixexp
@@ -107,6 +112,11 @@ exp
     | exp operatorBitwise exp
     ;
 
+typeLiteral
+    : 'int'
+    | 'float'
+    ;
+
 prefixexp
     : varOrExp nameAndArgs*
     ;
@@ -116,11 +126,15 @@ functioncall
     ;
 
 varOrExp
-    : var | '(' exp ')'
+    : varId | '(' exp ')'
     ;
 
-var
+varId
     : (NAME | '(' exp ')' varSuffix) varSuffix*
+    ;
+
+typedvar
+    : typeLiteral (NAME | '(' exp ')' varSuffix) varSuffix*
     ;
 
 varSuffix
@@ -144,7 +158,7 @@ functioncall
 */
 
 args
-    : '(' explist? ')' | tableconstructor | string
+    : '(' explist? ')' | tableconstructor | stringLiteral
     ;
 
 functiondef
@@ -202,11 +216,11 @@ operatorUnary
 operatorPower
     : '^';
 
-number
+numberLiteral
     : INT | HEX | FLOAT | HEX_FLOAT
     ;
 
-string
+stringLiteral
     : NORMALSTRING | CHARSTRING | LONGSTRING
     ;
 
