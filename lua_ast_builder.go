@@ -14,15 +14,36 @@ func NewLuaASTBuilder() *LuaASTBuilder {
 }
 
 func (v *LuaASTBuilder) VisitChunk(ctx *parser.ChunkContext) interface{} {
-	return v.VisitChildren(ctx)
+	return ChunkC{Block: v.Visit(ctx.Block())}
+	//return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitBlock(ctx *parser.BlockContext) interface{} {
-	return v.VisitChildren(ctx)
+	stats := ctx.AllStat()
+	statc := make([]StatC, len(stats))
+	for i, s := range stats {
+		statc[i] = v.Visit(stats[i])
+	}
+	return BlockC{StatLst: statc}
+	//return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitStat(ctx *parser.StatContext) interface{} {
-	return v.VisitChildren(ctx)
+
+	if t := ctx.Typedvarlist(); t != nil {
+		e := ctx.Explist()
+		if len(t) != len(e) {
+			fmt.Println("ERROR: AST: the var list is not the same length as the expression list")
+		}
+
+		l := make([]DefC, len(t))
+		for i, v := range t {
+			//l[i] = DefC{Id: v.Visit(v
+		}
+		return StatC{}
+
+	}
+	//return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitRetstat(ctx *parser.RetstatContext) interface{} {
@@ -58,7 +79,7 @@ func (v *LuaASTBuilder) VisitExp(ctx *parser.ExpContext) interface{} {
 }
 
 func (v *LuaASTBuilder) VisitTypeLiteral(ctx *parser.TypeLiteralContext) interface{} {
-	return v.VisitChildren(ctx)
+	return ctx.getText()
 }
 
 func (v *LuaASTBuilder) VisitPrefixexp(ctx *parser.PrefixexpContext) interface{} {
