@@ -134,7 +134,7 @@ varId
     ;
 
 typedvar
-    : typeLiteral (NAME | '(' exp ')' varSuffix) varSuffix*
+    : typeLiteral varId
     ;
 
 varSuffix
