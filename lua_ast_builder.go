@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/ocurr/senior-project/antlr/parser"
 )
@@ -14,17 +15,18 @@ func NewLuaASTBuilder() *LuaASTBuilder {
 }
 
 func (v *LuaASTBuilder) VisitChunk(ctx *parser.ChunkContext) interface{} {
-	return ChunkC{Block: v.Visit(ctx.Block())}
+	return ChunkC{Block: v.Visit(ctx.Block()).(BlockC)}
 	//return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitBlock(ctx *parser.BlockContext) interface{} {
 	stats := ctx.AllStat()
-	statc := make([]StatC, len(stats))
+	statLst := make([]*StatC, len(stats))
 	for i, s := range stats {
-		statc[i] = v.Visit(stats[i])
+		statLst[i] = new(StatC)
+		statLst[i].Stat = v.Visit(stats[i])
 	}
-	return BlockC{StatLst: statc}
+	return BlockC{StatLst: statLst}
 	//return v.VisitChildren(ctx)
 }
 
@@ -32,17 +34,27 @@ func (v *LuaASTBuilder) VisitStat(ctx *parser.StatContext) interface{} {
 
 	if t := ctx.Typedvarlist(); t != nil {
 		e := ctx.Explist()
-		if len(t) != len(e) {
+
+		allT := t.AllTypedvar()
+		allE := e.AllExp()
+
+		if len(allT) != len(allE) {
 			fmt.Println("ERROR: AST: the var list is not the same length as the expression list")
 		}
 
-		l := make([]DefC, len(t))
-		for i, v := range t {
-			//l[i] = DefC{Id: v.Visit(v
+		lst := make([]*DefC, len(allT))
+
+		for i := 0; i < len(allT); i++ {
+			lst[i] = new(DefC)
+			DefC.Id = v.Visit(allT[i])
+			DefC.Val = v.Visit(allE[i])
 		}
-		return StatC{}
+
+		return DefLst{List: lst}
 
 	}
+
+	return DefC{}
 	//return v.VisitChildren(ctx)
 }
 
@@ -63,7 +75,8 @@ func (v *LuaASTBuilder) VisitVarlist(ctx *parser.VarlistContext) interface{} {
 }
 
 func (v *LuaASTBuilder) VisitTypedvarlist(ctx *parser.TypedvarlistContext) interface{} {
-	return v.VisitChildren(ctx)
+	fmt.Println("VisitTypedvarlist is unimplemented")
+	return nil
 }
 
 func (v *LuaASTBuilder) VisitNamelist(ctx *parser.NamelistContext) interface{} {
@@ -79,7 +92,7 @@ func (v *LuaASTBuilder) VisitExp(ctx *parser.ExpContext) interface{} {
 }
 
 func (v *LuaASTBuilder) VisitTypeLiteral(ctx *parser.TypeLiteralContext) interface{} {
-	return ctx.getText()
+	return ctx.GetText()
 }
 
 func (v *LuaASTBuilder) VisitPrefixexp(ctx *parser.PrefixexpContext) interface{} {
