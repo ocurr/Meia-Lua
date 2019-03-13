@@ -21,10 +21,9 @@ func (v *LuaASTBuilder) VisitChunk(ctx *parser.ChunkContext) interface{} {
 
 func (v *LuaASTBuilder) VisitBlock(ctx *parser.BlockContext) interface{} {
 	stats := ctx.AllStat()
-	statLst := make([]*StatC, len(stats))
-	for i, s := range stats {
-		statLst[i] = new(StatC)
-		statLst[i].Stat = v.Visit(stats[i])
+	statLst := make([]Stat, len(stats))
+	for i, _ := range stats {
+		statLst[i] = v.Visit(stats[i]).(Stat)
 	}
 	return BlockC{StatLst: statLst}
 	//return v.VisitChildren(ctx)
@@ -35,19 +34,18 @@ func (v *LuaASTBuilder) VisitStat(ctx *parser.StatContext) interface{} {
 	if t := ctx.Typedvarlist(); t != nil {
 		e := ctx.Explist()
 
-		allT := t.AllTypedvar()
-		allE := e.AllExp()
+		allTVar := v.Visit(t).(IdLst)
+		allExp := v.Visit(e).(ExpLst)
 
-		if len(allT) != len(allE) {
+		if len(allTVar.List) != len(allExp.List) {
 			fmt.Println("ERROR: AST: the var list is not the same length as the expression list")
+			return DefLst{}
 		}
 
-		lst := make([]*DefC, len(allT))
+		lst := make([]DefC, len(allTVar.List))
 
-		for i := 0; i < len(allT); i++ {
-			lst[i] = new(DefC)
-			DefC.Id = v.Visit(allT[i])
-			DefC.Val = v.Visit(allE[i])
+		for i := 0; i < len(allTVar.List); i++ {
+			lst[i] = DefC{Id: allTVar.List[i], Exp: allExp.List[i]}
 		}
 
 		return DefLst{List: lst}
@@ -75,8 +73,18 @@ func (v *LuaASTBuilder) VisitVarlist(ctx *parser.VarlistContext) interface{} {
 }
 
 func (v *LuaASTBuilder) VisitTypedvarlist(ctx *parser.TypedvarlistContext) interface{} {
-	fmt.Println("VisitTypedvarlist is unimplemented")
-	return nil
+
+	allVars := ctx.AllTypedvar()
+
+	allIdC := make([]IdC, len(allVars))
+
+	for i := 0; i < len(allVars); i++ {
+		allIdC[i] = v.Visit(allVars[i]).(IdC)
+	}
+
+	return IdLst{List: allIdC}
+
+	//return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitNamelist(ctx *parser.NamelistContext) interface{} {
@@ -92,7 +100,15 @@ func (v *LuaASTBuilder) VisitExp(ctx *parser.ExpContext) interface{} {
 }
 
 func (v *LuaASTBuilder) VisitTypeLiteral(ctx *parser.TypeLiteralContext) interface{} {
-	return ctx.GetText()
+	switch ctx.GetText() {
+	case "float":
+		return FloatT{}
+	case "int":
+		return IntT{}
+	default:
+		fmt.Printf("ERROR type %s is not supported\n", ctx.GetText())
+		return ErrorT{}
+	}
 }
 
 func (v *LuaASTBuilder) VisitPrefixexp(ctx *parser.PrefixexpContext) interface{} {
@@ -108,11 +124,15 @@ func (v *LuaASTBuilder) VisitVarOrExp(ctx *parser.VarOrExpContext) interface{} {
 }
 
 func (v *LuaASTBuilder) VisitVarId(ctx *parser.VarIdContext) interface{} {
-	return v.VisitChildren(ctx)
+	return ctx.GetText()
+	//return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitTypedvar(ctx *parser.TypedvarContext) interface{} {
-	return v.VisitChildren(ctx)
+
+	return IdC{Id: v.Visit(ctx.VarId()).(string), TypeId: v.Visit(ctx.TypeLiteral()).(TypeT)}
+
+	//return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitVarSuffix(ctx *parser.VarSuffixContext) interface{} {
