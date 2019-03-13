@@ -29,26 +29,17 @@ func (c *ChunkC) GetCtx() *antlr.BaseParserRuleContext {
 
 type BlockC struct {
 	Ctx     *antlr.BaseParserRuleContext
-	StatLst []*Stat
+	StatLst []Stat
 }
 
 func (b *BlockC) GetCtx() *antlr.BaseParserRuleContext {
 	return b.Ctx
 }
 
-type StatC struct {
-	Ctx  *antlr.BaseParserRuleContext
-	Stat *Stat
-}
-
-func (s *StatC) GetCtx() *antlr.BaseParserRuleContext {
-	return s.Ctx
-}
-
 type DefC struct {
 	Ctx *antlr.BaseParserRuleContext
-	Id  *IdC
-	Exp *Exp
+	Id  IdC
+	Exp Exp
 }
 
 func (d *DefC) GetCtx() *antlr.BaseParserRuleContext {
@@ -58,7 +49,7 @@ func (d *DefC) GetCtx() *antlr.BaseParserRuleContext {
 func (d *DefC) statNode() {}
 
 type DefLst struct {
-	List []*DefC
+	List []DefC
 }
 
 func (dl *DefLst) GetCtx() *antlr.BaseParserRuleContext {
@@ -70,20 +61,28 @@ func (dl *DefLst) statNode() {}
 type IdC struct {
 	Ctx    *antlr.BaseParserRuleContext
 	Id     string
-	TypeId *TypeT
+	TypeId TypeT
 }
 
 func (i *IdC) GetCtx() *antlr.BaseParserRuleContext {
 	return i.Ctx
 }
 
-type TypeC struct {
-	Ctx  *antlr.BaseParserRuleContext
-	Type *TypeT
+type IdLst struct {
+	List []IdC
 }
 
-func (t *TypeC) GetCtx() *antlr.BaseParserRuleContext {
-	return t.Ctx
+func (idl *IdLst) GetCtx() *antlr.BaseParserRuleContext {
+	return antlr.NewBaseParserRuleContext(nil, -1)
+}
+
+type ExpLst struct {
+	Ctx  *antlr.BaseParserRuleContext
+	List []Exp
+}
+
+func (edl *ExpLst) GetCtx() *antlr.BaseParserRuleContext {
+	return antlr.NewBaseParserRuleContext(nil, -1)
 }
 
 type IntC struct {
