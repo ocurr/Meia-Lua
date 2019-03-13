@@ -1,12 +1,20 @@
 package main
 
-type TypeT struct {
+type TypeT interface {
+	typeDesc()
 }
 
 type FloatT struct {
-	*TypeT
 }
 
+func (f *FloatT) typeDesc() {}
+
 type IntT struct {
-	*TypeT
 }
+
+func (i *IntT) typeDesc() {}
+
+type ErrorT struct {
+}
+
+func (e *ErrorT) typeDesc() {}
