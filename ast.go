@@ -87,7 +87,7 @@ func (edl *ExpLst) GetCtx() *antlr.BaseParserRuleContext {
 
 type IntC struct {
 	Ctx *antlr.BaseParserRuleContext
-	N   int
+	N   int64
 }
 
 func (i *IntC) GetCtx() *antlr.BaseParserRuleContext {

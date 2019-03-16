@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/antlr/antlr4/runtime/Go/antlr"
+	//"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/ocurr/senior-project/antlr/parser"
+	"strconv"
 )
 
 type LuaASTBuilder struct {
-	*antlr.BaseParseTreeVisitor
+	*parser.BaseLuaVisitor
 }
 
 func NewLuaASTBuilder() *LuaASTBuilder {
@@ -15,6 +16,7 @@ func NewLuaASTBuilder() *LuaASTBuilder {
 }
 
 func (v *LuaASTBuilder) VisitChunk(ctx *parser.ChunkContext) interface{} {
+	fmt.Println("entering chunk")
 	return ChunkC{Block: v.Visit(ctx.Block()).(BlockC)}
 	//return v.VisitChildren(ctx)
 }
@@ -92,11 +94,24 @@ func (v *LuaASTBuilder) VisitNamelist(ctx *parser.NamelistContext) interface{} {
 }
 
 func (v *LuaASTBuilder) VisitExplist(ctx *parser.ExplistContext) interface{} {
-	return v.VisitChildren(ctx)
+
+	allExpCtx := ctx.AllExp()
+
+	allExp := make([]Exp, len(allExpCtx))
+
+	for i := 0; i < len(allExpCtx); i++ {
+		allExp[i] = v.Visit(allExpCtx[i]).(Exp)
+	}
+
+	return ExpLst{List: allExp}
 }
 
 func (v *LuaASTBuilder) VisitExp(ctx *parser.ExpContext) interface{} {
-	return v.VisitChildren(ctx)
+	if nl := ctx.NumberLiteral(); nl != nil {
+		return v.Visit(nl)
+	}
+	fmt.Println("ERROR: Expression not supported")
+	return StringC{S: "EXPRESSION NOT SUPPORTED"}
 }
 
 func (v *LuaASTBuilder) VisitTypeLiteral(ctx *parser.TypeLiteralContext) interface{} {
@@ -125,14 +140,11 @@ func (v *LuaASTBuilder) VisitVarOrExp(ctx *parser.VarOrExpContext) interface{} {
 
 func (v *LuaASTBuilder) VisitVarId(ctx *parser.VarIdContext) interface{} {
 	return ctx.GetText()
-	//return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitTypedvar(ctx *parser.TypedvarContext) interface{} {
 
 	return IdC{Id: v.Visit(ctx.VarId()).(string), TypeId: v.Visit(ctx.TypeLiteral()).(TypeT)}
-
-	//return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitVarSuffix(ctx *parser.VarSuffixContext) interface{} {
@@ -212,7 +224,23 @@ func (v *LuaASTBuilder) VisitOperatorPower(ctx *parser.OperatorPowerContext) int
 }
 
 func (v *LuaASTBuilder) VisitNumberLiteral(ctx *parser.NumberLiteralContext) interface{} {
-	return v.VisitChildren(ctx)
+	if INT := ctx.INT(); INT != nil {
+		n, err := strconv.ParseInt(INT.GetText(), 10, 64)
+		if err != nil {
+			fmt.Println("ERROR: unable to parse int")
+			return IntC{N: -1}
+		}
+		return IntC{N: n}
+	}
+	if FLOAT := ctx.FLOAT(); FLOAT != nil {
+		n, err := strconv.ParseFloat(FLOAT.GetText(), 64)
+		if err != nil {
+			fmt.Println("ERROR: unable to parse float")
+			return FloatC{N: -1}
+		}
+		return FloatC{N: n}
+	}
+	return StringC{S: "ERROR"}
 }
 
 func (v *LuaASTBuilder) VisitStringLiteral(ctx *parser.StringLiteralContext) interface{} {
