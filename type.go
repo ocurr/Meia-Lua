@@ -7,12 +7,12 @@ type TypeT interface {
 type FloatT struct {
 }
 
-func (f *FloatT) typeDesc() {}
+func (f FloatT) typeDesc() {}
 
 type IntT struct {
 }
 
-func (i *IntT) typeDesc() {}
+func (i IntT) typeDesc() {}
 
 type ErrorT struct {
 }
