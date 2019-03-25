@@ -44,6 +44,6 @@ func main() {
 	p.BuildParseTrees = true
 	tree := p.Chunk()
 	builder := NewLuaASTBuilder()
-	ast := builder.Visit(tree)
-	fmt.Println(ast)
+	ast := tree.Accept(builder)
+	fmt.Printf("%#v\n", ast)
 }
