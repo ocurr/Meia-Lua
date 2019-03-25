@@ -10,7 +10,7 @@ type Node interface {
 
 type Exp interface {
 	Node
-	exprNode()
+	expNode()
 }
 
 type Stat interface {
@@ -23,7 +23,7 @@ type ChunkC struct {
 	Block BlockC
 }
 
-func (c *ChunkC) GetCtx() *antlr.BaseParserRuleContext {
+func (c ChunkC) GetCtx() *antlr.BaseParserRuleContext {
 	return c.Ctx
 }
 
@@ -32,7 +32,7 @@ type BlockC struct {
 	StatLst []Stat
 }
 
-func (b *BlockC) GetCtx() *antlr.BaseParserRuleContext {
+func (b BlockC) GetCtx() *antlr.BaseParserRuleContext {
 	return b.Ctx
 }
 
@@ -42,21 +42,21 @@ type DefC struct {
 	Exp Exp
 }
 
-func (d *DefC) GetCtx() *antlr.BaseParserRuleContext {
+func (d DefC) GetCtx() *antlr.BaseParserRuleContext {
 	return d.Ctx
 }
 
-func (d *DefC) statNode() {}
+func (d DefC) statNode() {}
 
 type DefLst struct {
 	List []DefC
 }
 
-func (dl *DefLst) GetCtx() *antlr.BaseParserRuleContext {
+func (dl DefLst) GetCtx() *antlr.BaseParserRuleContext {
 	return antlr.NewBaseParserRuleContext(nil, -1)
 }
 
-func (dl *DefLst) statNode() {}
+func (dl DefLst) statNode() {}
 
 type IdC struct {
 	Ctx    *antlr.BaseParserRuleContext
@@ -64,7 +64,7 @@ type IdC struct {
 	TypeId TypeT
 }
 
-func (i *IdC) GetCtx() *antlr.BaseParserRuleContext {
+func (i IdC) GetCtx() *antlr.BaseParserRuleContext {
 	return i.Ctx
 }
 
@@ -72,7 +72,7 @@ type IdLst struct {
 	List []IdC
 }
 
-func (idl *IdLst) GetCtx() *antlr.BaseParserRuleContext {
+func (idl IdLst) GetCtx() *antlr.BaseParserRuleContext {
 	return antlr.NewBaseParserRuleContext(nil, -1)
 }
 
@@ -81,7 +81,7 @@ type ExpLst struct {
 	List []Exp
 }
 
-func (edl *ExpLst) GetCtx() *antlr.BaseParserRuleContext {
+func (edl ExpLst) GetCtx() *antlr.BaseParserRuleContext {
 	return antlr.NewBaseParserRuleContext(nil, -1)
 }
 
@@ -90,30 +90,30 @@ type IntC struct {
 	N   int64
 }
 
-func (i *IntC) GetCtx() *antlr.BaseParserRuleContext {
+func (i IntC) GetCtx() *antlr.BaseParserRuleContext {
 	return i.Ctx
 }
 
-func (i *IntC) expNode() {}
+func (i IntC) expNode() {}
 
 type FloatC struct {
 	Ctx *antlr.BaseParserRuleContext
 	N   float64
 }
 
-func (f *FloatC) GetCtx() *antlr.BaseParserRuleContext {
+func (f FloatC) GetCtx() *antlr.BaseParserRuleContext {
 	return f.Ctx
 }
 
-func (f *FloatC) expNode() {}
+func (f FloatC) expNode() {}
 
 type StringC struct {
 	Ctx *antlr.BaseParserRuleContext
 	S   string
 }
 
-func (s *StringC) GetCtx() *antlr.BaseParserRuleContext {
+func (s StringC) GetCtx() *antlr.BaseParserRuleContext {
 	return s.Ctx
 }
 
-func (s *StringC) expNode() {}
+func (s StringC) expNode() {}
