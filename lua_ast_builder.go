@@ -55,22 +55,18 @@ func (v *LuaASTBuilder) VisitStat(ctx *parser.StatContext) interface{} {
 
 func (v *LuaASTBuilder) VisitRetstat(ctx *parser.RetstatContext) interface{} {
 	panic("VisitRetstat not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitLabel(ctx *parser.LabelContext) interface{} {
 	panic("VisitLabel not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitFuncname(ctx *parser.FuncnameContext) interface{} {
 	panic("VisitFuncname not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitVarlist(ctx *parser.VarlistContext) interface{} {
 	panic("VisitVarlist not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitTypedvarlist(ctx *parser.TypedvarlistContext) interface{} {
@@ -88,7 +84,6 @@ func (v *LuaASTBuilder) VisitTypedvarlist(ctx *parser.TypedvarlistContext) inter
 
 func (v *LuaASTBuilder) VisitNamelist(ctx *parser.NamelistContext) interface{} {
 	panic("VisitNamelist not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitExplist(ctx *parser.ExplistContext) interface{} {
@@ -126,17 +121,14 @@ func (v *LuaASTBuilder) VisitTypeLiteral(ctx *parser.TypeLiteralContext) interfa
 
 func (v *LuaASTBuilder) VisitPrefixexp(ctx *parser.PrefixexpContext) interface{} {
 	panic("VisitPrefixexp not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitFunctioncall(ctx *parser.FunctioncallContext) interface{} {
 	panic("VisitFunctioncall not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitVarOrExp(ctx *parser.VarOrExpContext) interface{} {
 	panic("VisitVarOrExp not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitVarId(ctx *parser.VarIdContext) interface{} {
@@ -150,97 +142,78 @@ func (v *LuaASTBuilder) VisitTypedvar(ctx *parser.TypedvarContext) interface{} {
 
 func (v *LuaASTBuilder) VisitVarSuffix(ctx *parser.VarSuffixContext) interface{} {
 	panic("VisitVarSuffix not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitNameAndArgs(ctx *parser.NameAndArgsContext) interface{} {
 	panic("VisitNameAndArgs not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitArgs(ctx *parser.ArgsContext) interface{} {
 	panic("VisitArgs not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitFunctiondef(ctx *parser.FunctiondefContext) interface{} {
 	panic("VisitFunctiondef not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitFuncbody(ctx *parser.FuncbodyContext) interface{} {
 	panic("VisitFuncbody not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitParlist(ctx *parser.ParlistContext) interface{} {
 	panic("VisitParlist not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitTableconstructor(ctx *parser.TableconstructorContext) interface{} {
 	panic("VisitTableconstructor not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitFieldlist(ctx *parser.FieldlistContext) interface{} {
 	panic("VisitFieldlist not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitField(ctx *parser.FieldContext) interface{} {
 	panic("VisitField not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitFieldsep(ctx *parser.FieldsepContext) interface{} {
 	panic("VisitFieldsep not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitOperatorOr(ctx *parser.OperatorOrContext) interface{} {
 	panic("VisitOperatorOr not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitOperatorAnd(ctx *parser.OperatorAndContext) interface{} {
 	panic("VisitOperatorAnd not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitOperatorComparison(ctx *parser.OperatorComparisonContext) interface{} {
 	panic("VisitOperatorComparison not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitOperatorStrcat(ctx *parser.OperatorStrcatContext) interface{} {
 	panic("VisitOperatorStrcat not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitOperatorAddSub(ctx *parser.OperatorAddSubContext) interface{} {
 	panic("VisitOperatorAddSub not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitOperatorMulDivMod(ctx *parser.OperatorMulDivModContext) interface{} {
 	panic("VisitOperatorMulDivMod not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitOperatorBitwise(ctx *parser.OperatorBitwiseContext) interface{} {
 	panic("VisitOperatorBitwise not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitOperatorUnary(ctx *parser.OperatorUnaryContext) interface{} {
 	panic("VisitOperatorUnary not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitOperatorPower(ctx *parser.OperatorPowerContext) interface{} {
 	panic("VisitOperatorPower not implemented")
-	return v.VisitChildren(ctx)
 }
 
 func (v *LuaASTBuilder) VisitNumberLiteral(ctx *parser.NumberLiteralContext) interface{} {
@@ -265,5 +238,4 @@ func (v *LuaASTBuilder) VisitNumberLiteral(ctx *parser.NumberLiteralContext) int
 
 func (v *LuaASTBuilder) VisitStringLiteral(ctx *parser.StringLiteralContext) interface{} {
 	panic("VisitStringLiteral not implemented")
-	return v.VisitChildren(ctx)
 }
