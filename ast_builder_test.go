@@ -23,6 +23,14 @@ func TestASTMatch(t *testing.T) {
 			t.Errorf("IdC{Id: \"y\", TypeId: IntT} == IdC{Id: \"x\", TypeId: IntT}")
 		}
 	})
+	t.Run("3", func(t *testing.T) {
+		res := astMatch(
+			IdC{Id: "y", TypeId: IntT{}},
+			IntC{N: 5})
+		if res {
+			t.Errorf("IdC{Id: \"y\", TypeId: IntT} != IntC{N: 5}")
+		}
+	})
 }
 
 func astMatch(node1, node2 Node) bool {
@@ -104,6 +112,4 @@ func astMatch(node1, node2 Node) bool {
 	default:
 		panic("Type not implemented")
 	}
-
-	return false
 }
