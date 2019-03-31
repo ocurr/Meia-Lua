@@ -4,20 +4,7 @@ import (
 	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/ocurr/senior-project/antlr/parser"
-	//"strings"
 )
-
-type TreeShapeListener struct {
-	*parser.BaseLuaListener
-}
-
-func NewTreeShapeListener() *TreeShapeListener {
-	return new(TreeShapeListener)
-}
-
-func (this *TreeShapeListener) EnterEveryRule(ctx antlr.ParserRuleContext) {
-	fmt.Println(ctx.GetText())
-}
 
 func main() {
 
