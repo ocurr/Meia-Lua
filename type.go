@@ -14,6 +14,11 @@ type IntT struct {
 
 func (i IntT) typeDesc() {}
 
+type StringT struct {
+}
+
+func (s StringT) typeDesc() {}
+
 type ErrorT struct {
 }
 
