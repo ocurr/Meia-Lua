@@ -1,34 +1,88 @@
 package main
 
 import (
+	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/ocurr/senior-project/antlr/parser"
 	"reflect"
 	"testing"
 )
 
 func TestASTBuilder(t *testing.T) {
+	t.Run("1", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("int x = 5")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		A := tree.Accept(builder)
+		B := ChunkC{Block: BlockC{
+			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: IntC{N: 5}}}}}}}
+		res := astMatch(A.(ChunkC), B)
+		if !res {
+			t.Errorf("%#v and %#v should be equal", A, B)
+		}
+	})
+	t.Run("2", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("float x = 5.5")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		A := tree.Accept(builder)
+		B := ChunkC{Block: BlockC{
+			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: FloatT{}}, Exp: FloatC{N: 5.5}}}}}}}
+		res := astMatch(A.(ChunkC), B)
+		if !res {
+			t.Errorf("%#v and %#v should be equal", A, B)
+		}
+	})
 }
 
 func TestASTMatch(t *testing.T) {
 	t.Run("1", func(t *testing.T) {
-		res := astMatch(IdC{Id: "x", TypeId: IntT{}}, IdC{Id: "x", TypeId: IntT{}})
+		A := IdC{Id: "x", TypeId: IntT{}}
+		B := IdC{Id: "x", TypeId: IntT{}}
+		res := astMatch(A, B)
 		if !res {
-			t.Errorf("IdC{Id: \"x\", TypeId: IntT} != IdC{Id: \"x\", TypeId: IntT}")
+			t.Errorf("%#v and %#v should be equal", A, B)
 		}
 	})
 	t.Run("2", func(t *testing.T) {
-		res := astMatch(
-			IdC{Id: "y", TypeId: IntT{}},
-			IdC{Id: "x", TypeId: IntT{}})
+		A := IdC{Id: "y", TypeId: IntT{}}
+		B := IdC{Id: "x", TypeId: IntT{}}
+		res := astMatch(A, B)
 		if res {
-			t.Errorf("IdC{Id: \"y\", TypeId: IntT} == IdC{Id: \"x\", TypeId: IntT}")
+			t.Errorf("%#v and %#v should NOT be equal", A, B)
 		}
 	})
 	t.Run("3", func(t *testing.T) {
-		res := astMatch(
-			IdC{Id: "y", TypeId: IntT{}},
-			IntC{N: 5})
+		A := IdC{Id: "y", TypeId: IntT{}}
+		B := IntC{N: 5}
+		res := astMatch(A, B)
 		if res {
-			t.Errorf("IdC{Id: \"y\", TypeId: IntT} != IntC{N: 5}")
+			t.Errorf("%#v and %#v should NOT be equal", A, B)
+		}
+	})
+	t.Run("4", func(t *testing.T) {
+		A := ExpLst{List: []Exp{IntC{N: 5}, IntC{N: 10}, FloatC{N: 13.5}}}
+		B := ExpLst{List: []Exp{IntC{N: 5}, IntC{N: 10}, FloatC{N: 13.5}}}
+		res := astMatch(A, B)
+		if !res {
+			t.Errorf("%#v and %#v should be equal", A, B)
+		}
+	})
+	t.Run("5", func(t *testing.T) {
+		A := BlockC{StatLst: []Stat{DefC{Id: IdC{Id: "y", TypeId: IntT{}}, Exp: IntC{N: 5}}}}
+		B := BlockC{StatLst: []Stat{DefC{Id: IdC{Id: "y", TypeId: IntT{}}, Exp: IntC{N: 5}}}}
+		res := astMatch(A, B)
+		if !res {
+			t.Errorf("%#v and %#v should be equal", A, B)
 		}
 	})
 }
