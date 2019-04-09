@@ -16,7 +16,7 @@ var _ = reflect.Copy
 var _ = strconv.Itoa
 
 var parserATN = []uint16{
-	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 71, 433,
+	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 72, 433,
 	4, 2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 4, 6, 9, 6, 4, 7, 9, 7,
 	4, 8, 9, 8, 4, 9, 9, 9, 4, 10, 9, 10, 4, 11, 9, 11, 4, 12, 9, 12, 4, 13,
 	9, 13, 4, 14, 9, 14, 4, 15, 9, 15, 4, 16, 9, 16, 4, 17, 9, 17, 4, 18, 9,
@@ -63,9 +63,9 @@ var parserATN = []uint16{
 	35, 3, 36, 3, 36, 3, 37, 3, 37, 3, 38, 3, 38, 3, 39, 3, 39, 3, 39, 2, 3,
 	22, 40, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34,
 	36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70,
-	72, 74, 76, 2, 11, 3, 2, 29, 30, 4, 2, 3, 3, 17, 17, 3, 2, 39, 44, 3, 2,
-	46, 47, 3, 2, 48, 51, 3, 2, 52, 56, 5, 2, 47, 47, 54, 54, 57, 58, 3, 2,
-	64, 67, 3, 2, 61, 63, 2, 460, 2, 78, 3, 2, 2, 2, 4, 84, 3, 2, 2, 2, 6,
+	72, 74, 76, 2, 11, 3, 2, 29, 31, 4, 2, 3, 3, 17, 17, 3, 2, 40, 45, 3, 2,
+	47, 48, 3, 2, 49, 52, 3, 2, 53, 57, 5, 2, 48, 48, 55, 55, 58, 59, 3, 2,
+	65, 68, 3, 2, 62, 64, 2, 460, 2, 78, 3, 2, 2, 2, 4, 84, 3, 2, 2, 2, 6,
 	171, 3, 2, 2, 2, 8, 173, 3, 2, 2, 2, 10, 180, 3, 2, 2, 2, 12, 184, 3, 2,
 	2, 2, 14, 196, 3, 2, 2, 2, 16, 221, 3, 2, 2, 2, 18, 223, 3, 2, 2, 2, 20,
 	231, 3, 2, 2, 2, 22, 252, 3, 2, 2, 2, 24, 291, 3, 2, 2, 2, 26, 293, 3,
@@ -83,7 +83,7 @@ var parserATN = []uint16{
 	5, 3, 2, 2, 2, 90, 172, 7, 3, 2, 2, 91, 92, 5, 16, 9, 2, 92, 93, 7, 4,
 	2, 2, 93, 94, 5, 20, 11, 2, 94, 172, 3, 2, 2, 2, 95, 172, 5, 28, 15, 2,
 	96, 172, 5, 10, 6, 2, 97, 172, 7, 5, 2, 2, 98, 99, 7, 6, 2, 2, 99, 172,
-	7, 60, 2, 2, 100, 101, 7, 7, 2, 2, 101, 102, 5, 4, 3, 2, 102, 103, 7, 8,
+	7, 61, 2, 2, 100, 101, 7, 7, 2, 2, 101, 102, 5, 4, 3, 2, 102, 103, 7, 8,
 	2, 2, 103, 172, 3, 2, 2, 2, 104, 105, 7, 9, 2, 2, 105, 106, 5, 22, 12,
 	2, 106, 107, 7, 7, 2, 2, 107, 108, 5, 4, 3, 2, 108, 109, 7, 8, 2, 2, 109,
 	172, 3, 2, 2, 2, 110, 111, 7, 10, 2, 2, 111, 112, 5, 4, 3, 2, 112, 113,
@@ -95,7 +95,7 @@ var parserATN = []uint16{
 	3, 2, 2, 2, 128, 126, 3, 2, 2, 2, 129, 130, 7, 15, 2, 2, 130, 132, 5, 4,
 	3, 2, 131, 129, 3, 2, 2, 2, 131, 132, 3, 2, 2, 2, 132, 133, 3, 2, 2, 2,
 	133, 134, 7, 8, 2, 2, 134, 172, 3, 2, 2, 2, 135, 136, 7, 16, 2, 2, 136,
-	137, 7, 60, 2, 2, 137, 138, 7, 4, 2, 2, 138, 139, 5, 22, 12, 2, 139, 140,
+	137, 7, 61, 2, 2, 137, 138, 7, 4, 2, 2, 138, 139, 5, 22, 12, 2, 139, 140,
 	7, 17, 2, 2, 140, 143, 5, 22, 12, 2, 141, 142, 7, 17, 2, 2, 142, 144, 5,
 	22, 12, 2, 143, 141, 3, 2, 2, 2, 143, 144, 3, 2, 2, 2, 144, 145, 3, 2,
 	2, 2, 145, 146, 7, 7, 2, 2, 146, 147, 5, 4, 3, 2, 147, 148, 7, 8, 2, 2,
@@ -103,7 +103,7 @@ var parserATN = []uint16{
 	152, 7, 18, 2, 2, 152, 153, 5, 20, 11, 2, 153, 154, 7, 7, 2, 2, 154, 155,
 	5, 4, 3, 2, 155, 156, 7, 8, 2, 2, 156, 172, 3, 2, 2, 2, 157, 158, 7, 19,
 	2, 2, 158, 159, 5, 12, 7, 2, 159, 160, 5, 44, 23, 2, 160, 172, 3, 2, 2,
-	2, 161, 162, 7, 20, 2, 2, 162, 163, 7, 19, 2, 2, 163, 164, 7, 60, 2, 2,
+	2, 161, 162, 7, 20, 2, 2, 162, 163, 7, 19, 2, 2, 163, 164, 7, 61, 2, 2,
 	164, 172, 5, 44, 23, 2, 165, 166, 7, 20, 2, 2, 166, 169, 5, 18, 10, 2,
 	167, 168, 7, 4, 2, 2, 168, 170, 5, 20, 11, 2, 169, 167, 3, 2, 2, 2, 169,
 	170, 3, 2, 2, 2, 170, 172, 3, 2, 2, 2, 171, 90, 3, 2, 2, 2, 171, 91, 3,
@@ -114,11 +114,11 @@ var parserATN = []uint16{
 	172, 7, 3, 2, 2, 2, 173, 175, 7, 21, 2, 2, 174, 176, 5, 20, 11, 2, 175,
 	174, 3, 2, 2, 2, 175, 176, 3, 2, 2, 2, 176, 178, 3, 2, 2, 2, 177, 179,
 	7, 3, 2, 2, 178, 177, 3, 2, 2, 2, 178, 179, 3, 2, 2, 2, 179, 9, 3, 2, 2,
-	2, 180, 181, 7, 22, 2, 2, 181, 182, 7, 60, 2, 2, 182, 183, 7, 22, 2, 2,
-	183, 11, 3, 2, 2, 2, 184, 189, 7, 60, 2, 2, 185, 186, 7, 23, 2, 2, 186,
-	188, 7, 60, 2, 2, 187, 185, 3, 2, 2, 2, 188, 191, 3, 2, 2, 2, 189, 187,
+	2, 180, 181, 7, 22, 2, 2, 181, 182, 7, 61, 2, 2, 182, 183, 7, 22, 2, 2,
+	183, 11, 3, 2, 2, 2, 184, 189, 7, 61, 2, 2, 185, 186, 7, 23, 2, 2, 186,
+	188, 7, 61, 2, 2, 187, 185, 3, 2, 2, 2, 188, 191, 3, 2, 2, 2, 189, 187,
 	3, 2, 2, 2, 189, 190, 3, 2, 2, 2, 190, 194, 3, 2, 2, 2, 191, 189, 3, 2,
-	2, 2, 192, 193, 7, 24, 2, 2, 193, 195, 7, 60, 2, 2, 194, 192, 3, 2, 2,
+	2, 2, 192, 193, 7, 24, 2, 2, 193, 195, 7, 61, 2, 2, 194, 192, 3, 2, 2,
 	2, 194, 195, 3, 2, 2, 2, 195, 13, 3, 2, 2, 2, 196, 201, 5, 32, 17, 2, 197,
 	198, 7, 17, 2, 2, 198, 200, 5, 32, 17, 2, 199, 197, 3, 2, 2, 2, 200, 203,
 	3, 2, 2, 2, 201, 199, 3, 2, 2, 2, 201, 202, 3, 2, 2, 2, 202, 15, 3, 2,
@@ -129,8 +129,8 @@ var parserATN = []uint16{
 	7, 17, 2, 2, 215, 217, 5, 32, 17, 2, 216, 214, 3, 2, 2, 2, 217, 220, 3,
 	2, 2, 2, 218, 216, 3, 2, 2, 2, 218, 219, 3, 2, 2, 2, 219, 222, 3, 2, 2,
 	2, 220, 218, 3, 2, 2, 2, 221, 204, 3, 2, 2, 2, 221, 212, 3, 2, 2, 2, 222,
-	17, 3, 2, 2, 2, 223, 228, 7, 60, 2, 2, 224, 225, 7, 17, 2, 2, 225, 227,
-	7, 60, 2, 2, 226, 224, 3, 2, 2, 2, 227, 230, 3, 2, 2, 2, 228, 226, 3, 2,
+	17, 3, 2, 2, 2, 223, 228, 7, 61, 2, 2, 224, 225, 7, 17, 2, 2, 225, 227,
+	7, 61, 2, 2, 226, 224, 3, 2, 2, 2, 227, 230, 3, 2, 2, 2, 228, 226, 3, 2,
 	2, 2, 228, 229, 3, 2, 2, 2, 229, 19, 3, 2, 2, 2, 230, 228, 3, 2, 2, 2,
 	231, 236, 5, 22, 12, 2, 232, 233, 7, 17, 2, 2, 233, 235, 5, 22, 12, 2,
 	234, 232, 3, 2, 2, 2, 235, 238, 3, 2, 2, 2, 236, 234, 3, 2, 2, 2, 236,
@@ -162,49 +162,49 @@ var parserATN = []uint16{
 	298, 3, 2, 2, 2, 298, 27, 3, 2, 2, 2, 299, 297, 3, 2, 2, 2, 300, 302, 5,
 	30, 16, 2, 301, 303, 5, 38, 20, 2, 302, 301, 3, 2, 2, 2, 303, 304, 3, 2,
 	2, 2, 304, 302, 3, 2, 2, 2, 304, 305, 3, 2, 2, 2, 305, 29, 3, 2, 2, 2,
-	306, 312, 5, 32, 17, 2, 307, 308, 7, 31, 2, 2, 308, 309, 5, 22, 12, 2,
-	309, 310, 7, 32, 2, 2, 310, 312, 3, 2, 2, 2, 311, 306, 3, 2, 2, 2, 311,
-	307, 3, 2, 2, 2, 312, 31, 3, 2, 2, 2, 313, 320, 7, 60, 2, 2, 314, 315,
-	7, 31, 2, 2, 315, 316, 5, 22, 12, 2, 316, 317, 7, 32, 2, 2, 317, 318, 5,
+	306, 312, 5, 32, 17, 2, 307, 308, 7, 32, 2, 2, 308, 309, 5, 22, 12, 2,
+	309, 310, 7, 33, 2, 2, 310, 312, 3, 2, 2, 2, 311, 306, 3, 2, 2, 2, 311,
+	307, 3, 2, 2, 2, 312, 31, 3, 2, 2, 2, 313, 320, 7, 61, 2, 2, 314, 315,
+	7, 32, 2, 2, 315, 316, 5, 22, 12, 2, 316, 317, 7, 33, 2, 2, 317, 318, 5,
 	36, 19, 2, 318, 320, 3, 2, 2, 2, 319, 313, 3, 2, 2, 2, 319, 314, 3, 2,
 	2, 2, 320, 324, 3, 2, 2, 2, 321, 323, 5, 36, 19, 2, 322, 321, 3, 2, 2,
 	2, 323, 326, 3, 2, 2, 2, 324, 322, 3, 2, 2, 2, 324, 325, 3, 2, 2, 2, 325,
 	33, 3, 2, 2, 2, 326, 324, 3, 2, 2, 2, 327, 328, 5, 24, 13, 2, 328, 329,
 	5, 32, 17, 2, 329, 35, 3, 2, 2, 2, 330, 332, 5, 38, 20, 2, 331, 330, 3,
 	2, 2, 2, 332, 335, 3, 2, 2, 2, 333, 331, 3, 2, 2, 2, 333, 334, 3, 2, 2,
-	2, 334, 342, 3, 2, 2, 2, 335, 333, 3, 2, 2, 2, 336, 337, 7, 33, 2, 2, 337,
-	338, 5, 22, 12, 2, 338, 339, 7, 34, 2, 2, 339, 343, 3, 2, 2, 2, 340, 341,
-	7, 23, 2, 2, 341, 343, 7, 60, 2, 2, 342, 336, 3, 2, 2, 2, 342, 340, 3,
-	2, 2, 2, 343, 37, 3, 2, 2, 2, 344, 345, 7, 24, 2, 2, 345, 347, 7, 60, 2,
+	2, 334, 342, 3, 2, 2, 2, 335, 333, 3, 2, 2, 2, 336, 337, 7, 34, 2, 2, 337,
+	338, 5, 22, 12, 2, 338, 339, 7, 35, 2, 2, 339, 343, 3, 2, 2, 2, 340, 341,
+	7, 23, 2, 2, 341, 343, 7, 61, 2, 2, 342, 336, 3, 2, 2, 2, 342, 340, 3,
+	2, 2, 2, 343, 37, 3, 2, 2, 2, 344, 345, 7, 24, 2, 2, 345, 347, 7, 61, 2,
 	2, 346, 344, 3, 2, 2, 2, 346, 347, 3, 2, 2, 2, 347, 348, 3, 2, 2, 2, 348,
-	349, 5, 40, 21, 2, 349, 39, 3, 2, 2, 2, 350, 352, 7, 31, 2, 2, 351, 353,
+	349, 5, 40, 21, 2, 349, 39, 3, 2, 2, 2, 350, 352, 7, 32, 2, 2, 351, 353,
 	5, 20, 11, 2, 352, 351, 3, 2, 2, 2, 352, 353, 3, 2, 2, 2, 353, 354, 3,
-	2, 2, 2, 354, 358, 7, 32, 2, 2, 355, 358, 5, 48, 25, 2, 356, 358, 5, 76,
+	2, 2, 2, 354, 358, 7, 33, 2, 2, 355, 358, 5, 48, 25, 2, 356, 358, 5, 76,
 	39, 2, 357, 350, 3, 2, 2, 2, 357, 355, 3, 2, 2, 2, 357, 356, 3, 2, 2, 2,
 	358, 41, 3, 2, 2, 2, 359, 360, 7, 19, 2, 2, 360, 361, 5, 44, 23, 2, 361,
-	43, 3, 2, 2, 2, 362, 364, 7, 31, 2, 2, 363, 365, 5, 46, 24, 2, 364, 363,
-	3, 2, 2, 2, 364, 365, 3, 2, 2, 2, 365, 366, 3, 2, 2, 2, 366, 367, 7, 32,
+	43, 3, 2, 2, 2, 362, 364, 7, 32, 2, 2, 363, 365, 5, 46, 24, 2, 364, 363,
+	3, 2, 2, 2, 364, 365, 3, 2, 2, 2, 365, 366, 3, 2, 2, 2, 366, 367, 7, 33,
 	2, 2, 367, 368, 5, 4, 3, 2, 368, 369, 7, 8, 2, 2, 369, 45, 3, 2, 2, 2,
 	370, 373, 5, 18, 10, 2, 371, 372, 7, 17, 2, 2, 372, 374, 7, 28, 2, 2, 373,
 	371, 3, 2, 2, 2, 373, 374, 3, 2, 2, 2, 374, 377, 3, 2, 2, 2, 375, 377,
 	7, 28, 2, 2, 376, 370, 3, 2, 2, 2, 376, 375, 3, 2, 2, 2, 377, 47, 3, 2,
-	2, 2, 378, 380, 7, 35, 2, 2, 379, 381, 5, 50, 26, 2, 380, 379, 3, 2, 2,
-	2, 380, 381, 3, 2, 2, 2, 381, 382, 3, 2, 2, 2, 382, 383, 7, 36, 2, 2, 383,
+	2, 2, 378, 380, 7, 36, 2, 2, 379, 381, 5, 50, 26, 2, 380, 379, 3, 2, 2,
+	2, 380, 381, 3, 2, 2, 2, 381, 382, 3, 2, 2, 2, 382, 383, 7, 37, 2, 2, 383,
 	49, 3, 2, 2, 2, 384, 390, 5, 52, 27, 2, 385, 386, 5, 54, 28, 2, 386, 387,
 	5, 52, 27, 2, 387, 389, 3, 2, 2, 2, 388, 385, 3, 2, 2, 2, 389, 392, 3,
 	2, 2, 2, 390, 388, 3, 2, 2, 2, 390, 391, 3, 2, 2, 2, 391, 394, 3, 2, 2,
 	2, 392, 390, 3, 2, 2, 2, 393, 395, 5, 54, 28, 2, 394, 393, 3, 2, 2, 2,
-	394, 395, 3, 2, 2, 2, 395, 51, 3, 2, 2, 2, 396, 397, 7, 33, 2, 2, 397,
-	398, 5, 22, 12, 2, 398, 399, 7, 34, 2, 2, 399, 400, 7, 4, 2, 2, 400, 401,
-	5, 22, 12, 2, 401, 407, 3, 2, 2, 2, 402, 403, 7, 60, 2, 2, 403, 404, 7,
+	394, 395, 3, 2, 2, 2, 395, 51, 3, 2, 2, 2, 396, 397, 7, 34, 2, 2, 397,
+	398, 5, 22, 12, 2, 398, 399, 7, 35, 2, 2, 399, 400, 7, 4, 2, 2, 400, 401,
+	5, 22, 12, 2, 401, 407, 3, 2, 2, 2, 402, 403, 7, 61, 2, 2, 403, 404, 7,
 	4, 2, 2, 404, 407, 5, 22, 12, 2, 405, 407, 5, 22, 12, 2, 406, 396, 3, 2,
 	2, 2, 406, 402, 3, 2, 2, 2, 406, 405, 3, 2, 2, 2, 407, 53, 3, 2, 2, 2,
-	408, 409, 9, 3, 2, 2, 409, 55, 3, 2, 2, 2, 410, 411, 7, 37, 2, 2, 411,
-	57, 3, 2, 2, 2, 412, 413, 7, 38, 2, 2, 413, 59, 3, 2, 2, 2, 414, 415, 9,
-	4, 2, 2, 415, 61, 3, 2, 2, 2, 416, 417, 7, 45, 2, 2, 417, 63, 3, 2, 2,
+	408, 409, 9, 3, 2, 2, 409, 55, 3, 2, 2, 2, 410, 411, 7, 38, 2, 2, 411,
+	57, 3, 2, 2, 2, 412, 413, 7, 39, 2, 2, 413, 59, 3, 2, 2, 2, 414, 415, 9,
+	4, 2, 2, 415, 61, 3, 2, 2, 2, 416, 417, 7, 46, 2, 2, 417, 63, 3, 2, 2,
 	2, 418, 419, 9, 5, 2, 2, 419, 65, 3, 2, 2, 2, 420, 421, 9, 6, 2, 2, 421,
 	67, 3, 2, 2, 2, 422, 423, 9, 7, 2, 2, 423, 69, 3, 2, 2, 2, 424, 425, 9,
-	8, 2, 2, 425, 71, 3, 2, 2, 2, 426, 427, 7, 59, 2, 2, 427, 73, 3, 2, 2,
+	8, 2, 2, 425, 71, 3, 2, 2, 2, 426, 427, 7, 60, 2, 2, 427, 73, 3, 2, 2,
 	2, 428, 429, 9, 9, 2, 2, 429, 75, 3, 2, 2, 2, 430, 431, 9, 10, 2, 2, 431,
 	77, 3, 2, 2, 2, 39, 84, 88, 126, 131, 143, 169, 171, 175, 178, 189, 194,
 	201, 209, 218, 221, 228, 236, 252, 286, 288, 297, 304, 311, 319, 324, 333,
@@ -217,17 +217,17 @@ var literalNames = []string{
 	"", "';'", "'='", "'break'", "'goto'", "'do'", "'end'", "'while'", "'repeat'",
 	"'until'", "'if'", "'then'", "'elseif'", "'else'", "'for'", "','", "'in'",
 	"'function'", "'local'", "'return'", "'::'", "'.'", "':'", "'nil'", "'false'",
-	"'true'", "'...'", "'int'", "'float'", "'('", "')'", "'['", "']'", "'{'",
-	"'}'", "'or'", "'and'", "'<'", "'>'", "'<='", "'>='", "'~='", "'=='", "'..'",
-	"'+'", "'-'", "'*'", "'/'", "'%'", "'//'", "'&'", "'|'", "'~'", "'<<'",
-	"'>>'", "'not'", "'#'", "'^'",
+	"'true'", "'...'", "'int'", "'float'", "'string'", "'('", "')'", "'['",
+	"']'", "'{'", "'}'", "'or'", "'and'", "'<'", "'>'", "'<='", "'>='", "'~='",
+	"'=='", "'..'", "'+'", "'-'", "'*'", "'/'", "'%'", "'//'", "'&'", "'|'",
+	"'~'", "'<<'", "'>>'", "'not'", "'#'", "'^'",
 }
 var symbolicNames = []string{
 	"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
 	"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
 	"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-	"", "", "", "", "NAME", "NORMALSTRING", "CHARSTRING", "LONGSTRING", "INT",
-	"HEX", "FLOAT", "HEX_FLOAT", "COMMENT", "LINE_COMMENT", "WS", "SHEBANG",
+	"", "", "", "", "", "NAME", "NORMALSTRING", "CHARSTRING", "LONGSTRING",
+	"INT", "HEX", "FLOAT", "HEX_FLOAT", "COMMENT", "LINE_COMMENT", "WS", "SHEBANG",
 }
 
 var ruleNames = []string{
@@ -325,18 +325,19 @@ const (
 	LuaParserT__54        = 55
 	LuaParserT__55        = 56
 	LuaParserT__56        = 57
-	LuaParserNAME         = 58
-	LuaParserNORMALSTRING = 59
-	LuaParserCHARSTRING   = 60
-	LuaParserLONGSTRING   = 61
-	LuaParserINT          = 62
-	LuaParserHEX          = 63
-	LuaParserFLOAT        = 64
-	LuaParserHEX_FLOAT    = 65
-	LuaParserCOMMENT      = 66
-	LuaParserLINE_COMMENT = 67
-	LuaParserWS           = 68
-	LuaParserSHEBANG      = 69
+	LuaParserT__57        = 58
+	LuaParserNAME         = 59
+	LuaParserNORMALSTRING = 60
+	LuaParserCHARSTRING   = 61
+	LuaParserLONGSTRING   = 62
+	LuaParserINT          = 63
+	LuaParserHEX          = 64
+	LuaParserFLOAT        = 65
+	LuaParserHEX_FLOAT    = 66
+	LuaParserCOMMENT      = 67
+	LuaParserLINE_COMMENT = 68
+	LuaParserWS           = 69
+	LuaParserSHEBANG      = 70
 )
 
 // LuaParser rules.
@@ -623,7 +624,7 @@ func (p *LuaParser) Block() (localctx IBlockContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<LuaParserT__0)|(1<<LuaParserT__2)|(1<<LuaParserT__3)|(1<<LuaParserT__4)|(1<<LuaParserT__6)|(1<<LuaParserT__7)|(1<<LuaParserT__9)|(1<<LuaParserT__13)|(1<<LuaParserT__16)|(1<<LuaParserT__17)|(1<<LuaParserT__19)|(1<<LuaParserT__26)|(1<<LuaParserT__27)|(1<<LuaParserT__28))) != 0) || _la == LuaParserNAME {
+	for (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<LuaParserT__0)|(1<<LuaParserT__2)|(1<<LuaParserT__3)|(1<<LuaParserT__4)|(1<<LuaParserT__6)|(1<<LuaParserT__7)|(1<<LuaParserT__9)|(1<<LuaParserT__13)|(1<<LuaParserT__16)|(1<<LuaParserT__17)|(1<<LuaParserT__19)|(1<<LuaParserT__26)|(1<<LuaParserT__27)|(1<<LuaParserT__28)|(1<<LuaParserT__29))) != 0) || _la == LuaParserNAME {
 		{
 			p.SetState(79)
 			p.Stat()
@@ -1293,7 +1294,7 @@ func (p *LuaParser) Retstat() (localctx IRetstatContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	if (((_la-17)&-(0x1f+1)) == 0 && ((1<<uint((_la-17)))&((1<<(LuaParserT__16-17))|(1<<(LuaParserT__22-17))|(1<<(LuaParserT__23-17))|(1<<(LuaParserT__24-17))|(1<<(LuaParserT__25-17))|(1<<(LuaParserT__28-17))|(1<<(LuaParserT__32-17))|(1<<(LuaParserT__44-17)))) != 0) || (((_la-52)&-(0x1f+1)) == 0 && ((1<<uint((_la-52)))&((1<<(LuaParserT__51-52))|(1<<(LuaParserT__54-52))|(1<<(LuaParserT__55-52))|(1<<(LuaParserNAME-52))|(1<<(LuaParserNORMALSTRING-52))|(1<<(LuaParserCHARSTRING-52))|(1<<(LuaParserLONGSTRING-52))|(1<<(LuaParserINT-52))|(1<<(LuaParserHEX-52))|(1<<(LuaParserFLOAT-52))|(1<<(LuaParserHEX_FLOAT-52)))) != 0) {
+	if (((_la-17)&-(0x1f+1)) == 0 && ((1<<uint((_la-17)))&((1<<(LuaParserT__16-17))|(1<<(LuaParserT__22-17))|(1<<(LuaParserT__23-17))|(1<<(LuaParserT__24-17))|(1<<(LuaParserT__25-17))|(1<<(LuaParserT__29-17))|(1<<(LuaParserT__33-17))|(1<<(LuaParserT__45-17)))) != 0) || (((_la-53)&-(0x1f+1)) == 0 && ((1<<uint((_la-53)))&((1<<(LuaParserT__52-53))|(1<<(LuaParserT__55-53))|(1<<(LuaParserT__56-53))|(1<<(LuaParserNAME-53))|(1<<(LuaParserNORMALSTRING-53))|(1<<(LuaParserCHARSTRING-53))|(1<<(LuaParserLONGSTRING-53))|(1<<(LuaParserINT-53))|(1<<(LuaParserHEX-53))|(1<<(LuaParserFLOAT-53))|(1<<(LuaParserHEX_FLOAT-53)))) != 0) {
 		{
 			p.SetState(172)
 			p.Explist()
@@ -2484,19 +2485,19 @@ func (p *LuaParser) exp(_p int) (localctx IExpContext) {
 			p.Functiondef()
 		}
 
-	case LuaParserT__28, LuaParserNAME:
+	case LuaParserT__29, LuaParserNAME:
 		{
 			p.SetState(245)
 			p.Prefixexp()
 		}
 
-	case LuaParserT__32:
+	case LuaParserT__33:
 		{
 			p.SetState(246)
 			p.Tableconstructor()
 		}
 
-	case LuaParserT__44, LuaParserT__51, LuaParserT__54, LuaParserT__55:
+	case LuaParserT__45, LuaParserT__52, LuaParserT__55, LuaParserT__56:
 		{
 			p.SetState(247)
 			p.OperatorUnary()
@@ -2763,7 +2764,7 @@ func (p *LuaParser) TypeLiteral() (localctx ITypeLiteralContext) {
 		p.SetState(289)
 		_la = p.GetTokenStream().LA(1)
 
-		if !(_la == LuaParserT__26 || _la == LuaParserT__27) {
+		if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<LuaParserT__26)|(1<<LuaParserT__27)|(1<<LuaParserT__28))) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -3195,7 +3196,7 @@ func (p *LuaParser) VarOrExp() (localctx IVarOrExpContext) {
 		p.EnterOuterAlt(localctx, 2)
 		{
 			p.SetState(305)
-			p.Match(LuaParserT__28)
+			p.Match(LuaParserT__29)
 		}
 		{
 			p.SetState(306)
@@ -3203,7 +3204,7 @@ func (p *LuaParser) VarOrExp() (localctx IVarOrExpContext) {
 		}
 		{
 			p.SetState(307)
-			p.Match(LuaParserT__29)
+			p.Match(LuaParserT__30)
 		}
 
 	}
@@ -3349,10 +3350,10 @@ func (p *LuaParser) VarId() (localctx IVarIdContext) {
 			p.Match(LuaParserNAME)
 		}
 
-	case LuaParserT__28:
+	case LuaParserT__29:
 		{
 			p.SetState(312)
-			p.Match(LuaParserT__28)
+			p.Match(LuaParserT__29)
 		}
 		{
 			p.SetState(313)
@@ -3360,7 +3361,7 @@ func (p *LuaParser) VarId() (localctx IVarIdContext) {
 		}
 		{
 			p.SetState(314)
-			p.Match(LuaParserT__29)
+			p.Match(LuaParserT__30)
 		}
 		{
 			p.SetState(315)
@@ -3642,7 +3643,7 @@ func (p *LuaParser) VarSuffix() (localctx IVarSuffixContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for _la == LuaParserT__21 || _la == LuaParserT__28 || (((_la-33)&-(0x1f+1)) == 0 && ((1<<uint((_la-33)))&((1<<(LuaParserT__32-33))|(1<<(LuaParserNORMALSTRING-33))|(1<<(LuaParserCHARSTRING-33))|(1<<(LuaParserLONGSTRING-33)))) != 0) {
+	for _la == LuaParserT__21 || _la == LuaParserT__29 || (((_la-34)&-(0x1f+1)) == 0 && ((1<<uint((_la-34)))&((1<<(LuaParserT__33-34))|(1<<(LuaParserNORMALSTRING-34))|(1<<(LuaParserCHARSTRING-34))|(1<<(LuaParserLONGSTRING-34)))) != 0) {
 		{
 			p.SetState(328)
 			p.NameAndArgs()
@@ -3656,10 +3657,10 @@ func (p *LuaParser) VarSuffix() (localctx IVarSuffixContext) {
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
-	case LuaParserT__30:
+	case LuaParserT__31:
 		{
 			p.SetState(334)
-			p.Match(LuaParserT__30)
+			p.Match(LuaParserT__31)
 		}
 		{
 			p.SetState(335)
@@ -3667,7 +3668,7 @@ func (p *LuaParser) VarSuffix() (localctx IVarSuffixContext) {
 		}
 		{
 			p.SetState(336)
-			p.Match(LuaParserT__31)
+			p.Match(LuaParserT__32)
 		}
 
 	case LuaParserT__20:
@@ -3937,17 +3938,17 @@ func (p *LuaParser) Args() (localctx IArgsContext) {
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
-	case LuaParserT__28:
+	case LuaParserT__29:
 		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(348)
-			p.Match(LuaParserT__28)
+			p.Match(LuaParserT__29)
 		}
 		p.SetState(350)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
-		if (((_la-17)&-(0x1f+1)) == 0 && ((1<<uint((_la-17)))&((1<<(LuaParserT__16-17))|(1<<(LuaParserT__22-17))|(1<<(LuaParserT__23-17))|(1<<(LuaParserT__24-17))|(1<<(LuaParserT__25-17))|(1<<(LuaParserT__28-17))|(1<<(LuaParserT__32-17))|(1<<(LuaParserT__44-17)))) != 0) || (((_la-52)&-(0x1f+1)) == 0 && ((1<<uint((_la-52)))&((1<<(LuaParserT__51-52))|(1<<(LuaParserT__54-52))|(1<<(LuaParserT__55-52))|(1<<(LuaParserNAME-52))|(1<<(LuaParserNORMALSTRING-52))|(1<<(LuaParserCHARSTRING-52))|(1<<(LuaParserLONGSTRING-52))|(1<<(LuaParserINT-52))|(1<<(LuaParserHEX-52))|(1<<(LuaParserFLOAT-52))|(1<<(LuaParserHEX_FLOAT-52)))) != 0) {
+		if (((_la-17)&-(0x1f+1)) == 0 && ((1<<uint((_la-17)))&((1<<(LuaParserT__16-17))|(1<<(LuaParserT__22-17))|(1<<(LuaParserT__23-17))|(1<<(LuaParserT__24-17))|(1<<(LuaParserT__25-17))|(1<<(LuaParserT__29-17))|(1<<(LuaParserT__33-17))|(1<<(LuaParserT__45-17)))) != 0) || (((_la-53)&-(0x1f+1)) == 0 && ((1<<uint((_la-53)))&((1<<(LuaParserT__52-53))|(1<<(LuaParserT__55-53))|(1<<(LuaParserT__56-53))|(1<<(LuaParserNAME-53))|(1<<(LuaParserNORMALSTRING-53))|(1<<(LuaParserCHARSTRING-53))|(1<<(LuaParserLONGSTRING-53))|(1<<(LuaParserINT-53))|(1<<(LuaParserHEX-53))|(1<<(LuaParserFLOAT-53))|(1<<(LuaParserHEX_FLOAT-53)))) != 0) {
 			{
 				p.SetState(349)
 				p.Explist()
@@ -3956,10 +3957,10 @@ func (p *LuaParser) Args() (localctx IArgsContext) {
 		}
 		{
 			p.SetState(352)
-			p.Match(LuaParserT__29)
+			p.Match(LuaParserT__30)
 		}
 
-	case LuaParserT__32:
+	case LuaParserT__33:
 		p.EnterOuterAlt(localctx, 2)
 		{
 			p.SetState(353)
@@ -4203,7 +4204,7 @@ func (p *LuaParser) Funcbody() (localctx IFuncbodyContext) {
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(360)
-		p.Match(LuaParserT__28)
+		p.Match(LuaParserT__29)
 	}
 	p.SetState(362)
 	p.GetErrorHandler().Sync(p)
@@ -4218,7 +4219,7 @@ func (p *LuaParser) Funcbody() (localctx IFuncbodyContext) {
 	}
 	{
 		p.SetState(364)
-		p.Match(LuaParserT__29)
+		p.Match(LuaParserT__30)
 	}
 	{
 		p.SetState(365)
@@ -4473,13 +4474,13 @@ func (p *LuaParser) Tableconstructor() (localctx ITableconstructorContext) {
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(376)
-		p.Match(LuaParserT__32)
+		p.Match(LuaParserT__33)
 	}
 	p.SetState(378)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	if (((_la-17)&-(0x1f+1)) == 0 && ((1<<uint((_la-17)))&((1<<(LuaParserT__16-17))|(1<<(LuaParserT__22-17))|(1<<(LuaParserT__23-17))|(1<<(LuaParserT__24-17))|(1<<(LuaParserT__25-17))|(1<<(LuaParserT__28-17))|(1<<(LuaParserT__30-17))|(1<<(LuaParserT__32-17))|(1<<(LuaParserT__44-17)))) != 0) || (((_la-52)&-(0x1f+1)) == 0 && ((1<<uint((_la-52)))&((1<<(LuaParserT__51-52))|(1<<(LuaParserT__54-52))|(1<<(LuaParserT__55-52))|(1<<(LuaParserNAME-52))|(1<<(LuaParserNORMALSTRING-52))|(1<<(LuaParserCHARSTRING-52))|(1<<(LuaParserLONGSTRING-52))|(1<<(LuaParserINT-52))|(1<<(LuaParserHEX-52))|(1<<(LuaParserFLOAT-52))|(1<<(LuaParserHEX_FLOAT-52)))) != 0) {
+	if (((_la-17)&-(0x1f+1)) == 0 && ((1<<uint((_la-17)))&((1<<(LuaParserT__16-17))|(1<<(LuaParserT__22-17))|(1<<(LuaParserT__23-17))|(1<<(LuaParserT__24-17))|(1<<(LuaParserT__25-17))|(1<<(LuaParserT__29-17))|(1<<(LuaParserT__31-17))|(1<<(LuaParserT__33-17))|(1<<(LuaParserT__45-17)))) != 0) || (((_la-53)&-(0x1f+1)) == 0 && ((1<<uint((_la-53)))&((1<<(LuaParserT__52-53))|(1<<(LuaParserT__55-53))|(1<<(LuaParserT__56-53))|(1<<(LuaParserNAME-53))|(1<<(LuaParserNORMALSTRING-53))|(1<<(LuaParserCHARSTRING-53))|(1<<(LuaParserLONGSTRING-53))|(1<<(LuaParserINT-53))|(1<<(LuaParserHEX-53))|(1<<(LuaParserFLOAT-53))|(1<<(LuaParserHEX_FLOAT-53)))) != 0) {
 		{
 			p.SetState(377)
 			p.Fieldlist()
@@ -4488,7 +4489,7 @@ func (p *LuaParser) Tableconstructor() (localctx ITableconstructorContext) {
 	}
 	{
 		p.SetState(380)
-		p.Match(LuaParserT__33)
+		p.Match(LuaParserT__34)
 	}
 
 	return localctx
@@ -4793,7 +4794,7 @@ func (p *LuaParser) Field() (localctx IFieldContext) {
 		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(394)
-			p.Match(LuaParserT__30)
+			p.Match(LuaParserT__31)
 		}
 		{
 			p.SetState(395)
@@ -4801,7 +4802,7 @@ func (p *LuaParser) Field() (localctx IFieldContext) {
 		}
 		{
 			p.SetState(396)
-			p.Match(LuaParserT__31)
+			p.Match(LuaParserT__32)
 		}
 		{
 			p.SetState(397)
@@ -5033,7 +5034,7 @@ func (p *LuaParser) OperatorOr() (localctx IOperatorOrContext) {
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(408)
-		p.Match(LuaParserT__34)
+		p.Match(LuaParserT__35)
 	}
 
 	return localctx
@@ -5129,7 +5130,7 @@ func (p *LuaParser) OperatorAnd() (localctx IOperatorAndContext) {
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(410)
-		p.Match(LuaParserT__35)
+		p.Match(LuaParserT__36)
 	}
 
 	return localctx
@@ -5228,7 +5229,7 @@ func (p *LuaParser) OperatorComparison() (localctx IOperatorComparisonContext) {
 		p.SetState(412)
 		_la = p.GetTokenStream().LA(1)
 
-		if !(((_la-37)&-(0x1f+1)) == 0 && ((1<<uint((_la-37)))&((1<<(LuaParserT__36-37))|(1<<(LuaParserT__37-37))|(1<<(LuaParserT__38-37))|(1<<(LuaParserT__39-37))|(1<<(LuaParserT__40-37))|(1<<(LuaParserT__41-37)))) != 0) {
+		if !(((_la-38)&-(0x1f+1)) == 0 && ((1<<uint((_la-38)))&((1<<(LuaParserT__37-38))|(1<<(LuaParserT__38-38))|(1<<(LuaParserT__39-38))|(1<<(LuaParserT__40-38))|(1<<(LuaParserT__41-38))|(1<<(LuaParserT__42-38)))) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -5329,7 +5330,7 @@ func (p *LuaParser) OperatorStrcat() (localctx IOperatorStrcatContext) {
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(414)
-		p.Match(LuaParserT__42)
+		p.Match(LuaParserT__43)
 	}
 
 	return localctx
@@ -5428,7 +5429,7 @@ func (p *LuaParser) OperatorAddSub() (localctx IOperatorAddSubContext) {
 		p.SetState(416)
 		_la = p.GetTokenStream().LA(1)
 
-		if !(_la == LuaParserT__43 || _la == LuaParserT__44) {
+		if !(_la == LuaParserT__44 || _la == LuaParserT__45) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -5532,7 +5533,7 @@ func (p *LuaParser) OperatorMulDivMod() (localctx IOperatorMulDivModContext) {
 		p.SetState(418)
 		_la = p.GetTokenStream().LA(1)
 
-		if !(((_la-46)&-(0x1f+1)) == 0 && ((1<<uint((_la-46)))&((1<<(LuaParserT__45-46))|(1<<(LuaParserT__46-46))|(1<<(LuaParserT__47-46))|(1<<(LuaParserT__48-46)))) != 0) {
+		if !(((_la-47)&-(0x1f+1)) == 0 && ((1<<uint((_la-47)))&((1<<(LuaParserT__46-47))|(1<<(LuaParserT__47-47))|(1<<(LuaParserT__48-47))|(1<<(LuaParserT__49-47)))) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -5636,7 +5637,7 @@ func (p *LuaParser) OperatorBitwise() (localctx IOperatorBitwiseContext) {
 		p.SetState(420)
 		_la = p.GetTokenStream().LA(1)
 
-		if !(((_la-50)&-(0x1f+1)) == 0 && ((1<<uint((_la-50)))&((1<<(LuaParserT__49-50))|(1<<(LuaParserT__50-50))|(1<<(LuaParserT__51-50))|(1<<(LuaParserT__52-50))|(1<<(LuaParserT__53-50)))) != 0) {
+		if !(((_la-51)&-(0x1f+1)) == 0 && ((1<<uint((_la-51)))&((1<<(LuaParserT__50-51))|(1<<(LuaParserT__51-51))|(1<<(LuaParserT__52-51))|(1<<(LuaParserT__53-51))|(1<<(LuaParserT__54-51)))) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -5740,7 +5741,7 @@ func (p *LuaParser) OperatorUnary() (localctx IOperatorUnaryContext) {
 		p.SetState(422)
 		_la = p.GetTokenStream().LA(1)
 
-		if !(((_la-45)&-(0x1f+1)) == 0 && ((1<<uint((_la-45)))&((1<<(LuaParserT__44-45))|(1<<(LuaParserT__51-45))|(1<<(LuaParserT__54-45))|(1<<(LuaParserT__55-45)))) != 0) {
+		if !(((_la-46)&-(0x1f+1)) == 0 && ((1<<uint((_la-46)))&((1<<(LuaParserT__45-46))|(1<<(LuaParserT__52-46))|(1<<(LuaParserT__55-46))|(1<<(LuaParserT__56-46)))) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -5841,7 +5842,7 @@ func (p *LuaParser) OperatorPower() (localctx IOperatorPowerContext) {
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(424)
-		p.Match(LuaParserT__56)
+		p.Match(LuaParserT__57)
 	}
 
 	return localctx
@@ -5957,7 +5958,7 @@ func (p *LuaParser) NumberLiteral() (localctx INumberLiteralContext) {
 		p.SetState(426)
 		_la = p.GetTokenStream().LA(1)
 
-		if !(((_la-62)&-(0x1f+1)) == 0 && ((1<<uint((_la-62)))&((1<<(LuaParserINT-62))|(1<<(LuaParserHEX-62))|(1<<(LuaParserFLOAT-62))|(1<<(LuaParserHEX_FLOAT-62)))) != 0) {
+		if !(((_la-63)&-(0x1f+1)) == 0 && ((1<<uint((_la-63)))&((1<<(LuaParserINT-63))|(1<<(LuaParserHEX-63))|(1<<(LuaParserFLOAT-63))|(1<<(LuaParserHEX_FLOAT-63)))) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -6074,7 +6075,7 @@ func (p *LuaParser) StringLiteral() (localctx IStringLiteralContext) {
 		p.SetState(428)
 		_la = p.GetTokenStream().LA(1)
 
-		if !(((_la-59)&-(0x1f+1)) == 0 && ((1<<uint((_la-59)))&((1<<(LuaParserNORMALSTRING-59))|(1<<(LuaParserCHARSTRING-59))|(1<<(LuaParserLONGSTRING-59)))) != 0) {
+		if !(((_la-60)&-(0x1f+1)) == 0 && ((1<<uint((_la-60)))&((1<<(LuaParserNORMALSTRING-60))|(1<<(LuaParserCHARSTRING-60))|(1<<(LuaParserLONGSTRING-60)))) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)

@@ -115,6 +115,7 @@ exp
 typeLiteral
     : 'int'
     | 'float'
+    | 'string'
     ;
 
 prefixexp
