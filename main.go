@@ -23,7 +23,7 @@ func main() {
 		}
 	*/
 
-	inputStream := antlr.NewInputStream("int x = 5")
+	inputStream := antlr.NewInputStream("int x = 5 + 2")
 	lexer := parser.NewLuaLexer(inputStream)
 	tokenStream := antlr.NewCommonTokenStream(lexer, 0)
 	p := parser.NewLuaParser(tokenStream)
