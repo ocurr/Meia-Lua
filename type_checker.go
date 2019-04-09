@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"reflect"
 )
 
 func TypeCheck(root Node) (TypeT, error) {
@@ -32,6 +33,45 @@ func TypeCheck(root Node) (TypeT, error) {
 		return r.TypeId, nil
 	case IdLst:
 	case ExpLst:
+	case BinaryOpC:
+
+		switch r.Op {
+		case "+":
+			fallthrough
+		case "*":
+			fallthrough
+		case "%":
+			fallthrough
+		case "-":
+			lhs, err := TypeCheck(r.Lhs)
+			if !isNumber(lhs) || err != nil {
+			}
+			rhs, err := TypeCheck(r.Rhs)
+			if !isNumber(rhs) || err != nil {
+			}
+			floatType := reflect.TypeOf(FloatT{})
+			if reflect.TypeOf(lhs) == floatType || reflect.TypeOf(rhs) == floatType {
+				return FloatT{}, nil
+			} else {
+				return IntT{}, nil
+			}
+		case "/":
+			lhs, err := TypeCheck(r.Lhs)
+			if !isNumber(lhs) || err != nil {
+			}
+			rhs, err := TypeCheck(r.Rhs)
+			if !isNumber(rhs) || err != nil {
+			}
+			return FloatT{}, nil
+		case "//":
+			lhs, err := TypeCheck(r.Lhs)
+			if !isNumber(lhs) || err != nil {
+			}
+			rhs, err := TypeCheck(r.Rhs)
+			if !isNumber(rhs) || err != nil {
+			}
+			return IntT{}, nil
+		}
 	case IntC:
 		return IntT{}, nil
 	case FloatC:
@@ -40,5 +80,16 @@ func TypeCheck(root Node) (TypeT, error) {
 		return StringT{}, nil
 	}
 
-	panic("type not implemented")
+	panic("AST Node not implemented")
+}
+
+func isNumber(t TypeT) bool {
+	switch t.(type) {
+	case IntT:
+		return true
+	case FloatT:
+		return true
+	default:
+		return false
+	}
 }
