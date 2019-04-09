@@ -71,15 +71,29 @@ func (v *LuaASTBuilder) VisitVarlist(ctx *parser.VarlistContext) interface{} {
 
 func (v *LuaASTBuilder) VisitTypedvarlist(ctx *parser.TypedvarlistContext) interface{} {
 
-	allVars := ctx.AllTypedvar()
+	if allVars := ctx.AllTypedvar(); len(allVars) != 0 {
+		allIdC := make([]IdC, len(allVars))
 
-	allIdC := make([]IdC, len(allVars))
+		for i := 0; i < len(allVars); i++ {
+			allIdC[i] = allVars[i].Accept(v).(IdC)
+		}
 
-	for i := 0; i < len(allVars); i++ {
-		allIdC[i] = allVars[i].Accept(v).(IdC)
+		return IdLst{List: allIdC}
+
+	} else if allVars := ctx.AllVarId(); len(allVars) != 0 {
+		allIdC := make([]IdC, len(allVars))
+
+		for i := 0; i < len(allVars); i++ {
+			allIdC[i] = IdC{
+				Id:     allVars[i].Accept(v).(string),
+				TypeId: ctx.TypeLiteral().Accept(v).(TypeT),
+			}
+		}
+
+		return IdLst{List: allIdC}
 	}
 
-	return IdLst{List: allIdC}
+	return IdLst{}
 }
 
 func (v *LuaASTBuilder) VisitNamelist(ctx *parser.NamelistContext) interface{} {
@@ -102,6 +116,20 @@ func (v *LuaASTBuilder) VisitExplist(ctx *parser.ExplistContext) interface{} {
 func (v *LuaASTBuilder) VisitExp(ctx *parser.ExpContext) interface{} {
 	if nl := ctx.NumberLiteral(); nl != nil {
 		return nl.Accept(v)
+	} else if sl := ctx.StringLiteral(); sl != nil {
+		return sl.Accept(v)
+	} else if bop := ctx.OperatorAddSub(); bop != nil {
+		return BinaryOpC{
+			Lhs: ctx.Exp(0).Accept(v).(Exp),
+			Rhs: ctx.Exp(1).Accept(v).(Exp),
+			Op:  bop.Accept(v).(string),
+		}
+	} else if bop := ctx.OperatorMulDivMod(); bop != nil {
+		return BinaryOpC{
+			Lhs: ctx.Exp(0).Accept(v).(Exp),
+			Rhs: ctx.Exp(1).Accept(v).(Exp),
+			Op:  bop.Accept(v).(string),
+		}
 	}
 	fmt.Println("ERROR: Expression not supported")
 	return StringC{S: "EXPRESSION NOT SUPPORTED"}
@@ -113,6 +141,8 @@ func (v *LuaASTBuilder) VisitTypeLiteral(ctx *parser.TypeLiteralContext) interfa
 		return FloatT{}
 	case "int":
 		return IntT{}
+	case "string":
+		return StringT{}
 	default:
 		fmt.Printf("ERROR type %s is not supported\n", ctx.GetText())
 		return ErrorT{}
@@ -137,7 +167,10 @@ func (v *LuaASTBuilder) VisitVarId(ctx *parser.VarIdContext) interface{} {
 
 func (v *LuaASTBuilder) VisitTypedvar(ctx *parser.TypedvarContext) interface{} {
 
-	return IdC{Id: ctx.VarId().Accept(v).(string), TypeId: ctx.TypeLiteral().Accept(v).(TypeT)}
+	return IdC{
+		Id:     ctx.VarId().Accept(v).(string),
+		TypeId: ctx.TypeLiteral().Accept(v).(TypeT),
+	}
 }
 
 func (v *LuaASTBuilder) VisitVarSuffix(ctx *parser.VarSuffixContext) interface{} {
@@ -197,11 +230,11 @@ func (v *LuaASTBuilder) VisitOperatorStrcat(ctx *parser.OperatorStrcatContext) i
 }
 
 func (v *LuaASTBuilder) VisitOperatorAddSub(ctx *parser.OperatorAddSubContext) interface{} {
-	panic("VisitOperatorAddSub not implemented")
+	return ctx.GetText()
 }
 
 func (v *LuaASTBuilder) VisitOperatorMulDivMod(ctx *parser.OperatorMulDivModContext) interface{} {
-	panic("VisitOperatorMulDivMod not implemented")
+	return ctx.GetText()
 }
 
 func (v *LuaASTBuilder) VisitOperatorBitwise(ctx *parser.OperatorBitwiseContext) interface{} {
@@ -237,5 +270,26 @@ func (v *LuaASTBuilder) VisitNumberLiteral(ctx *parser.NumberLiteralContext) int
 }
 
 func (v *LuaASTBuilder) VisitStringLiteral(ctx *parser.StringLiteralContext) interface{} {
-	panic("VisitStringLiteral not implemented")
+	if normStr := ctx.NORMALSTRING(); normStr != nil {
+		str, err := strconv.Unquote(normStr.GetText())
+		if err != nil {
+			fmt.Println("ERROR: unable to parse string")
+		}
+		return StringC{S: str}
+	} else if charStr := ctx.CHARSTRING(); charStr != nil {
+		str, err := strconv.Unquote(charStr.GetText())
+		if err != nil {
+			fmt.Println("ERROR: unable to parse string")
+		}
+		return StringC{S: str}
+	} else if longStr := ctx.LONGSTRING(); longStr != nil {
+		str, err := strconv.Unquote(longStr.GetText())
+		if err != nil {
+			fmt.Println("ERROR: unable to parse string")
+		}
+		return StringC{S: str}
+	}
+
+	fmt.Println("ERROR: unable to parse string literal")
+	return StringC{S: "ERROR"}
 }

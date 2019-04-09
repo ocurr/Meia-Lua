@@ -85,6 +85,19 @@ func (edl ExpLst) GetCtx() *antlr.BaseParserRuleContext {
 	return antlr.NewBaseParserRuleContext(nil, -1)
 }
 
+type BinaryOpC struct {
+	Ctx *antlr.BaseParserRuleContext
+	Lhs Exp
+	Rhs Exp
+	Op  string
+}
+
+func (bop BinaryOpC) GetCtx() *antlr.BaseParserRuleContext {
+	return bop.Ctx
+}
+
+func (bop BinaryOpC) expNode() {}
+
 type IntC struct {
 	Ctx *antlr.BaseParserRuleContext
 	N   int64

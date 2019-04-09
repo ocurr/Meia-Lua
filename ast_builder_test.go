@@ -8,7 +8,7 @@ import (
 )
 
 func TestASTBuilder(t *testing.T) {
-	t.Run("1", func(t *testing.T) {
+	t.Run("SingleIntAssign", func(t *testing.T) {
 		inputStream := antlr.NewInputStream("int x = 5")
 		lexer := parser.NewLuaLexer(inputStream)
 		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
@@ -17,15 +17,15 @@ func TestASTBuilder(t *testing.T) {
 		p.BuildParseTrees = true
 		builder := NewLuaASTBuilder()
 
-		A := tree.Accept(builder)
-		B := ChunkC{Block: BlockC{
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
 			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: IntC{N: 5}}}}}}}
-		res := astMatch(A.(ChunkC), B)
+		res := astMatch(got.(ChunkC), want)
 		if !res {
-			t.Errorf("%#v and %#v should be equal", A, B)
+			t.Errorf("expected: %#v ; got: %#v", want, got)
 		}
 	})
-	t.Run("2", func(t *testing.T) {
+	t.Run("SingleFloatAssign", func(t *testing.T) {
 		inputStream := antlr.NewInputStream("float x = 5.5")
 		lexer := parser.NewLuaLexer(inputStream)
 		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
@@ -34,12 +34,218 @@ func TestASTBuilder(t *testing.T) {
 		p.BuildParseTrees = true
 		builder := NewLuaASTBuilder()
 
-		A := tree.Accept(builder)
-		B := ChunkC{Block: BlockC{
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
 			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: FloatT{}}, Exp: FloatC{N: 5.5}}}}}}}
-		res := astMatch(A.(ChunkC), B)
+		res := astMatch(got.(ChunkC), want)
 		if !res {
-			t.Errorf("%#v and %#v should be equal", A, B)
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
+	t.Run("SingleStringAssign", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("string animal = \"horse\"")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "animal", TypeId: StringT{}}, Exp: StringC{S: "horse"}}}}}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
+	t.Run("MultipleIntAssign", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("int x, y, z = 5, 6, 7")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{DefLst{List: []DefC{
+				DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: IntC{N: 5}},
+				DefC{Id: IdC{Id: "y", TypeId: IntT{}}, Exp: IntC{N: 6}},
+				DefC{Id: IdC{Id: "z", TypeId: IntT{}}, Exp: IntC{N: 7}},
+			}}}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected:i %#v ; got: %#v", want, got)
+		}
+	})
+	t.Run("MultipleFloatAssign", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("float x, y, z = 5.5, 10.789, 100.23")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{DefLst{List: []DefC{
+				DefC{Id: IdC{Id: "x", TypeId: FloatT{}}, Exp: FloatC{N: 5.5}},
+				DefC{Id: IdC{Id: "y", TypeId: FloatT{}}, Exp: FloatC{N: 10.789}},
+				DefC{Id: IdC{Id: "z", TypeId: FloatT{}}, Exp: FloatC{N: 100.23}},
+			}}}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
+	t.Run("MultipleStringAssign", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("string animal, dog, word = \"horse\", \"fido\", \"bar\"")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{DefLst{List: []DefC{
+				DefC{Id: IdC{Id: "animal", TypeId: StringT{}}, Exp: StringC{S: "horse"}},
+				DefC{Id: IdC{Id: "dog", TypeId: StringT{}}, Exp: StringC{S: "fido"}},
+				DefC{Id: IdC{Id: "word", TypeId: StringT{}}, Exp: StringC{S: "bar"}},
+			}}}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
+	t.Run("AdditionAssign", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("int x = 5 + 2")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+				Lhs: IntC{N: 5},
+				Rhs: IntC{N: 2},
+				Op:  "+",
+			}}}}}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
+	t.Run("SubtractionAssign", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("int x = 5 - 2")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+				Lhs: IntC{N: 5},
+				Rhs: IntC{N: 2},
+				Op:  "-",
+			}}}}}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
+	t.Run("MultiplyAssign", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("int x = 5 * 2")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+				Lhs: IntC{N: 5},
+				Rhs: IntC{N: 2},
+				Op:  "*",
+			}}}}}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
+	t.Run("ModAssign", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("int x = 5 % 2")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+				Lhs: IntC{N: 5},
+				Rhs: IntC{N: 2},
+				Op:  "%",
+			}}}}}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
+	t.Run("DivideAssign", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("int x = 5 / 2")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+				Lhs: IntC{N: 5},
+				Rhs: IntC{N: 2},
+				Op:  "/",
+			}}}}}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
+	t.Run("IntDivideAssign", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("int x = 5 // 2")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+				Lhs: IntC{N: 5},
+				Rhs: IntC{N: 2},
+				Op:  "//",
+			}}}}}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
 		}
 	})
 }
@@ -154,6 +360,11 @@ func astMatch(node1, node2 Node) bool {
 		}
 
 		return true
+	case BinaryOpC:
+		n2 := node2.(BinaryOpC)
+		return astMatch(n1.Lhs, n2.Lhs) &&
+			astMatch(n1.Rhs, n2.Rhs) &&
+			n1.Op == n2.Op
 	case IntC:
 		n2 := node2.(IntC)
 		return n1.N == n2.N
@@ -164,6 +375,6 @@ func astMatch(node1, node2 Node) bool {
 		n2 := node2.(StringC)
 		return n1.S == n2.S
 	default:
-		panic("Type not implemented")
+		panic("AST Node in ASTMatch not implemented")
 	}
 }
