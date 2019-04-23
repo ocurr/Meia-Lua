@@ -11,8 +11,8 @@ type TypeT interface {
 type DefaultT struct {
 }
 
-func (dt DefaultT) typeDesc() {}
-func (dt DefaultT) Name()     { return "default" }
+func (dt DefaultT) typeDesc()    {}
+func (dt DefaultT) Name() string { return "default" }
 
 type FloatT struct {
 }
