@@ -32,6 +32,10 @@ func (v *BaseLuaVisitor) VisitFuncname(ctx *FuncnameContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseLuaVisitor) VisitAssign(ctx *AssignContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseLuaVisitor) VisitVarlist(ctx *VarlistContext) interface{} {
 	return v.VisitChildren(ctx)
 }

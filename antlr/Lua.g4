@@ -48,7 +48,7 @@ block
 
 stat
     : ';'
-    | typedvarlist '=' explist
+    | assign
     | functioncall
     | label
     | 'break'
@@ -74,6 +74,11 @@ label
 
 funcname
     : NAME ('.' NAME)* (':' NAME)?
+    ;
+ 
+assign
+    : varlist '=' explist
+    | typedvarlist '=' explist
     ;
 
 varlist

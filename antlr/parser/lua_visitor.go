@@ -26,6 +26,9 @@ type LuaVisitor interface {
 	// Visit a parse tree produced by LuaParser#funcname.
 	VisitFuncname(ctx *FuncnameContext) interface{}
 
+	// Visit a parse tree produced by LuaParser#assign.
+	VisitAssign(ctx *AssignContext) interface{}
+
 	// Visit a parse tree produced by LuaParser#varlist.
 	VisitVarlist(ctx *VarlistContext) interface{}
 

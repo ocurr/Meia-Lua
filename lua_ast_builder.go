@@ -29,25 +29,8 @@ func (v *LuaASTBuilder) VisitBlock(ctx *parser.BlockContext) interface{} {
 
 func (v *LuaASTBuilder) VisitStat(ctx *parser.StatContext) interface{} {
 
-	if t := ctx.Typedvarlist(); t != nil {
-		e := ctx.Explist()
-
-		allTVar := t.Accept(v).(IdLst)
-		allExp := e.Accept(v).(ExpLst)
-
-		if len(allTVar.List) != len(allExp.List) {
-			fmt.Println("ERROR: AST: the var list is not the same length as the expression list")
-			return DefLst{}
-		}
-
-		lst := make([]DefC, len(allTVar.List))
-
-		for i := 0; i < len(allTVar.List); i++ {
-			lst[i] = DefC{Id: allTVar.List[i], Exp: allExp.List[i]}
-		}
-
-		return DefLst{List: lst}
-
+	if a := ctx.Assign(); a != nil {
+		return a.Accept(v)
 	}
 
 	return DefC{}
@@ -65,8 +48,50 @@ func (v *LuaASTBuilder) VisitFuncname(ctx *parser.FuncnameContext) interface{} {
 	panic("VisitFuncname not implemented")
 }
 
+func (v *LuaASTBuilder) VisitAssign(ctx *parser.AssignContext) interface{} {
+
+	e := ctx.Explist()
+	allExp := e.Accept(v).(ExpLst)
+
+	var allTVar IdLst
+
+	t := ctx.Typedvarlist()
+	if t == nil {
+		t := ctx.Varlist()
+		allTVar = t.Accept(v).(IdLst)
+	} else {
+		allTVar = t.Accept(v).(IdLst)
+	}
+
+	if len(allTVar.List) != len(allExp.List) {
+		fmt.Println("ERROR: AST: the var list is not the same length as the expression list")
+		return DefLst{}
+	}
+
+	lst := make([]DefC, len(allTVar.List))
+
+	for i := 0; i < len(allTVar.List); i++ {
+		lst[i] = DefC{Id: allTVar.List[i], Exp: allExp.List[i]}
+	}
+
+	return DefLst{List: lst}
+}
+
 func (v *LuaASTBuilder) VisitVarlist(ctx *parser.VarlistContext) interface{} {
-	panic("VisitVarlist not implemented")
+	if allVars := ctx.AllVarId(); len(allVars) != 0 {
+		allIdC := make([]IdC, len(allVars))
+
+		for i := 0; i < len(allVars); i++ {
+			allIdC[i] = IdC{
+				Id:     allVars[i].Accept(v).(string),
+				TypeId: nil,
+			}
+		}
+
+		return IdLst{List: allIdC}
+	}
+
+	return IdLst{}
 }
 
 func (v *LuaASTBuilder) VisitTypedvarlist(ctx *parser.TypedvarlistContext) interface{} {

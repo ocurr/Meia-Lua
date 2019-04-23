@@ -248,6 +248,34 @@ func TestASTBuilder(t *testing.T) {
 			t.Errorf("expected: %#v ; got: %#v", want, got)
 		}
 	})
+	t.Run("Reassign", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("int x = 5 // 2\nx = 1 + 1")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{
+				DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+					Lhs: IntC{N: 5},
+					Rhs: IntC{N: 2},
+					Op:  "//",
+				}}}},
+				DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: nil}, Exp: BinaryOpC{
+					Lhs: IntC{N: 1},
+					Rhs: IntC{N: 1},
+					Op:  "+",
+				}}}},
+			}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
 }
 
 func TestASTMatch(t *testing.T) {
