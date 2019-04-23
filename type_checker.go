@@ -6,7 +6,9 @@ import (
 	"reflect"
 )
 
-func TypeCheck(root Node) (TypeT, []error) {
+type TypeEnv map[string]TypeT
+
+func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 
 	ec = new(errorCollector)
 
@@ -26,7 +28,10 @@ func TypeCheck(root Node) (TypeT, []error) {
 		expT, err := TypeCheck(r.Exp)
 		ec.add(err...)
 
-		if idT != expT {
+		if idT == nil {
+			ec.add(fmt.Errorf("No type defined for %s", r.Id.Id))
+			return ErrorT, ec.errors
+		} else if idT != expT {
 			ec.add(fmt.Errorf("Type of identifier %q does not match type of expression %s", r.Id.Id, expT))
 			return ErrorT, ec.errors
 		}
@@ -39,6 +44,10 @@ func TypeCheck(root Node) (TypeT, []error) {
 		}
 		return DefaultT{}, ec.errors
 	case IdC:
+		if t, ok := tenv[r.Id]; ok {
+			return t, ec.errors
+		}
+		tenv[r.Id] = r.TypeId
 		return r.TypeId, ec.errors
 	case IdLst:
 		for _, i := range r.List {
