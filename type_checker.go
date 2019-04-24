@@ -7,6 +7,10 @@ import (
 
 type TypeEnv map[string]TypeT
 
+func NewTypeEnv() TypeEnv {
+	return map[string]TypeT{}
+}
+
 func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 
 	ec := new(errorCollector)
