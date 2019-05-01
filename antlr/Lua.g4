@@ -56,7 +56,7 @@ stat
     | 'do' block 'end'
     | 'while' exp 'do' block 'end'
     | 'repeat' block 'until' exp
-    | 'if' exp 'then' block ('elseif' exp 'then' block)* ('else' block)? 'end'
+    | ifstat
     | 'for' NAME '=' exp ',' exp (',' exp)? 'do' block 'end'
     | 'for' namelist 'in' explist 'do' block 'end'
     | 'function' funcname funcbody
@@ -74,6 +74,18 @@ label
 
 funcname
     : NAME ('.' NAME)* (':' NAME)?
+    ;
+
+ifstat
+    : 'if' exp 'then' block (elseifstat)* (elsestat)? 'end'
+    ;
+
+elseifstat
+    : 'elseif' exp 'then' block
+    ;
+
+elsestat
+    : 'else' block
     ;
  
 assign
@@ -99,7 +111,8 @@ explist
     ;
 
 exp
-    : 'nil' | 'false' | 'true'
+    : 'nil'
+    | boolLiteral
     | numberLiteral
     | stringLiteral
     | '...'
@@ -115,6 +128,11 @@ exp
     | exp operatorAnd exp
     | exp operatorOr exp
     | exp operatorBitwise exp
+    ;
+
+boolLiteral
+    : 'true'
+    | 'false'
     ;
 
 typeLiteral

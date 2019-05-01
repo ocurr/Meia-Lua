@@ -36,6 +36,19 @@ func (b BlockC) GetCtx() *antlr.BaseParserRuleContext {
 	return b.Ctx
 }
 
+type CondC struct {
+	Ctx     *antlr.BaseParserRuleContext
+	Cnd     Exp
+	Block   BlockC
+	Elseifs []CondC
+	Else    BlockC
+}
+
+func (c CondC) statNode() {}
+func (c CondC) GetCtx() *antlr.BaseParserRuleContext {
+	return c.Ctx
+}
+
 type DefC struct {
 	Ctx *antlr.BaseParserRuleContext
 	Id  IdC
@@ -130,3 +143,13 @@ func (s StringC) GetCtx() *antlr.BaseParserRuleContext {
 }
 
 func (s StringC) expNode() {}
+
+type BoolC struct {
+	Ctx  *antlr.BaseParserRuleContext
+	True bool
+}
+
+func (b BoolC) expNode() {}
+func (b BoolC) GetCtx() *antlr.BaseParserRuleContext {
+	return b.Ctx
+}

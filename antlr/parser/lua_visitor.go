@@ -26,6 +26,15 @@ type LuaVisitor interface {
 	// Visit a parse tree produced by LuaParser#funcname.
 	VisitFuncname(ctx *FuncnameContext) interface{}
 
+	// Visit a parse tree produced by LuaParser#ifstat.
+	VisitIfstat(ctx *IfstatContext) interface{}
+
+	// Visit a parse tree produced by LuaParser#elseifstat.
+	VisitElseifstat(ctx *ElseifstatContext) interface{}
+
+	// Visit a parse tree produced by LuaParser#elsestat.
+	VisitElsestat(ctx *ElsestatContext) interface{}
+
 	// Visit a parse tree produced by LuaParser#assign.
 	VisitAssign(ctx *AssignContext) interface{}
 
@@ -43,6 +52,9 @@ type LuaVisitor interface {
 
 	// Visit a parse tree produced by LuaParser#exp.
 	VisitExp(ctx *ExpContext) interface{}
+
+	// Visit a parse tree produced by LuaParser#boolLiteral.
+	VisitBoolLiteral(ctx *BoolLiteralContext) interface{}
 
 	// Visit a parse tree produced by LuaParser#typeLiteral.
 	VisitTypeLiteral(ctx *TypeLiteralContext) interface{}

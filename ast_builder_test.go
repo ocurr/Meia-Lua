@@ -276,6 +276,30 @@ func TestASTBuilder(t *testing.T) {
 			t.Errorf("expected: %#v ; got: %#v", want, got)
 		}
 	})
+	t.Run("IfOnly", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("if true then\nx = 5\nend")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{
+				CondC{
+					Cnd: BoolC{True: true},
+					Block: BlockC{StatLst: []Stat{
+						DefLst{List: []DefC{DefC{Id: IdC{Id: "x"}, Exp: IntC{N: 5}}}}},
+					},
+				}}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
 }
 
 func TestASTMatch(t *testing.T) {

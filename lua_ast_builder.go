@@ -33,6 +33,10 @@ func (v *LuaASTBuilder) VisitStat(ctx *parser.StatContext) interface{} {
 		return a.Accept(v)
 	}
 
+	if i := ctx.Ifstat(); i != nil {
+		return i.Accept(v)
+	}
+
 	return DefC{}
 }
 
@@ -46,6 +50,36 @@ func (v *LuaASTBuilder) VisitLabel(ctx *parser.LabelContext) interface{} {
 
 func (v *LuaASTBuilder) VisitFuncname(ctx *parser.FuncnameContext) interface{} {
 	panic("VisitFuncname not implemented")
+}
+
+func (v *LuaASTBuilder) VisitIfstat(ctx *parser.IfstatContext) interface{} {
+	cond := CondC{}
+	cond.Cnd = ctx.Exp().Accept(v).(Exp)
+	cond.Block = ctx.Block().Accept(v).(BlockC)
+
+	if eifs := ctx.AllElseifstat(); len(eifs) != 0 {
+		cond.Elseifs = make([]CondC, len(eifs))
+		for i := 0; i < len(eifs); i++ {
+			cond.Elseifs[i] = eifs[i].Accept(v).(CondC)
+		}
+	}
+
+	if els := ctx.Elsestat(); els != nil {
+		cond.Else = els.Accept(v).(BlockC)
+	}
+
+	return cond
+}
+
+func (v *LuaASTBuilder) VisitElseifstat(ctx *parser.IfstatContext) interface{} {
+	cond := CondC{}
+	cond.Cnd = ctx.Exp().Accept(v).(Exp)
+	cond.Block = ctx.Block().Accept(v).(BlockC)
+	return cond
+}
+
+func (v *LuaASTBuilder) VisitElsestat(ctx *parser.IfstatContext) interface{} {
+	return ctx.Block().Accept(v)
 }
 
 func (v *LuaASTBuilder) VisitAssign(ctx *parser.AssignContext) interface{} {
@@ -272,6 +306,18 @@ func (v *LuaASTBuilder) VisitOperatorUnary(ctx *parser.OperatorUnaryContext) int
 
 func (v *LuaASTBuilder) VisitOperatorPower(ctx *parser.OperatorPowerContext) interface{} {
 	panic("VisitOperatorPower not implemented")
+}
+
+func (v *LuaASTBuilder) VisitBoolLiteral(ctx *parser.BoolLiteralContext) interface{} {
+	b := BoolC{}
+	switch ctx.GetText() {
+	case "true":
+		b.True = true
+	case "false":
+		b.True = false
+	}
+
+	return b
 }
 
 func (v *LuaASTBuilder) VisitNumberLiteral(ctx *parser.NumberLiteralContext) interface{} {

@@ -32,6 +32,18 @@ func (v *BaseLuaVisitor) VisitFuncname(ctx *FuncnameContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseLuaVisitor) VisitIfstat(ctx *IfstatContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseLuaVisitor) VisitElseifstat(ctx *ElseifstatContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseLuaVisitor) VisitElsestat(ctx *ElsestatContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseLuaVisitor) VisitAssign(ctx *AssignContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -53,6 +65,10 @@ func (v *BaseLuaVisitor) VisitExplist(ctx *ExplistContext) interface{} {
 }
 
 func (v *BaseLuaVisitor) VisitExp(ctx *ExpContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseLuaVisitor) VisitBoolLiteral(ctx *BoolLiteralContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
