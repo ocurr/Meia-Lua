@@ -417,6 +417,18 @@ func astMatch(node1, node2 Node) bool {
 		return astMatch(n1.Lhs, n2.Lhs) &&
 			astMatch(n1.Rhs, n2.Rhs) &&
 			n1.Op == n2.Op
+	case CondC:
+		n2 := node2.(CondC)
+		match := true
+		if len(n1.Elseifs) != len(n2.Elseifs) {
+			return false
+		} else {
+			for i := 0; i < len(n1.Elseifs); i++ {
+				match = astMatch(n1.Elseifs[i], n2.Elseifs[i])
+			}
+		}
+		return astMatch(n1.Cnd, n2.Cnd) &&
+			astMatch(n1.Block, n2.Block) && match && astMatch(n1.Else, n2.Else)
 	case IntC:
 		n2 := node2.(IntC)
 		return n1.N == n2.N
@@ -426,6 +438,9 @@ func astMatch(node1, node2 Node) bool {
 	case StringC:
 		n2 := node2.(StringC)
 		return n1.S == n2.S
+	case BoolC:
+		n2 := node2.(BoolC)
+		return n1.True == n2.True
 	default:
 		panic("AST Node in ASTMatch not implemented")
 	}

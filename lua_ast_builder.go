@@ -7,7 +7,7 @@ import (
 )
 
 type LuaASTBuilder struct {
-	*parser.BaseLuaVisitor
+	parser.BaseLuaVisitor
 }
 
 func NewLuaASTBuilder() *LuaASTBuilder {
@@ -71,14 +71,14 @@ func (v *LuaASTBuilder) VisitIfstat(ctx *parser.IfstatContext) interface{} {
 	return cond
 }
 
-func (v *LuaASTBuilder) VisitElseifstat(ctx *parser.IfstatContext) interface{} {
+func (v *LuaASTBuilder) VisitElseifstat(ctx *parser.ElseifstatContext) interface{} {
 	cond := CondC{}
 	cond.Cnd = ctx.Exp().Accept(v).(Exp)
 	cond.Block = ctx.Block().Accept(v).(BlockC)
 	return cond
 }
 
-func (v *LuaASTBuilder) VisitElsestat(ctx *parser.IfstatContext) interface{} {
+func (v *LuaASTBuilder) VisitElsestat(ctx *parser.ElsestatContext) interface{} {
 	return ctx.Block().Accept(v)
 }
 
@@ -177,6 +177,8 @@ func (v *LuaASTBuilder) VisitExp(ctx *parser.ExpContext) interface{} {
 		return nl.Accept(v)
 	} else if sl := ctx.StringLiteral(); sl != nil {
 		return sl.Accept(v)
+	} else if bl := ctx.BoolLiteral(); bl != nil {
+		return bl.Accept(v)
 	} else if bop := ctx.OperatorAddSub(); bop != nil {
 		return BinaryOpC{
 			Lhs: ctx.Exp(0).Accept(v).(Exp),
