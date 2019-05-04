@@ -26,6 +26,12 @@ type IntT struct {
 func (i IntT) typeDesc()    {}
 func (f IntT) Name() string { return "int" }
 
+type BoolT struct {
+}
+
+func (b BoolT) typeDesc()    {}
+func (b BoolT) Name() string { return "bool" }
+
 type StringT struct {
 }
 

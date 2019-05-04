@@ -37,6 +37,10 @@ func (v *LuaASTBuilder) VisitStat(ctx *parser.StatContext) interface{} {
 		return i.Accept(v)
 	}
 
+	if w := ctx.Whilestat(); w != nil {
+		return w.Accept(v)
+	}
+
 	return DefC{}
 }
 
@@ -109,6 +113,13 @@ func (v *LuaASTBuilder) VisitAssign(ctx *parser.AssignContext) interface{} {
 	}
 
 	return DefLst{List: lst}
+}
+
+func (v *LuaASTBuilder) VisitWhilestat(ctx *parser.WhilestatContext) interface{} {
+	return WhileC{
+		Cnd:   ctx.Exp().Accept(v).(Exp),
+		Block: ctx.Block().Accept(v).(BlockC),
+	}
 }
 
 func (v *LuaASTBuilder) VisitVarlist(ctx *parser.VarlistContext) interface{} {

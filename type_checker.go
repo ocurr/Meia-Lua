@@ -11,6 +11,10 @@ func NewTypeEnv() TypeEnv {
 	return map[string]TypeT{}
 }
 
+func LuaTypeCheck(root Node) (TypeT, []error) {
+	return TypeCheck(root, NewTypeEnv())
+}
+
 func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 
 	ec := new(errorCollector)
@@ -63,6 +67,38 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 			_, err := TypeCheck(e, tenv)
 			ec.add(err...)
 		}
+		return DefaultT{}, ec.errors
+	case CondC:
+		cndT, err := TypeCheck(r.Cnd, tenv)
+		ec.add(err...)
+		if !isBool(cndT) {
+			ec.add(fmt.Errorf("a conditional statement must evaulate to a boolean value"))
+			return ErrorT{}, ec.errors
+		}
+
+		_, err = TypeCheck(r.Block, tenv)
+		ec.add(err...)
+
+		for _, els := range r.Elseifs {
+			_, err := TypeCheck(els, tenv)
+			ec.add(err...)
+		}
+
+		_, err = TypeCheck(r.Else, tenv)
+		ec.add(err...)
+
+		return DefaultT{}, ec.errors
+	case WhileC:
+		cndT, err := TypeCheck(r.Cnd, tenv)
+		ec.add(err...)
+		if !isBool(cndT) {
+			ec.add(fmt.Errorf("a conditional statement must evaulate to a boolean value"))
+			return ErrorT{}, ec.errors
+		}
+
+		_, err = TypeCheck(r.Block, tenv)
+		ec.add(err...)
+
 		return DefaultT{}, ec.errors
 	case BinaryOpC:
 
@@ -127,6 +163,8 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 		return FloatT{}, ec.errors
 	case StringC:
 		return StringT{}, ec.errors
+	case BoolC:
+		return BoolT{}, ec.errors
 	}
 
 	panic("AST Node not implemented")
@@ -134,9 +172,16 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 
 func isNumber(t TypeT) bool {
 	switch t.(type) {
-	case IntT:
+	case IntT, FloatT:
 		return true
-	case FloatT:
+	default:
+		return false
+	}
+}
+
+func isBool(t TypeT) bool {
+	switch t.(type) {
+	case BoolT:
 		return true
 	default:
 		return false

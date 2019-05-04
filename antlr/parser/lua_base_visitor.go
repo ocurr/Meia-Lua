@@ -44,6 +44,10 @@ func (v *BaseLuaVisitor) VisitElsestat(ctx *ElsestatContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseLuaVisitor) VisitWhilestat(ctx *WhilestatContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseLuaVisitor) VisitAssign(ctx *AssignContext) interface{} {
 	return v.VisitChildren(ctx)
 }

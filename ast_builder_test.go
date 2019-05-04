@@ -300,6 +300,30 @@ func TestASTBuilder(t *testing.T) {
 			t.Errorf("expected: %#v ; got: %#v", want, got)
 		}
 	})
+	t.Run("WhileOnly", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("while true do\nx = 5\nend")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{
+				WhileC{
+					Cnd: BoolC{True: true},
+					Block: BlockC{StatLst: []Stat{
+						DefLst{List: []DefC{DefC{Id: IdC{Id: "x"}, Exp: IntC{N: 5}}}}},
+					},
+				}}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
 }
 
 func TestASTMatch(t *testing.T) {
@@ -429,6 +453,9 @@ func astMatch(node1, node2 Node) bool {
 		}
 		return astMatch(n1.Cnd, n2.Cnd) &&
 			astMatch(n1.Block, n2.Block) && match && astMatch(n1.Else, n2.Else)
+	case WhileC:
+		n2 := node2.(WhileC)
+		return astMatch(n1.Cnd, n2.Cnd) && astMatch(n1.Block, n2.Block)
 	case IntC:
 		n2 := node2.(IntC)
 		return n1.N == n2.N

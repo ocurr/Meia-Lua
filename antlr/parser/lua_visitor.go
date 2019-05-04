@@ -35,6 +35,9 @@ type LuaVisitor interface {
 	// Visit a parse tree produced by LuaParser#elsestat.
 	VisitElsestat(ctx *ElsestatContext) interface{}
 
+	// Visit a parse tree produced by LuaParser#whilestat.
+	VisitWhilestat(ctx *WhilestatContext) interface{}
+
 	// Visit a parse tree produced by LuaParser#assign.
 	VisitAssign(ctx *AssignContext) interface{}
 

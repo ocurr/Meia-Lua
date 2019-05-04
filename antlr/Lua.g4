@@ -54,7 +54,7 @@ stat
     | 'break'
     | 'goto' NAME
     | 'do' block 'end'
-    | 'while' exp 'do' block 'end'
+    | whilestat
     | 'repeat' block 'until' exp
     | ifstat
     | 'for' NAME '=' exp ',' exp (',' exp)? 'do' block 'end'
@@ -86,6 +86,10 @@ elseifstat
 
 elsestat
     : 'else' block
+    ;
+
+whilestat
+    : 'while' exp 'do' block 'end'
     ;
  
 assign
