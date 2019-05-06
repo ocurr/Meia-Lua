@@ -41,6 +41,10 @@ func (v *LuaASTBuilder) VisitStat(ctx *parser.StatContext) interface{} {
 		return w.Accept(v)
 	}
 
+	if f := ctx.Forstat(); f != nil {
+		return f.Accept(v)
+	}
+
 	return DefC{}
 }
 
@@ -120,6 +124,33 @@ func (v *LuaASTBuilder) VisitWhilestat(ctx *parser.WhilestatContext) interface{}
 		Cnd:   ctx.Exp().Accept(v).(Exp),
 		Block: ctx.Block().Accept(v).(BlockC),
 	}
+}
+
+func (v *LuaASTBuilder) VisitForstat(ctx *parser.ForstatContext) interface{} {
+
+	forS := ForC{
+		Assign: DefC{Id: IdC{}},
+	}
+
+	if typeL := ctx.TypeLiteral(); typeL != nil {
+		forS.Assign.Id.TypeId = typeL.Accept(v).(TypeT)
+	}
+
+	forS.Assign.Id.Id = ctx.NAME().GetText()
+
+	allExp := ctx.AllExp()
+
+	forS.Assign.Exp = allExp[0].Accept(v).(Exp)
+
+	forS.Cnd = allExp[1].Accept(v).(Exp)
+
+	if len(allExp) > 2 {
+		forS.Step = allExp[2].Accept(v).(Exp)
+	}
+
+	forS.Block = ctx.Block().Accept(v).(BlockC)
+
+	return forS
 }
 
 func (v *LuaASTBuilder) VisitVarlist(ctx *parser.VarlistContext) interface{} {
@@ -202,6 +233,14 @@ func (v *LuaASTBuilder) VisitExp(ctx *parser.ExpContext) interface{} {
 			Rhs: ctx.Exp(1).Accept(v).(Exp),
 			Op:  bop.Accept(v).(string),
 		}
+	} else if bop := ctx.OperatorComparison(); bop != nil {
+		return BinaryOpC{
+			Lhs: ctx.Exp(0).Accept(v).(Exp),
+			Rhs: ctx.Exp(1).Accept(v).(Exp),
+			Op:  bop.Accept(v).(string),
+		}
+	} else if pref := ctx.Prefixexp(); pref != nil {
+		return pref.Accept(v).(Exp)
 	}
 	fmt.Println("ERROR: Expression not supported")
 	return StringC{S: "EXPRESSION NOT SUPPORTED"}
@@ -215,6 +254,8 @@ func (v *LuaASTBuilder) VisitTypeLiteral(ctx *parser.TypeLiteralContext) interfa
 		return IntT{}
 	case "string":
 		return StringT{}
+	case "bool":
+		return BoolT{}
 	default:
 		fmt.Printf("ERROR type %s is not supported\n", ctx.GetText())
 		return ErrorT{}
@@ -222,7 +263,7 @@ func (v *LuaASTBuilder) VisitTypeLiteral(ctx *parser.TypeLiteralContext) interfa
 }
 
 func (v *LuaASTBuilder) VisitPrefixexp(ctx *parser.PrefixexpContext) interface{} {
-	panic("VisitPrefixexp not implemented")
+	return ctx.VarOrExp().Accept(v)
 }
 
 func (v *LuaASTBuilder) VisitFunctioncall(ctx *parser.FunctioncallContext) interface{} {
@@ -230,7 +271,15 @@ func (v *LuaASTBuilder) VisitFunctioncall(ctx *parser.FunctioncallContext) inter
 }
 
 func (v *LuaASTBuilder) VisitVarOrExp(ctx *parser.VarOrExpContext) interface{} {
-	panic("VisitVarOrExp not implemented")
+	if i := ctx.VarId(); i != nil {
+		return IdC{Id: i.Accept(v).(string)}
+	}
+	if e := ctx.Exp(); e != nil {
+		return e.Accept(v)
+	}
+
+	// we can't get here since this expression will consist of either a varid or an exp
+	return nil
 }
 
 func (v *LuaASTBuilder) VisitVarId(ctx *parser.VarIdContext) interface{} {
@@ -294,7 +343,7 @@ func (v *LuaASTBuilder) VisitOperatorAnd(ctx *parser.OperatorAndContext) interfa
 }
 
 func (v *LuaASTBuilder) VisitOperatorComparison(ctx *parser.OperatorComparisonContext) interface{} {
-	panic("VisitOperatorComparison not implemented")
+	return ctx.GetText()
 }
 
 func (v *LuaASTBuilder) VisitOperatorStrcat(ctx *parser.OperatorStrcatContext) interface{} {

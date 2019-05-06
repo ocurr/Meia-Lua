@@ -227,6 +227,149 @@ func TestASTBuilder(t *testing.T) {
 			t.Errorf("expected: %#v ; got: %#v", want, got)
 		}
 	})
+	t.Run("BoolAssign", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("bool x = true")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BoolC{True: true}}}}}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
+	t.Run("LessThanAssign", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("bool x = 5 < 2")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
+				Lhs: IntC{N: 5},
+				Rhs: IntC{N: 2},
+				Op:  "<",
+			}}}}}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
+	t.Run("LessThanEqualAssign", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("bool x = 5 <= 2")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
+				Lhs: IntC{N: 5},
+				Rhs: IntC{N: 2},
+				Op:  "<=",
+			}}}}}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
+	t.Run("GreaterThanAssign", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("bool x = 5 > 2")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
+				Lhs: IntC{N: 5},
+				Rhs: IntC{N: 2},
+				Op:  ">",
+			}}}}}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
+	t.Run("GreaterThanEqualAssign", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("bool x = 5 >= 2")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
+				Lhs: IntC{N: 5},
+				Rhs: IntC{N: 2},
+				Op:  ">=",
+			}}}}}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
+	t.Run("EqualAssign", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("bool x = 5 == 2")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
+				Lhs: IntC{N: 5},
+				Rhs: IntC{N: 2},
+				Op:  "==",
+			}}}}}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
+	t.Run("NotEqualAssign", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("bool x = 5 ~= 2")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{
+			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
+				Lhs: IntC{N: 5},
+				Rhs: IntC{N: 2},
+				Op:  "~=",
+			}}}}}}}
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
 	t.Run("IntDivideAssign", func(t *testing.T) {
 		inputStream := antlr.NewInputStream("int x = 5 // 2")
 		lexer := parser.NewLuaLexer(inputStream)
@@ -324,6 +467,75 @@ func TestASTBuilder(t *testing.T) {
 			t.Errorf("expected: %#v ; got: %#v", want, got)
 		}
 	})
+	t.Run("For", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("for int x = 5, x < 5, 1 do\ny = 5\nend")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+
+		want := ChunkC{Block: BlockC{StatLst: []Stat{
+			ForC{
+				Assign: DefC{
+					Id: IdC{
+						Id:     "x",
+						TypeId: IntT{},
+					},
+					Exp: IntC{N: 5},
+				},
+				Cnd: BinaryOpC{
+					Lhs: IdC{Id: "x"},
+					Rhs: IntC{N: 5},
+					Op:  "<",
+				},
+				Step:  IntC{N: 1},
+				Block: BlockC{StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "y"}, Exp: IntC{N: 5}}}}}},
+			},
+		}}}
+
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
+	t.Run("ForNoStep", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("for int x = 5, x < 5 do\ny = 5\nend")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+
+		want := ChunkC{Block: BlockC{StatLst: []Stat{
+			ForC{
+				Assign: DefC{
+					Id: IdC{
+						Id:     "x",
+						TypeId: IntT{},
+					},
+					Exp: IntC{N: 5},
+				},
+				Cnd: BinaryOpC{
+					Lhs: IdC{Id: "x"},
+					Rhs: IntC{N: 5},
+					Op:  "<",
+				},
+				Block: BlockC{StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "y"}, Exp: IntC{N: 5}}}}}},
+			},
+		}}}
+
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
 }
 
 func TestASTMatch(t *testing.T) {
@@ -371,6 +583,13 @@ func TestASTMatch(t *testing.T) {
 
 func astMatch(node1, node2 Node) bool {
 	if reflect.TypeOf(node1) != reflect.TypeOf(node2) {
+		return false
+	}
+
+	if node1 == nil {
+		if node2 == nil {
+			return true
+		}
 		return false
 	}
 
@@ -456,6 +675,11 @@ func astMatch(node1, node2 Node) bool {
 	case WhileC:
 		n2 := node2.(WhileC)
 		return astMatch(n1.Cnd, n2.Cnd) && astMatch(n1.Block, n2.Block)
+	case ForC:
+		n2 := node2.(ForC)
+
+		return astMatch(n1.Assign, n2.Assign) && astMatch(n1.Cnd, n2.Cnd) &&
+			astMatch(n1.Step, n2.Step) && astMatch(n1.Block, n2.Block)
 	case IntC:
 		n2 := node2.(IntC)
 		return n1.N == n2.N
