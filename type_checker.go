@@ -117,7 +117,34 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 
 		return DefaultT{}, ec.errors
 	case ForC:
-		//TODO
+		var ntenv TypeEnv
+		if r.Assign.Id.TypeId == nil {
+			_, err := TypeCheck(r.Assign, tenv)
+			ec.add(err...)
+		} else {
+			ntenv = tenv.Extend(r.Assign.Id.Id, r.Assign.Id.TypeId)
+			_, err := TypeCheck(r.Assign.Exp, tenv)
+			ec.add(err...)
+		}
+
+		cndT, err := TypeCheck(r.Cnd, tenv)
+		ec.add(err...)
+		if !isNumber(cndT) {
+			ec.add(fmt.Errorf("A For statement's limit must be a number."))
+			return ErrorT{}, ec.errors
+		}
+
+		stpT, err := TypeCheck(r.Step, tenv)
+		ec.add(err...)
+		if !isNumber(stpT) {
+			ec.add(fmt.Errorf("A For statement's step must be a number."))
+			return ErrorT{}, ec.errors
+		}
+
+		_, err = TypeCheck(r.Block, ntenv)
+		ec.add(err...)
+
+		return DefaultT{}, ec.errors
 	case BinaryOpC:
 
 		switch r.Op {
@@ -208,7 +235,7 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 		return BoolT{}, ec.errors
 	}
 
-	panic("AST Node not implemented")
+	panic(fmt.Sprintf("AST Node not implemented or you forgot a return %#v", root))
 }
 
 func isNumber(t TypeT) bool {

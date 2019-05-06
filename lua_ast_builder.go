@@ -146,6 +146,8 @@ func (v *LuaASTBuilder) VisitForstat(ctx *parser.ForstatContext) interface{} {
 
 	if len(allExp) > 2 {
 		forS.Step = allExp[2].Accept(v).(Exp)
+	} else {
+		forS.Step = IntC{N: 1}
 	}
 
 	forS.Block = ctx.Block().Accept(v).(BlockC)

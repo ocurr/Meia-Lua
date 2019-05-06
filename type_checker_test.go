@@ -148,6 +148,41 @@ func TestTypeChecker(t *testing.T) {
 			t.Errorf("expected no errors got: %v", err)
 		}
 	})
+	t.Run("For", func(t *testing.T) {
+		input := "for int i=0, 10 do\n" +
+			"int x = 5\n" +
+			"end"
+
+		_, err := LuaTypeCheck(buildInputTree(input))
+		if len(err) != 0 {
+			t.Errorf("expected no errors got: %v", err)
+		}
+	})
+	t.Run("ForNoBody", func(t *testing.T) {
+
+		_, err := LuaTypeCheck(ForC{
+			Assign: DefC{
+				Id:  IdC{Id: "x", TypeId: IntT{}},
+				Exp: IntC{N: 5},
+			},
+			Cnd:   IntC{N: 10},
+			Step:  IntC{N: 1},
+			Block: BlockC{StatLst: []Stat{}},
+		})
+		if len(err) != 0 {
+			t.Errorf("expected no errors got: %v", err)
+		}
+	})
+	t.Run("ForWithStep", func(t *testing.T) {
+		input := "for int i=0, 10, 1 do\n" +
+			"int x = 5\n" +
+			"end"
+
+		_, err := LuaTypeCheck(buildInputTree(input))
+		if len(err) != 0 {
+			t.Errorf("expected no errors got: %v", err)
+		}
+	})
 }
 
 func buildInputTree(input string) ChunkC {

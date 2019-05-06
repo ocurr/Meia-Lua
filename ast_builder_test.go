@@ -527,6 +527,7 @@ func TestASTBuilder(t *testing.T) {
 					Rhs: IntC{N: 5},
 					Op:  "<",
 				},
+				Step:  IntC{N: 1},
 				Block: BlockC{StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "y"}, Exp: IntC{N: 5}}}}}},
 			},
 		}}}
