@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/ocurr/senior-project/antlr/parser"
 	"testing"
 )
 
@@ -133,4 +135,29 @@ func TestTypeChecker(t *testing.T) {
 			t.Errorf("expected no errors got: %v", err)
 		}
 	})
+	t.Run("Closure", func(t *testing.T) {
+		input := "int x = 5\n" +
+			"string y = \"horse\"\n" +
+			"while x < 10 do\nint y = 10\nx = x + y\nend\n" +
+			"if y == \"horse\" then\n" +
+			"int z = 7\n" +
+			"end"
+
+		_, err := LuaTypeCheck(buildInputTree(input))
+		if len(err) != 0 {
+			t.Errorf("expected no errors got: %v", err)
+		}
+	})
+}
+
+func buildInputTree(input string) ChunkC {
+	inputStream := antlr.NewInputStream(input)
+	lexer := parser.NewLuaLexer(inputStream)
+	tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+	p := parser.NewLuaParser(tokenStream)
+	tree := p.Chunk()
+	p.BuildParseTrees = true
+	builder := NewLuaASTBuilder()
+
+	return tree.Accept(builder).(ChunkC)
 }
