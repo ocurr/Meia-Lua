@@ -55,10 +55,9 @@ stat
     | 'goto' NAME
     | 'do' block 'end'
     | whilestat
+    | forstat
     | 'repeat' block 'until' exp
     | ifstat
-    | 'for' NAME '=' exp ',' exp (',' exp)? 'do' block 'end'
-    | 'for' namelist 'in' explist 'do' block 'end'
     | 'function' funcname funcbody
     | 'local' 'function' NAME funcbody
     | 'local' namelist ('=' explist)?
@@ -91,7 +90,13 @@ elsestat
 whilestat
     : 'while' exp 'do' block 'end'
     ;
- 
+
+forstat
+    : 'for' typeLiteral? NAME '=' exp ',' exp (',' exp)? 'do' block 'end'
+    /* | 'for' namelist 'in' explist 'do' block 'end'
+    Since we don't have tables yet we don't need to support the for in syntax */
+    ;
+
 assign
     : varlist '=' explist
     | typedvarlist '=' explist
@@ -143,6 +148,7 @@ typeLiteral
     : 'int'
     | 'float'
     | 'string'
+    | 'bool'
     ;
 
 prefixexp
