@@ -60,6 +60,19 @@ func (w WhileC) GetCtx() *antlr.BaseParserRuleContext {
 	return w.Ctx
 }
 
+type ForC struct {
+	Ctx    *antlr.BaseParserRuleContext
+	Assign DefC
+	Cnd    Exp
+	Step   Exp
+	Block  BlockC
+}
+
+func (f ForC) statNode() {}
+func (f ForC) GetCtx() *antlr.BaseParserRuleContext {
+	return f.Ctx
+}
+
 type DefC struct {
 	Ctx *antlr.BaseParserRuleContext
 	Id  IdC
@@ -88,6 +101,7 @@ type IdC struct {
 	TypeId TypeT
 }
 
+func (i IdC) expNode() {}
 func (i IdC) GetCtx() *antlr.BaseParserRuleContext {
 	return i.Ctx
 }
