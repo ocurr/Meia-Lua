@@ -105,7 +105,7 @@ func (v *LuaASTBuilder) VisitAssign(ctx *parser.AssignContext) interface{} {
 		allTVar = t.Accept(v).(IdLst)
 	}
 
-	if len(allTVar.List) != len(allExp.List) {
+	if len(allExp.List) != 0 && len(allTVar.List) != len(allExp.List) {
 		fmt.Println("ERROR: AST: the var list is not the same length as the expression list")
 		return DefLst{}
 	}

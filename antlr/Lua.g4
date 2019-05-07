@@ -60,7 +60,6 @@ stat
     | ifstat
     | 'function' funcname funcbody
     | 'local' 'function' NAME funcbody
-    | 'local' namelist ('=' explist)?
     ;
 
 retstat
@@ -100,6 +99,7 @@ forstat
 assign
     : varlist '=' explist
     | typedvarlist '=' explist
+    | 'local' typedvarlist ('=' explist)?
     ;
 
 varlist
