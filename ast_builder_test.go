@@ -537,6 +537,25 @@ func TestASTBuilder(t *testing.T) {
 			t.Errorf("expected: %#v ; got: %#v", want, got)
 		}
 	})
+	t.Run("Nil", func(t *testing.T) {
+		inputStream := antlr.NewInputStream("int x = nil")
+		lexer := parser.NewLuaLexer(inputStream)
+		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
+		p := parser.NewLuaParser(tokenStream)
+		tree := p.Chunk()
+		p.BuildParseTrees = true
+		builder := NewLuaASTBuilder()
+
+		got := tree.Accept(builder)
+		want := ChunkC{Block: BlockC{StatLst: []Stat{
+			DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: NilC{}}}},
+		}}}
+
+		res := astMatch(got.(ChunkC), want)
+		if !res {
+			t.Errorf("expected: %#v ; got: %#v", want, got)
+		}
+	})
 }
 
 func TestASTMatch(t *testing.T) {
@@ -693,6 +712,8 @@ func astMatch(node1, node2 Node) bool {
 	case BoolC:
 		n2 := node2.(BoolC)
 		return n1.True == n2.True
+	case NilC:
+		return true
 	default:
 		panic("AST Node in ASTMatch not implemented")
 	}

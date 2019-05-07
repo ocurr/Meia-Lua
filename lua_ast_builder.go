@@ -244,6 +244,12 @@ func (v *LuaASTBuilder) VisitExp(ctx *parser.ExpContext) interface{} {
 	} else if pref := ctx.Prefixexp(); pref != nil {
 		return pref.Accept(v).(Exp)
 	}
+
+	switch ctx.GetText() {
+	case "nil":
+		return NilC{}
+	}
+
 	fmt.Println("ERROR: Expression not supported")
 	return StringC{S: "EXPRESSION NOT SUPPORTED"}
 }

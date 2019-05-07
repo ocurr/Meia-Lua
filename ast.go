@@ -178,3 +178,12 @@ func (b BoolC) expNode() {}
 func (b BoolC) GetCtx() *antlr.BaseParserRuleContext {
 	return b.Ctx
 }
+
+type NilC struct {
+	Ctx *antlr.BaseParserRuleContext
+}
+
+func (n NilC) expNode() {}
+func (n NilC) GetCtx() *antlr.BaseParserRuleContext {
+	return n.Ctx
+}
