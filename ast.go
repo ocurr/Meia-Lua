@@ -18,6 +18,13 @@ type Stat interface {
 	statNode()
 }
 
+type ScopeC string
+
+const (
+	LOCAL  ScopeC = "local"
+	GLOBAL ScopeC = "global"
+)
+
 type ChunkC struct {
 	Ctx   *antlr.BaseParserRuleContext
 	Block BlockC
@@ -74,9 +81,10 @@ func (f ForC) GetCtx() *antlr.BaseParserRuleContext {
 }
 
 type DefC struct {
-	Ctx *antlr.BaseParserRuleContext
-	Id  IdC
-	Exp Exp
+	Ctx   *antlr.BaseParserRuleContext
+	Id    IdC
+	Exp   Exp
+	Scope ScopeC
 }
 
 func (d DefC) GetCtx() *antlr.BaseParserRuleContext {

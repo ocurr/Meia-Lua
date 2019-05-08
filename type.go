@@ -38,6 +38,12 @@ type StringT struct {
 func (s StringT) typeDesc()    {}
 func (f StringT) Name() string { return "string" }
 
+type NilT struct {
+}
+
+func (s NilT) typeDesc()    {}
+func (f NilT) Name() string { return "nil" }
+
 type ErrorT struct {
 }
 

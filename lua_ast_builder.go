@@ -92,8 +92,13 @@ func (v *LuaASTBuilder) VisitElsestat(ctx *parser.ElsestatContext) interface{} {
 
 func (v *LuaASTBuilder) VisitAssign(ctx *parser.AssignContext) interface{} {
 
+	var allExp ExpLst
 	e := ctx.Explist()
-	allExp := e.Accept(v).(ExpLst)
+	if e != nil {
+		allExp = e.Accept(v).(ExpLst)
+	} else {
+		allExp = ExpLst{List: []Exp{}}
+	}
 
 	var allTVar IdLst
 
@@ -112,8 +117,23 @@ func (v *LuaASTBuilder) VisitAssign(ctx *parser.AssignContext) interface{} {
 
 	lst := make([]DefC, len(allTVar.List))
 
+	scope := GLOBAL
+	if len(allExp.List) == 0 {
+		scope = LOCAL
+	}
+
 	for i := 0; i < len(allTVar.List); i++ {
-		lst[i] = DefC{Id: allTVar.List[i], Exp: allExp.List[i]}
+		lst[i] = DefC{
+			Id: allTVar.List[i],
+			Exp: func() Exp {
+				if len(allExp.List) == 0 {
+					return NilC{}
+				} else {
+					return allExp.List[i]
+				}
+			}(),
+			Scope: scope,
+		}
 	}
 
 	return DefLst{List: lst}
@@ -129,7 +149,7 @@ func (v *LuaASTBuilder) VisitWhilestat(ctx *parser.WhilestatContext) interface{}
 func (v *LuaASTBuilder) VisitForstat(ctx *parser.ForstatContext) interface{} {
 
 	forS := ForC{
-		Assign: DefC{Id: IdC{}},
+		Assign: DefC{Id: IdC{}, Scope: GLOBAL},
 	}
 
 	if typeL := ctx.TypeLiteral(); typeL != nil {
@@ -185,11 +205,12 @@ func (v *LuaASTBuilder) VisitTypedvarlist(ctx *parser.TypedvarlistContext) inter
 
 	} else if allVars := ctx.AllVarId(); len(allVars) != 0 {
 		allIdC := make([]IdC, len(allVars))
+		listType := ctx.TypeLiteral().Accept(v).(TypeT)
 
 		for i := 0; i < len(allVars); i++ {
 			allIdC[i] = IdC{
 				Id:     allVars[i].Accept(v).(string),
-				TypeId: ctx.TypeLiteral().Accept(v).(TypeT),
+				TypeId: listType,
 			}
 		}
 

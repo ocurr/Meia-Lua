@@ -233,6 +233,8 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 		return StringT{}, ec.errors
 	case BoolC:
 		return BoolT{}, ec.errors
+	case NilC:
+		return NilT{}, ec.errors
 	}
 
 	panic(fmt.Sprintf("AST Node not implemented or you forgot a return %#v", root))

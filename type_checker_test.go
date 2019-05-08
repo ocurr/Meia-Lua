@@ -183,6 +183,14 @@ func TestTypeChecker(t *testing.T) {
 			t.Errorf("expected no errors got: %v", err)
 		}
 	})
+	t.Run("LocalVar", func(t *testing.T) {
+		input := "local int x = 5\n" +
+			"x = x + 5"
+		_, err := LuaTypeCheck(buildInputTree(input))
+		if len(err) != 0 {
+			t.Errorf("expected no errors got: %v", err)
+		}
+	})
 }
 
 func buildInputTree(input string) ChunkC {
