@@ -59,7 +59,8 @@ stat
     | 'repeat' block 'until' exp
     | ifstat
     | 'function' funcname funcbody
-    | 'local' 'function' NAME funcbody
+    // we do not currently support local functions
+    //| 'local' 'function' NAME funcbody
     ;
 
 retstat
@@ -115,6 +116,10 @@ namelist
     : NAME (',' NAME)*
     ;
 
+typednamelist
+    : typeLiteral NAME (',' typeLiteral NAME)*
+    ;
+
 explist
     : exp (',' exp)*
     ;
@@ -149,6 +154,7 @@ typeLiteral
     | 'float'
     | 'string'
     | 'bool'
+    | 'function' '(' (typeLiteral (',' typeLiteral)*)? ':' (typeLiteral (',' typeLiteral)*) ')'
     ;
 
 prefixexp
@@ -200,11 +206,11 @@ functiondef
     ;
 
 funcbody
-    : '(' parlist? ')' block 'end'
+    : '(' parlist? ')' (':' '(' typeLiteral (',' typeLiteral)* ')')? block 'end'
     ;
 
 parlist
-    : namelist (',' '...')? | '...'
+    : typednamelist (',' '...')? | '...'
     ;
 
 tableconstructor
