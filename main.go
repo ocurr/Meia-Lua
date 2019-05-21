@@ -27,5 +27,12 @@ func main() {
 	tree := p.Chunk()
 	builder := NewLuaASTBuilder()
 	ast := tree.Accept(builder)
+	_, errs := LuaTypeCheck(ast.(Node))
+	if len(errs) != 0 {
+		for _, err := range errs {
+			fmt.Println("ERROR: ", err)
+		}
+		return
+	}
 	fmt.Printf("%s", PrintLua(ast.(Node)))
 }

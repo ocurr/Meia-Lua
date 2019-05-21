@@ -67,8 +67,12 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 		return DefaultT{}, ec.errors
 	case IdC:
 		if r.TypeId == nil {
-			t := tenv[r.Id]
-			return t, ec.errors
+			if t, ok := tenv[r.Id]; ok {
+				return t, ec.errors
+			} else {
+				ec.add(fmt.Errorf("Variable %s does is used without being declared", r.Id))
+				return NilT{}, ec.errors
+			}
 		}
 		tenv[r.Id] = r.TypeId
 		return r.TypeId, ec.errors
