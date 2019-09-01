@@ -1,4 +1,4 @@
-# Typed Lua
+# Meia-Lua
 
 This respository contains my senior project for Cal Poly, SLO.
 It will *eventually* be a type system for the Lua programming language.
