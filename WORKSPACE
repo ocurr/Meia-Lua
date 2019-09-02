@@ -37,4 +37,5 @@ gazelle_dependencies()
 http_jar(
         name = "antlr4-complete",
         url = "https://www.antlr.org/download/antlr-4.7.2-complete.jar",
+        sha256 = "6852386d7975eff29171dae002cc223251510d35f291ae277948f381a7b380b4",
         )
