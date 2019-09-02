@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/ocurr/senior-project/antlr/parser"
+	"github.com/ocurr/Meia-Lua/meia-lua/antlr/parser"
 	"strconv"
 )
 

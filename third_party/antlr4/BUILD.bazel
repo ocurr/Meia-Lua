@@ -1,0 +1,11 @@
+
+licenses(["notice"])
+
+java_binary(
+        name = "antlr4",
+        runtime_deps = [
+                "@antlr4-complete//jar",
+                ],
+        main_class = "org.antlr.v4.Tool",
+        visibility = ["//visibility:public"],
+        )

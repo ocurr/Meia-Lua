@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/ocurr/senior-project/antlr/parser"
+	"github.com/ocurr/Meia-Lua/meia-lua/antlr/parser"
 	"testing"
 )
 

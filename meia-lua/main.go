@@ -3,14 +3,14 @@ package main
 import (
 	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/ocurr/senior-project/antlr/parser"
+	"github.com/ocurr/Meia-Lua/meia-lua/antlr/parser"
 	"os"
 )
 
 func main() {
 
 	if len(os.Args) != 2 {
-		fmt.Println("USAGE: typed-lua <file>")
+		fmt.Println("USAGE: meia-lua <file>")
 		return
 	}
 

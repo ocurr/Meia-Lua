@@ -1,0 +1,41 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "ast.go",
+        "error_listener.go",
+        "lua_ast_builder.go",
+        "main.go",
+        "print.go",
+        "type.go",
+        "type_checker.go",
+    ],
+    importpath = "github.com/ocurr/Meia-Lua/meia-lua",
+    visibility = ["//visibility:private"],
+    deps = [
+        #"//meia-lua/antlr/parser:go_default_library",
+        "//meia-lua/antlr:parser",
+        "@com_github_antlr_antlr4//runtime/Go/antlr:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "meia-lua",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = [
+        "ast_builder_test.go",
+        "type_checker_test.go",
+    ],
+    embed = [":go_default_library"],
+    deps = [
+        "//meia-lua/antlr:parser",
+        "@com_github_antlr_antlr4//runtime/Go/antlr:go_default_library",
+    ],
+    size = "small",
+)
