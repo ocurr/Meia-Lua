@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/ocurr/Meia-Lua/meia-lua/antlr/parser"
+	"github.com/ocurr/Meia-Lua/parser"
 )
 
 type LuaASTBuilder struct {

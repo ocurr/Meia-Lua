@@ -1,4 +1,4 @@
-module github.com/ocurr/Meia-Lua/meia-lua
+module github.com/ocurr/Meia-Lua
 
 go 1.14
 

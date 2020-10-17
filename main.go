@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/ocurr/Meia-Lua/meia-lua/antlr/parser"
 	"os"
+
+	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/ocurr/Meia-Lua/parser"
 )
 
 func main() {

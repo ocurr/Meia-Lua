@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/ocurr/Meia-Lua/meia-lua/antlr/parser"
+	"github.com/ocurr/Meia-Lua/parser"
 )
 
 func TestASTBuilder(t *testing.T) {

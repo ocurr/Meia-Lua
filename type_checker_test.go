@@ -3,8 +3,9 @@ package main
 import (
 	"testing"
 
+	"github.com/ocurr/Meia-Lua/parser"
+
 	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/ocurr/Meia-Lua/meia-lua/antlr/parser"
 )
 
 func TestTypeChecker(t *testing.T) {
