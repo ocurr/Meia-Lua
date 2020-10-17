@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/ocurr/Meia-Lua/meia-lua/antlr/parser"
 	"reflect"
 	"testing"
+
+	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/ocurr/Meia-Lua/meia-lua/antlr/parser"
 )
 
 func TestASTBuilder(t *testing.T) {
@@ -706,11 +707,12 @@ func astMatch(node1, node2 Node) bool {
 		match := true
 		if len(n1.Elseifs) != len(n2.Elseifs) {
 			return false
-		} else {
-			for i := 0; i < len(n1.Elseifs); i++ {
-				match = astMatch(n1.Elseifs[i], n2.Elseifs[i])
-			}
 		}
+
+		for i := 0; i < len(n1.Elseifs); i++ {
+			match = astMatch(n1.Elseifs[i], n2.Elseifs[i])
+		}
+
 		return astMatch(n1.Cnd, n2.Cnd) &&
 			astMatch(n1.Block, n2.Block) && match && astMatch(n1.Else, n2.Else)
 	case WhileC:

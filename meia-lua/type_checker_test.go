@@ -1,9 +1,10 @@
 package main
 
 import (
+	"testing"
+
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/ocurr/Meia-Lua/meia-lua/antlr/parser"
-	"testing"
 )
 
 func TestTypeChecker(t *testing.T) {

@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/ocurr/Meia-Lua/meia-lua/antlr/parser"
 	"strconv"
+
+	"github.com/ocurr/Meia-Lua/meia-lua/antlr/parser"
 )
 
 type LuaASTBuilder struct {
@@ -21,7 +22,7 @@ func (v *LuaASTBuilder) VisitChunk(ctx *parser.ChunkContext) interface{} {
 func (v *LuaASTBuilder) VisitBlock(ctx *parser.BlockContext) interface{} {
 	stats := ctx.AllStat()
 	statLst := make([]Stat, len(stats))
-	for i, _ := range stats {
+	for i := range stats {
 		statLst[i] = stats[i].Accept(v).(Stat)
 	}
 	return BlockC{StatLst: statLst}
