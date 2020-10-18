@@ -20,7 +20,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: IntC{N: 5}, Scope: GLOBAL}}}}}}
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: IntC{N: 5}, Scope: GLOBAL}}}}}}
 		res := astMatch(got.(ChunkC), want)
 		if !res {
 			t.Errorf("expected: %#v ; got: %#v", want, got)
@@ -37,7 +37,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: FloatT{}}, Exp: FloatC{N: 5.5}, Scope: GLOBAL}}}}}}
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: FloatT{}}, Exp: FloatC{N: 5.5}, Scope: GLOBAL}}}}}}
 		res := astMatch(got.(ChunkC), want)
 		if !res {
 			t.Errorf("expected: %#v ; got: %#v", want, got)
@@ -54,7 +54,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "animal", TypeId: StringT{}}, Exp: StringC{S: "horse"}, Scope: GLOBAL}}}}}}
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "animal", TypeId: StringT{}}, Exp: StringC{S: "horse"}, Scope: GLOBAL}}}}}}
 		res := astMatch(got.(ChunkC), want)
 		if !res {
 			t.Errorf("expected: %#v ; got: %#v", want, got)
@@ -72,9 +72,9 @@ func TestASTBuilder(t *testing.T) {
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
 			StatLst: []Stat{DefLst{List: []DefC{
-				DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: IntC{N: 5}, Scope: GLOBAL},
-				DefC{Id: IdC{Id: "y", TypeId: IntT{}}, Exp: IntC{N: 6}, Scope: GLOBAL},
-				DefC{Id: IdC{Id: "z", TypeId: IntT{}}, Exp: IntC{N: 7}, Scope: GLOBAL},
+				{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: IntC{N: 5}, Scope: GLOBAL},
+				{Id: IdC{Id: "y", TypeId: IntT{}}, Exp: IntC{N: 6}, Scope: GLOBAL},
+				{Id: IdC{Id: "z", TypeId: IntT{}}, Exp: IntC{N: 7}, Scope: GLOBAL},
 			}}}}}
 		res := astMatch(got.(ChunkC), want)
 		if !res {
@@ -93,9 +93,9 @@ func TestASTBuilder(t *testing.T) {
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
 			StatLst: []Stat{DefLst{List: []DefC{
-				DefC{Id: IdC{Id: "x", TypeId: FloatT{}}, Exp: FloatC{N: 5.5}, Scope: GLOBAL},
-				DefC{Id: IdC{Id: "y", TypeId: FloatT{}}, Exp: FloatC{N: 10.789}, Scope: GLOBAL},
-				DefC{Id: IdC{Id: "z", TypeId: FloatT{}}, Exp: FloatC{N: 100.23}, Scope: GLOBAL},
+				{Id: IdC{Id: "x", TypeId: FloatT{}}, Exp: FloatC{N: 5.5}, Scope: GLOBAL},
+				{Id: IdC{Id: "y", TypeId: FloatT{}}, Exp: FloatC{N: 10.789}, Scope: GLOBAL},
+				{Id: IdC{Id: "z", TypeId: FloatT{}}, Exp: FloatC{N: 100.23}, Scope: GLOBAL},
 			}}}}}
 		res := astMatch(got.(ChunkC), want)
 		if !res {
@@ -114,9 +114,9 @@ func TestASTBuilder(t *testing.T) {
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
 			StatLst: []Stat{DefLst{List: []DefC{
-				DefC{Id: IdC{Id: "animal", TypeId: StringT{}}, Exp: StringC{S: "horse"}, Scope: GLOBAL},
-				DefC{Id: IdC{Id: "dog", TypeId: StringT{}}, Exp: StringC{S: "fido"}, Scope: GLOBAL},
-				DefC{Id: IdC{Id: "word", TypeId: StringT{}}, Exp: StringC{S: "bar"}, Scope: GLOBAL},
+				{Id: IdC{Id: "animal", TypeId: StringT{}}, Exp: StringC{S: "horse"}, Scope: GLOBAL},
+				{Id: IdC{Id: "dog", TypeId: StringT{}}, Exp: StringC{S: "fido"}, Scope: GLOBAL},
+				{Id: IdC{Id: "word", TypeId: StringT{}}, Exp: StringC{S: "bar"}, Scope: GLOBAL},
 			}}}}}
 		res := astMatch(got.(ChunkC), want)
 		if !res {
@@ -134,7 +134,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "+",
@@ -155,7 +155,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "-",
@@ -176,7 +176,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "*",
@@ -197,7 +197,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "%",
@@ -218,7 +218,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "/",
@@ -239,7 +239,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BoolC{True: true}, Scope: GLOBAL}}}}}}
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BoolC{True: true}, Scope: GLOBAL}}}}}}
 		res := astMatch(got.(ChunkC), want)
 		if !res {
 			t.Errorf("expected: %#v ; got: %#v", want, got)
@@ -256,7 +256,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "<",
@@ -277,7 +277,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "<=",
@@ -298,7 +298,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  ">",
@@ -319,7 +319,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  ">=",
@@ -340,7 +340,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "==",
@@ -361,7 +361,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "~=",
@@ -382,7 +382,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "//",
@@ -407,12 +407,12 @@ func TestASTBuilder(t *testing.T) {
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
 			StatLst: []Stat{
-				DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+				DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
 					Lhs: IntC{N: 5},
 					Rhs: IntC{N: 2},
 					Op:  "//",
 				}, Scope: GLOBAL}}},
-				DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: nil}, Exp: BinaryOpC{
+				DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: nil}, Exp: BinaryOpC{
 					Lhs: IntC{N: 1},
 					Rhs: IntC{N: 1},
 					Op:  "+",
@@ -443,7 +443,7 @@ func TestASTBuilder(t *testing.T) {
 				CondC{
 					Cnd: BoolC{True: true},
 					Block: BlockC{StatLst: []Stat{
-						DefLst{List: []DefC{DefC{Id: IdC{Id: "x"}, Exp: IntC{N: 5}, Scope: GLOBAL}}}},
+						DefLst{List: []DefC{{Id: IdC{Id: "x"}, Exp: IntC{N: 5}, Scope: GLOBAL}}}},
 					},
 				}}}}
 		res := astMatch(got.(ChunkC), want)
@@ -471,7 +471,7 @@ func TestASTBuilder(t *testing.T) {
 				WhileC{
 					Cnd: BoolC{True: true},
 					Block: BlockC{StatLst: []Stat{
-						DefLst{List: []DefC{DefC{Id: IdC{Id: "x"}, Exp: IntC{N: 5}, Scope: GLOBAL}}}},
+						DefLst{List: []DefC{{Id: IdC{Id: "x"}, Exp: IntC{N: 5}, Scope: GLOBAL}}}},
 					},
 				}}}}
 		res := astMatch(got.(ChunkC), want)
@@ -510,7 +510,7 @@ func TestASTBuilder(t *testing.T) {
 					Op:  "<",
 				},
 				Step:  IntC{N: 1},
-				Block: BlockC{StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "y"}, Exp: IntC{N: 5}, Scope: GLOBAL}}}}},
+				Block: BlockC{StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "y"}, Exp: IntC{N: 5}, Scope: GLOBAL}}}}},
 			},
 		}}}
 
@@ -550,7 +550,7 @@ func TestASTBuilder(t *testing.T) {
 					Op:  "<",
 				},
 				Step:  IntC{N: 1},
-				Block: BlockC{StatLst: []Stat{DefLst{List: []DefC{DefC{Id: IdC{Id: "y"}, Exp: IntC{N: 5}, Scope: GLOBAL}}}}},
+				Block: BlockC{StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "y"}, Exp: IntC{N: 5}, Scope: GLOBAL}}}}},
 			},
 		}}}
 
@@ -570,7 +570,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{StatLst: []Stat{
-			DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: NilC{}, Scope: GLOBAL}}},
+			DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: NilC{}, Scope: GLOBAL}}},
 		}}}
 
 		res := astMatch(got.(ChunkC), want)
@@ -589,7 +589,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{StatLst: []Stat{
-			DefLst{List: []DefC{DefC{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: NilC{}, Scope: LOCAL}}},
+			DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: NilC{}, Scope: LOCAL}}},
 		}}}
 
 		res := astMatch(got.(ChunkC), want)
