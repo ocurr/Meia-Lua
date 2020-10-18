@@ -44,7 +44,7 @@ func TestASTBuilder(t *testing.T) {
 		}
 	})
 	t.Run("SingleStringAssign", func(t *testing.T) {
-		inputStream := antlr.NewInputStream("string animal = \"horse\"")
+		inputStream := antlr.NewInputStream(`string animal = "horse"`)
 		lexer := parser.NewLuaLexer(inputStream)
 		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
 		p := parser.NewLuaParser(tokenStream)
@@ -103,7 +103,7 @@ func TestASTBuilder(t *testing.T) {
 		}
 	})
 	t.Run("MultipleStringAssign", func(t *testing.T) {
-		inputStream := antlr.NewInputStream("string animal, dog, word = \"horse\", \"fido\", \"bar\"")
+		inputStream := antlr.NewInputStream(`string animal, dog, word = "horse", "fido", "bar"`)
 		lexer := parser.NewLuaLexer(inputStream)
 		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
 		p := parser.NewLuaParser(tokenStream)
@@ -393,7 +393,10 @@ func TestASTBuilder(t *testing.T) {
 		}
 	})
 	t.Run("Reassign", func(t *testing.T) {
-		inputStream := antlr.NewInputStream("int x = 5 // 2\nx = 1 + 1")
+		inputStream := antlr.NewInputStream(`
+		int x = 5 // 2
+		x = 1 + 1
+		`)
 		lexer := parser.NewLuaLexer(inputStream)
 		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
 		p := parser.NewLuaParser(tokenStream)
@@ -421,7 +424,11 @@ func TestASTBuilder(t *testing.T) {
 		}
 	})
 	t.Run("IfOnly", func(t *testing.T) {
-		inputStream := antlr.NewInputStream("if true then\nx = 5\nend")
+		inputStream := antlr.NewInputStream(`
+		if true then
+			x = 5
+		end
+		`)
 		lexer := parser.NewLuaLexer(inputStream)
 		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
 		p := parser.NewLuaParser(tokenStream)
@@ -445,7 +452,11 @@ func TestASTBuilder(t *testing.T) {
 		}
 	})
 	t.Run("WhileOnly", func(t *testing.T) {
-		inputStream := antlr.NewInputStream("while true do\nx = 5\nend")
+		inputStream := antlr.NewInputStream(`
+		while true do
+			x = 5
+		end
+		`)
 		lexer := parser.NewLuaLexer(inputStream)
 		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
 		p := parser.NewLuaParser(tokenStream)
@@ -469,7 +480,11 @@ func TestASTBuilder(t *testing.T) {
 		}
 	})
 	t.Run("For", func(t *testing.T) {
-		inputStream := antlr.NewInputStream("for int x = 5, x < 5, 1 do\ny = 5\nend")
+		inputStream := antlr.NewInputStream(`
+		for int x = 5, x < 5, 1 do
+			y = 5
+		end
+		`)
 		lexer := parser.NewLuaLexer(inputStream)
 		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
 		p := parser.NewLuaParser(tokenStream)
@@ -505,7 +520,11 @@ func TestASTBuilder(t *testing.T) {
 		}
 	})
 	t.Run("ForNoStep", func(t *testing.T) {
-		inputStream := antlr.NewInputStream("for int x = 5, x < 5 do\ny = 5\nend")
+		inputStream := antlr.NewInputStream(`
+		for int x = 5, x < 5 do
+			y = 5
+		end
+		`)
 		lexer := parser.NewLuaLexer(inputStream)
 		tokenStream := antlr.NewCommonTokenStream(lexer, 0)
 		p := parser.NewLuaParser(tokenStream)

@@ -138,12 +138,17 @@ func TestTypeChecker(t *testing.T) {
 		}
 	})
 	t.Run("Closure", func(t *testing.T) {
-		input := "int x = 5\n" +
-			"string y = \"horse\"\n" +
-			"while x < 10 do\nint y = 10\nx = x + y\nend\n" +
-			"if y == \"horse\" then\n" +
-			"int z = 7\n" +
-			"end"
+		input := `
+		int x = 5
+		string y = "horse"
+		while x < 10 do
+			int y = 10
+			x = x + y
+		end
+		if y == "horse" then
+			int z = 7
+		end
+		`
 
 		_, err := LuaTypeCheck(buildInputTree(input))
 		if len(err) != 0 {
@@ -151,9 +156,11 @@ func TestTypeChecker(t *testing.T) {
 		}
 	})
 	t.Run("For", func(t *testing.T) {
-		input := "for int i=0, 10 do\n" +
-			"int x = 5\n" +
-			"end"
+		input := `
+		for int i=0, 10 do
+			int x = 5
+		end
+		`
 
 		_, err := LuaTypeCheck(buildInputTree(input))
 		if len(err) != 0 {
@@ -176,9 +183,11 @@ func TestTypeChecker(t *testing.T) {
 		}
 	})
 	t.Run("ForWithStep", func(t *testing.T) {
-		input := "for int i=0, 10, 1 do\n" +
-			"int x = 5\n" +
-			"end"
+		input := `
+		for int i=0, 10, 1 do
+			int x = 5
+		end
+		`
 
 		_, err := LuaTypeCheck(buildInputTree(input))
 		if len(err) != 0 {
@@ -186,8 +195,11 @@ func TestTypeChecker(t *testing.T) {
 		}
 	})
 	t.Run("LocalVar", func(t *testing.T) {
-		input := "local int x = 5\n" +
-			"x = x + 5"
+		input := `
+		local int x = 5
+		x = x + 5
+		`
+
 		_, err := LuaTypeCheck(buildInputTree(input))
 		if len(err) != 0 {
 			t.Errorf("expected no errors got: %v", err)
