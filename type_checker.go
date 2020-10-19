@@ -5,12 +5,15 @@ import (
 	"reflect"
 )
 
+// TypeEnv is a type environment representation that maps from labels to types.
 type TypeEnv map[string]TypeT
 
+// NewTypeEnv returns a new empty TypeEnv.
 func NewTypeEnv() TypeEnv {
 	return map[string]TypeT{}
 }
 
+// Copy returns a copy of the TypeEnv.
 func (tenv TypeEnv) Copy() TypeEnv {
 	newTenv := NewTypeEnv()
 	for k, v := range tenv {
@@ -19,6 +22,7 @@ func (tenv TypeEnv) Copy() TypeEnv {
 	return newTenv
 }
 
+// Extend adds a new label -> type mapping to the TypeEnv.
 func (tenv TypeEnv) Extend(id string, t TypeT) TypeEnv {
 	ntenv := tenv.Copy()
 	ntenv[id] = t
@@ -26,10 +30,12 @@ func (tenv TypeEnv) Extend(id string, t TypeT) TypeEnv {
 	return ntenv
 }
 
+// LuaTypeCheck type checks root and returns the final type and a list of errors.
 func LuaTypeCheck(root Node) (TypeT, []error) {
 	return TypeCheck(root, NewTypeEnv())
 }
 
+// TypeCheck type checks root using tenv as the Type Environment.
 func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 
 	ec := new(errorCollector)
@@ -51,10 +57,10 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 		ec.add(err...)
 
 		if idT == nil {
-			ec.add(fmt.Errorf("No type defined for %s.", r.Id.Id))
+			ec.add(fmt.Errorf("no type defined for %s", r.Id.Id))
 			return ErrorT{}, ec.errors
 		} else if idT != expT {
-			ec.add(fmt.Errorf("Type of identifier %q does not match type of expression %s.", r.Id.Id, expT.Name()))
+			ec.add(fmt.Errorf("type of identifier %q does not match type of expression %s", r.Id.Id, expT.Name()))
 			return ErrorT{}, ec.errors
 		}
 
@@ -70,7 +76,7 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 			if t, ok := tenv[r.Id]; ok {
 				return t, ec.errors
 			} else {
-				ec.add(fmt.Errorf("Variable %s does is used without being declared", r.Id))
+				ec.add(fmt.Errorf("variable %s does is used without being declared", r.Id))
 				return NilT{}, ec.errors
 			}
 		}
@@ -92,7 +98,7 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 		cndT, err := TypeCheck(r.Cnd, tenv)
 		ec.add(err...)
 		if !isBool(cndT) {
-			ec.add(fmt.Errorf("a conditional statement must evaulate to a boolean value."))
+			ec.add(fmt.Errorf("a conditional statement must evaulate to a boolean value"))
 			return ErrorT{}, ec.errors
 		}
 
@@ -112,7 +118,7 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 		cndT, err := TypeCheck(r.Cnd, tenv)
 		ec.add(err...)
 		if !isBool(cndT) {
-			ec.add(fmt.Errorf("a conditional statement must evaulate to a boolean value."))
+			ec.add(fmt.Errorf("a conditional statement must evaulate to a boolean value"))
 			return ErrorT{}, ec.errors
 		}
 
@@ -134,14 +140,14 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 		cndT, err := TypeCheck(r.Cnd, tenv)
 		ec.add(err...)
 		if !isNumber(cndT) {
-			ec.add(fmt.Errorf("A For statement's limit must be a number."))
+			ec.add(fmt.Errorf("a for statement's limit must be a number"))
 			return ErrorT{}, ec.errors
 		}
 
 		stpT, err := TypeCheck(r.Step, tenv)
 		ec.add(err...)
 		if !isNumber(stpT) {
-			ec.add(fmt.Errorf("A For statement's step must be a number."))
+			ec.add(fmt.Errorf("a for statement's step must be a number"))
 			return ErrorT{}, ec.errors
 		}
 
@@ -162,13 +168,13 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 			lhs, err := TypeCheck(r.Lhs, tenv)
 			ec.add(err...)
 			if !isNumber(lhs) {
-				ec.add(fmt.Errorf("operator: %q expected float or int got: %s.", r.Op, lhs.Name()))
+				ec.add(fmt.Errorf("operator: %q expected float or int got: %s", r.Op, lhs.Name()))
 				return ErrorT{}, ec.errors
 			}
 			rhs, err := TypeCheck(r.Rhs, tenv)
 			ec.add(err...)
 			if !isNumber(rhs) {
-				ec.add(fmt.Errorf("operator: %q expected float or int got: %s.", r.Op, rhs.Name()))
+				ec.add(fmt.Errorf("operator: %q expected float or int got: %s", r.Op, rhs.Name()))
 				return ErrorT{}, ec.errors
 			}
 			floatType := reflect.TypeOf(FloatT{})
@@ -181,13 +187,13 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 			lhs, err := TypeCheck(r.Lhs, tenv)
 			ec.add(err...)
 			if !isNumber(lhs) {
-				ec.add(fmt.Errorf("operator: %q expected float or int got: %s.", r.Op, lhs.Name()))
+				ec.add(fmt.Errorf("operator: %q expected float or int got: %s", r.Op, lhs.Name()))
 				return ErrorT{}, ec.errors
 			}
 			rhs, err := TypeCheck(r.Rhs, tenv)
 			ec.add(err...)
 			if !isNumber(rhs) {
-				ec.add(fmt.Errorf("operator: %q expected float or int got: %s.", r.Op, rhs.Name()))
+				ec.add(fmt.Errorf("operator: %q expected float or int got: %s", r.Op, rhs.Name()))
 				return ErrorT{}, ec.errors
 			}
 			return FloatT{}, ec.errors
@@ -195,13 +201,13 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 			lhs, err := TypeCheck(r.Lhs, tenv)
 			ec.add(err...)
 			if !isNumber(lhs) {
-				ec.add(fmt.Errorf("operator: %q expected float or int got: %s.", r.Op, lhs.Name()))
+				ec.add(fmt.Errorf("operator: %q expected float or int got: %s", r.Op, lhs.Name()))
 				return ErrorT{}, ec.errors
 			}
 			rhs, err := TypeCheck(r.Rhs, tenv)
 			ec.add(err...)
 			if !isNumber(rhs) {
-				ec.add(fmt.Errorf("operator: %q expected float or int got: %s.", r.Op, rhs.Name()))
+				ec.add(fmt.Errorf("operator: %q expected float or int got: %s", r.Op, rhs.Name()))
 				return ErrorT{}, ec.errors
 			}
 			return IntT{}, ec.errors
@@ -210,7 +216,7 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 			ec.add(err...)
 			rhs, err := TypeCheck(r.Lhs, tenv)
 			if lhs != rhs {
-				ec.add(fmt.Errorf("operator: %q requires that both operands have the same type.", r.Op))
+				ec.add(fmt.Errorf("operator: %q requires that both operands have the same type", r.Op))
 				return ErrorT{}, ec.errors
 			}
 			return BoolT{}, ec.errors
@@ -218,13 +224,13 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 			lhs, err := TypeCheck(r.Lhs, tenv)
 			ec.add(err...)
 			if !isNumber(lhs) {
-				ec.add(fmt.Errorf("operator: %q expected float or int got: %s.", r.Op, lhs.Name()))
+				ec.add(fmt.Errorf("operator: %q expected float or int got: %s", r.Op, lhs.Name()))
 				return ErrorT{}, ec.errors
 			}
 			rhs, err := TypeCheck(r.Rhs, tenv)
 			ec.add(err...)
 			if !isNumber(rhs) {
-				ec.add(fmt.Errorf("operator: %q expected float or int got: %s.", r.Op, rhs.Name()))
+				ec.add(fmt.Errorf("operator: %q expected float or int got: %s", r.Op, rhs.Name()))
 				return ErrorT{}, ec.errors
 			}
 			return BoolT{}, ec.errors
