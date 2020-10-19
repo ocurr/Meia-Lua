@@ -648,10 +648,7 @@ func astMatch(node1, node2 Node) bool {
 	}
 
 	if node1 == nil {
-		if node2 == nil {
-			return true
-		}
-		return false
+		return node2 == nil
 	}
 
 	switch n1 := node1.(type) {

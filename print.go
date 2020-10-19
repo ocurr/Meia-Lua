@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// PrintLua returns a properly formatted text representation of the given Lua AST.
 func PrintLua(node Node) string {
 
 	switch n := node.(type) {
@@ -88,9 +89,8 @@ func PrintLua(node Node) string {
 	case BoolC:
 		if n.True {
 			return "true"
-		} else {
-			return "false"
 		}
+		return "false"
 	case NilC:
 		return "nil"
 	default:

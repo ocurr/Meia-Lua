@@ -141,9 +141,8 @@ func (v *LuaASTBuilder) VisitAssign(ctx *parser.AssignContext) interface{} {
 			Exp: func() Exp {
 				if len(allExp.List) == 0 {
 					return NilC{}
-				} else {
-					return allExp.List[i]
 				}
+				return allExp.List[i]
 			}(),
 			Scope: scope,
 		}

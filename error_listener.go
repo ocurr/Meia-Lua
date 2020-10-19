@@ -24,7 +24,6 @@ func (d *LuaErrorListener) ReportAmbiguity(recognizer antlr.Parser, dfa *antlr.D
 
 // ReportAttemptingFullContext is a NO-OP.
 func (d *LuaErrorListener) ReportAttemptingFullContext(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex int, conflictingAlts *antlr.BitSet, configs antlr.ATNConfigSet) {
-	return
 }
 
 // ReportContextSensitivity is called to report context sensitive tokens in the token stream.

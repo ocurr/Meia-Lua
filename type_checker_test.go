@@ -32,14 +32,14 @@ func TestTypeChecker(t *testing.T) {
 			Cnd: BoolC{True: true},
 			Block: BlockC{StatLst: []Stat{
 				DefLst{List: []DefC{
-					DefC{Id: IdC{Id: "x", TypeId: IntT{}},
+					{Id: IdC{Id: "x", TypeId: IntT{}},
 						Exp: IntC{N: 5}}}},
 				CondC{
 					Cnd: BoolC{True: true},
 					Block: BlockC{
 						StatLst: []Stat{
 							DefLst{List: []DefC{
-								DefC{Id: IdC{Id: "x", TypeId: IntT{}},
+								{Id: IdC{Id: "x", TypeId: IntT{}},
 									Exp: IntC{N: 6}}}}}}},
 			}}}
 
@@ -55,22 +55,22 @@ func TestTypeChecker(t *testing.T) {
 			Cnd: BoolC{True: true},
 			Block: BlockC{StatLst: []Stat{
 				DefLst{List: []DefC{
-					DefC{Id: IdC{Id: "x", TypeId: IntT{}},
+					{Id: IdC{Id: "x", TypeId: IntT{}},
 						Exp: IntC{N: 5}}}},
 				CondC{
 					Cnd: BoolC{True: true},
 					Block: BlockC{
 						StatLst: []Stat{
 							DefLst{List: []DefC{
-								DefC{Id: IdC{Id: "x", TypeId: IntT{}},
+								{Id: IdC{Id: "x", TypeId: IntT{}},
 									Exp: IntC{N: 6}}}}}},
 					Elseifs: []CondC{
-						CondC{
+						{
 							Cnd: BoolC{True: false},
 							Block: BlockC{
 								StatLst: []Stat{
 									DefLst{List: []DefC{
-										DefC{Id: IdC{Id: "x", TypeId: IntT{}},
+										{Id: IdC{Id: "x", TypeId: IntT{}},
 											Exp: IntC{N: 5}}}}}}},
 					},
 				}}}}
@@ -86,22 +86,22 @@ func TestTypeChecker(t *testing.T) {
 			Cnd: BoolC{True: true},
 			Block: BlockC{StatLst: []Stat{
 				DefLst{List: []DefC{
-					DefC{Id: IdC{Id: "x", TypeId: IntT{}},
+					{Id: IdC{Id: "x", TypeId: IntT{}},
 						Exp: IntC{N: 5}}}},
 				CondC{
 					Cnd: BoolC{True: true},
 					Block: BlockC{
 						StatLst: []Stat{
 							DefLst{List: []DefC{
-								DefC{Id: IdC{Id: "x", TypeId: IntT{}},
+								{Id: IdC{Id: "x", TypeId: IntT{}},
 									Exp: IntC{N: 6}}}}}},
 					Elseifs: []CondC{
-						CondC{
+						{
 							Cnd: BoolC{True: false},
 							Block: BlockC{
 								StatLst: []Stat{
 									DefLst{List: []DefC{
-										DefC{Id: IdC{Id: "x", TypeId: IntT{}},
+										{Id: IdC{Id: "x", TypeId: IntT{}},
 											Exp: IntC{N: 5}}}}}}},
 					},
 					Else: BlockC{StatLst: []Stat{
@@ -110,7 +110,7 @@ func TestTypeChecker(t *testing.T) {
 							Block: BlockC{
 								StatLst: []Stat{
 									DefLst{List: []DefC{
-										DefC{Id: IdC{Id: "x", TypeId: IntT{}},
+										{Id: IdC{Id: "x", TypeId: IntT{}},
 											Exp: IntC{N: 6}}}}}},
 						}},
 					}}}}}
@@ -127,7 +127,7 @@ func TestTypeChecker(t *testing.T) {
 			Block: BlockC{
 				StatLst: []Stat{
 					DefLst{List: []DefC{
-						DefC{Id: IdC{Id: "x", TypeId: IntT{}},
+						{Id: IdC{Id: "x", TypeId: IntT{}},
 							Exp: IntC{N: 6}}}}}},
 		}
 

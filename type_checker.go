@@ -75,10 +75,10 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 		if r.TypeId == nil {
 			if t, ok := tenv[r.Id]; ok {
 				return t, ec.errors
-			} else {
-				ec.add(fmt.Errorf("variable %s does is used without being declared", r.Id))
-				return NilT{}, ec.errors
 			}
+
+			ec.add(fmt.Errorf("variable %s does is used without being declared", r.Id))
+			return NilT{}, ec.errors
 		}
 		tenv[r.Id] = r.TypeId
 		return r.TypeId, ec.errors
@@ -180,9 +180,8 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 			floatType := reflect.TypeOf(FloatT{})
 			if reflect.TypeOf(lhs) == floatType || reflect.TypeOf(rhs) == floatType {
 				return FloatT{}, ec.errors
-			} else {
-				return IntT{}, ec.errors
 			}
+			return IntT{}, ec.errors
 		case "/":
 			lhs, err := TypeCheck(r.Lhs, tenv)
 			ec.add(err...)
@@ -215,6 +214,7 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 			lhs, err := TypeCheck(r.Lhs, tenv)
 			ec.add(err...)
 			rhs, err := TypeCheck(r.Lhs, tenv)
+			ec.add(err...)
 			if lhs != rhs {
 				ec.add(fmt.Errorf("operator: %q requires that both operands have the same type", r.Op))
 				return ErrorT{}, ec.errors
