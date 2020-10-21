@@ -207,6 +207,17 @@ func TestTypeChecker(t *testing.T) {
 	})
 }
 
+func TestEquality(t *testing.T) {
+	input := `
+	bool y = 5 == "horse"
+	`
+
+	_, err := LuaTypeCheck(buildInputTree(input))
+	if len(err) == 0 {
+		t.Errorf("expected errors, got no errors instead")
+	}
+}
+
 func buildInputTree(input string) ChunkC {
 	inputStream := antlr.NewInputStream(input)
 	lexer := parser.NewLuaLexer(inputStream)

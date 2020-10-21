@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"reflect"
+
+	"github.com/antlr/antlr4/runtime/Go/antlr"
 )
 
 // TypeEnv is a type environment representation that maps from labels to types.
@@ -57,10 +59,10 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 		ec.add(err...)
 
 		if idT == nil {
-			ec.add(fmt.Errorf("no type defined for %s", r.Id.Id))
+			ec.add(formatError(r.GetCtx(), "no type defined for %s", r.Id.Id))
 			return ErrorT{}, ec.errors
 		} else if idT != expT {
-			ec.add(fmt.Errorf("type of identifier %q does not match type of expression %s", r.Id.Id, expT.Name()))
+			ec.add(formatError(r.GetCtx(), "type of identifier %q does not match type of expression %s", r.Id.Id, expT.Name()))
 			return ErrorT{}, ec.errors
 		}
 
@@ -77,7 +79,7 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 				return t, ec.errors
 			}
 
-			ec.add(fmt.Errorf("variable %s does is used without being declared", r.Id))
+			ec.add(formatError(r.GetCtx(), "variable %s does is used without being declared", r.Id))
 			return NilT{}, ec.errors
 		}
 		tenv[r.Id] = r.TypeId
@@ -98,7 +100,7 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 		cndT, err := TypeCheck(r.Cnd, tenv)
 		ec.add(err...)
 		if !isBool(cndT) {
-			ec.add(fmt.Errorf("a conditional statement must evaulate to a boolean value"))
+			ec.add(formatError(r.GetCtx(), "a conditional statement must evaulate to a boolean value"))
 			return ErrorT{}, ec.errors
 		}
 
@@ -118,7 +120,7 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 		cndT, err := TypeCheck(r.Cnd, tenv)
 		ec.add(err...)
 		if !isBool(cndT) {
-			ec.add(fmt.Errorf("a conditional statement must evaulate to a boolean value"))
+			ec.add(formatError(r.GetCtx(), "a conditional statement must evaulate to a boolean value"))
 			return ErrorT{}, ec.errors
 		}
 
@@ -140,14 +142,14 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 		cndT, err := TypeCheck(r.Cnd, tenv)
 		ec.add(err...)
 		if !isNumber(cndT) {
-			ec.add(fmt.Errorf("a for statement's limit must be a number"))
+			ec.add(formatError(r.GetCtx(), "a for statement's limit must be a number"))
 			return ErrorT{}, ec.errors
 		}
 
 		stpT, err := TypeCheck(r.Step, tenv)
 		ec.add(err...)
 		if !isNumber(stpT) {
-			ec.add(fmt.Errorf("a for statement's step must be a number"))
+			ec.add(formatError(r.GetCtx(), "a for statement's step must be a number"))
 			return ErrorT{}, ec.errors
 		}
 
@@ -168,13 +170,13 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 			lhs, err := TypeCheck(r.Lhs, tenv)
 			ec.add(err...)
 			if !isNumber(lhs) {
-				ec.add(fmt.Errorf("operator: %q expected float or int got: %s", r.Op, lhs.Name()))
+				ec.add(formatError(r.GetCtx(), "operator: %q expected float or int got: %s", r.Op, lhs.Name()))
 				return ErrorT{}, ec.errors
 			}
 			rhs, err := TypeCheck(r.Rhs, tenv)
 			ec.add(err...)
 			if !isNumber(rhs) {
-				ec.add(fmt.Errorf("operator: %q expected float or int got: %s", r.Op, rhs.Name()))
+				ec.add(formatError(r.GetCtx(), "operator: %q expected float or int got: %s", r.Op, rhs.Name()))
 				return ErrorT{}, ec.errors
 			}
 			floatType := reflect.TypeOf(FloatT{})
@@ -186,13 +188,13 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 			lhs, err := TypeCheck(r.Lhs, tenv)
 			ec.add(err...)
 			if !isNumber(lhs) {
-				ec.add(fmt.Errorf("operator: %q expected float or int got: %s", r.Op, lhs.Name()))
+				ec.add(formatError(r.GetCtx(), "operator: %q expected float or int got: %s", r.Op, lhs.Name()))
 				return ErrorT{}, ec.errors
 			}
 			rhs, err := TypeCheck(r.Rhs, tenv)
 			ec.add(err...)
 			if !isNumber(rhs) {
-				ec.add(fmt.Errorf("operator: %q expected float or int got: %s", r.Op, rhs.Name()))
+				ec.add(formatError(r.GetCtx(), "operator: %q expected float or int got: %s", r.Op, rhs.Name()))
 				return ErrorT{}, ec.errors
 			}
 			return FloatT{}, ec.errors
@@ -200,23 +202,23 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 			lhs, err := TypeCheck(r.Lhs, tenv)
 			ec.add(err...)
 			if !isNumber(lhs) {
-				ec.add(fmt.Errorf("operator: %q expected float or int got: %s", r.Op, lhs.Name()))
+				ec.add(formatError(r.GetCtx(), "operator: %q expected float or int got: %s", r.Op, lhs.Name()))
 				return ErrorT{}, ec.errors
 			}
 			rhs, err := TypeCheck(r.Rhs, tenv)
 			ec.add(err...)
 			if !isNumber(rhs) {
-				ec.add(fmt.Errorf("operator: %q expected float or int got: %s", r.Op, rhs.Name()))
+				ec.add(formatError(r.GetCtx(), "operator: %q expected float or int got: %s", r.Op, rhs.Name()))
 				return ErrorT{}, ec.errors
 			}
 			return IntT{}, ec.errors
 		case "==", "~=":
 			lhs, err := TypeCheck(r.Lhs, tenv)
 			ec.add(err...)
-			rhs, err := TypeCheck(r.Lhs, tenv)
+			rhs, err := TypeCheck(r.Rhs, tenv)
 			ec.add(err...)
 			if lhs != rhs {
-				ec.add(fmt.Errorf("operator: %q requires that both operands have the same type", r.Op))
+				ec.add(formatError(r.GetCtx(), "operator: %q requires that both operands have the same type", r.Op))
 				return ErrorT{}, ec.errors
 			}
 			return BoolT{}, ec.errors
@@ -224,13 +226,13 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 			lhs, err := TypeCheck(r.Lhs, tenv)
 			ec.add(err...)
 			if !isNumber(lhs) {
-				ec.add(fmt.Errorf("operator: %q expected float or int got: %s", r.Op, lhs.Name()))
+				ec.add(formatError(r.GetCtx(), "operator: %q expected float or int got: %s", r.Op, lhs.Name()))
 				return ErrorT{}, ec.errors
 			}
 			rhs, err := TypeCheck(r.Rhs, tenv)
 			ec.add(err...)
 			if !isNumber(rhs) {
-				ec.add(fmt.Errorf("operator: %q expected float or int got: %s", r.Op, rhs.Name()))
+				ec.add(formatError(r.GetCtx(), "operator: %q expected float or int got: %s", r.Op, rhs.Name()))
 				return ErrorT{}, ec.errors
 			}
 			return BoolT{}, ec.errors
@@ -266,6 +268,12 @@ func isBool(t TypeT) bool {
 	default:
 		return false
 	}
+}
+
+func formatError(ctx antlr.ParserRuleContext, errf string, vals ...interface{}) error {
+
+	start := ctx.GetStart()
+	return fmt.Errorf("%s:%d:%d\n\t%s", start.GetInputStream().GetSourceName(), start.GetLine(), start.GetColumn(), fmt.Errorf(errf, vals...))
 }
 
 type errorCollector struct {
