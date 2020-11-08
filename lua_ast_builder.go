@@ -19,7 +19,7 @@ func NewLuaASTBuilder() *LuaASTBuilder {
 
 // VisitChunk visits a Chunk.
 func (v *LuaASTBuilder) VisitChunk(ctx *parser.ChunkContext) interface{} {
-	return ChunkC{ctx: ctx, Block: ctx.Block().Accept(v).(BlockC)}
+	return ChunkC{Ctx: ctx, Block: ctx.Block().Accept(v).(BlockC)}
 }
 
 // VisitBlock visits a Block.
@@ -29,7 +29,7 @@ func (v *LuaASTBuilder) VisitBlock(ctx *parser.BlockContext) interface{} {
 	for i := range stats {
 		statLst[i] = stats[i].Accept(v).(Stat)
 	}
-	return BlockC{ctx: ctx, StatLst: statLst}
+	return BlockC{Ctx: ctx, StatLst: statLst}
 }
 
 // VisitStat visits a Stat.
@@ -51,7 +51,7 @@ func (v *LuaASTBuilder) VisitStat(ctx *parser.StatContext) interface{} {
 		return f.Accept(v)
 	}
 
-	return DefC{ctx: ctx}
+	return DefC{Ctx: ctx}
 }
 
 // VisitRetstat visits a Retstat.
@@ -91,7 +91,7 @@ func (v *LuaASTBuilder) VisitIfstat(ctx *parser.IfstatContext) interface{} {
 
 // VisitElseifstat visits an elseifstat.
 func (v *LuaASTBuilder) VisitElseifstat(ctx *parser.ElseifstatContext) interface{} {
-	cond := CondC{ctx: ctx}
+	cond := CondC{Ctx: ctx}
 	cond.Cnd = ctx.Exp().Accept(v).(Exp)
 	cond.Block = ctx.Block().Accept(v).(BlockC)
 	return cond
@@ -110,7 +110,7 @@ func (v *LuaASTBuilder) VisitAssign(ctx *parser.AssignContext) interface{} {
 	if e != nil {
 		allExp = e.Accept(v).(ExpLst)
 	} else {
-		allExp = ExpLst{ctx: ctx, List: []Exp{}}
+		allExp = ExpLst{Ctx: ctx, List: []Exp{}}
 	}
 
 	var allTVar IdLst
@@ -137,7 +137,7 @@ func (v *LuaASTBuilder) VisitAssign(ctx *parser.AssignContext) interface{} {
 
 	for i := 0; i < len(allTVar.List); i++ {
 		lst[i] = DefC{
-			ctx: ctx,
+			Ctx: ctx,
 			Id:  allTVar.List[i],
 			Exp: func() Exp {
 				if len(allExp.List) == 0 {
@@ -149,13 +149,13 @@ func (v *LuaASTBuilder) VisitAssign(ctx *parser.AssignContext) interface{} {
 		}
 	}
 
-	return DefLst{ctx: ctx, List: lst}
+	return DefLst{Ctx: ctx, List: lst}
 }
 
 // VisitWhilestat visits a whilestat.
 func (v *LuaASTBuilder) VisitWhilestat(ctx *parser.WhilestatContext) interface{} {
 	return WhileC{
-		ctx:   ctx,
+		Ctx:   ctx,
 		Cnd:   ctx.Exp().Accept(v).(Exp),
 		Block: ctx.Block().Accept(v).(BlockC),
 	}
@@ -165,7 +165,7 @@ func (v *LuaASTBuilder) VisitWhilestat(ctx *parser.WhilestatContext) interface{}
 func (v *LuaASTBuilder) VisitForstat(ctx *parser.ForstatContext) interface{} {
 
 	forS := ForC{
-		ctx:    ctx,
+		Ctx:    ctx,
 		Assign: DefC{Id: IdC{}, Scope: GLOBAL},
 	}
 
@@ -184,7 +184,7 @@ func (v *LuaASTBuilder) VisitForstat(ctx *parser.ForstatContext) interface{} {
 	if len(allExp) > 2 {
 		forS.Step = allExp[2].Accept(v).(Exp)
 	} else {
-		forS.Step = IntC{ctx: ctx, N: 1}
+		forS.Step = IntC{Ctx: ctx, N: 1}
 	}
 
 	forS.Block = ctx.Block().Accept(v).(BlockC)
@@ -199,7 +199,7 @@ func (v *LuaASTBuilder) VisitVarlist(ctx *parser.VarlistContext) interface{} {
 
 		for i := 0; i < len(allVars); i++ {
 			allIdC[i] = IdC{
-				ctx:    ctx,
+				Ctx:    ctx,
 				Id:     allVars[i].Accept(v).(string),
 				TypeId: nil,
 			}
@@ -221,7 +221,7 @@ func (v *LuaASTBuilder) VisitTypedvarlist(ctx *parser.TypedvarlistContext) inter
 			allIdC[i] = allVars[i].Accept(v).(IdC)
 		}
 
-		return IdLst{ctx: ctx, List: allIdC}
+		return IdLst{Ctx: ctx, List: allIdC}
 
 	} else if allVars := ctx.AllVarId(); len(allVars) != 0 {
 		allIdC := make([]IdC, len(allVars))
@@ -229,13 +229,13 @@ func (v *LuaASTBuilder) VisitTypedvarlist(ctx *parser.TypedvarlistContext) inter
 
 		for i := 0; i < len(allVars); i++ {
 			allIdC[i] = IdC{
-				ctx:    ctx,
+				Ctx:    ctx,
 				Id:     allVars[i].Accept(v).(string),
 				TypeId: listType,
 			}
 		}
 
-		return IdLst{ctx: ctx, List: allIdC}
+		return IdLst{Ctx: ctx, List: allIdC}
 	}
 
 	return IdLst{}
@@ -257,7 +257,7 @@ func (v *LuaASTBuilder) VisitExplist(ctx *parser.ExplistContext) interface{} {
 		allExp[i] = allExpCtx[i].Accept(v).(Exp)
 	}
 
-	return ExpLst{ctx: ctx, List: allExp}
+	return ExpLst{Ctx: ctx, List: allExp}
 }
 
 // VisitExp visits an exp.
@@ -270,21 +270,21 @@ func (v *LuaASTBuilder) VisitExp(ctx *parser.ExpContext) interface{} {
 		return bl.Accept(v)
 	} else if bop := ctx.OperatorAddSub(); bop != nil {
 		return BinaryOpC{
-			ctx: ctx,
+			Ctx: ctx,
 			Lhs: ctx.Exp(0).Accept(v).(Exp),
 			Rhs: ctx.Exp(1).Accept(v).(Exp),
 			Op:  bop.Accept(v).(string),
 		}
 	} else if bop := ctx.OperatorMulDivMod(); bop != nil {
 		return BinaryOpC{
-			ctx: ctx,
+			Ctx: ctx,
 			Lhs: ctx.Exp(0).Accept(v).(Exp),
 			Rhs: ctx.Exp(1).Accept(v).(Exp),
 			Op:  bop.Accept(v).(string),
 		}
 	} else if bop := ctx.OperatorComparison(); bop != nil {
 		return BinaryOpC{
-			ctx: ctx,
+			Ctx: ctx,
 			Lhs: ctx.Exp(0).Accept(v).(Exp),
 			Rhs: ctx.Exp(1).Accept(v).(Exp),
 			Op:  bop.Accept(v).(string),
@@ -332,7 +332,7 @@ func (v *LuaASTBuilder) VisitFunctioncall(ctx *parser.FunctioncallContext) inter
 // VisitVarOrExp visits a varOrExp.
 func (v *LuaASTBuilder) VisitVarOrExp(ctx *parser.VarOrExpContext) interface{} {
 	if i := ctx.VarId(); i != nil {
-		return IdC{ctx: ctx, Id: i.Accept(v).(string)}
+		return IdC{Ctx: ctx, Id: i.Accept(v).(string)}
 	}
 	if e := ctx.Exp(); e != nil {
 		return e.Accept(v)
@@ -351,7 +351,7 @@ func (v *LuaASTBuilder) VisitVarId(ctx *parser.VarIdContext) interface{} {
 func (v *LuaASTBuilder) VisitTypedvar(ctx *parser.TypedvarContext) interface{} {
 
 	return IdC{
-		ctx:    ctx,
+		Ctx:    ctx,
 		Id:     ctx.VarId().Accept(v).(string),
 		TypeId: ctx.TypeLiteral().Accept(v).(TypeT),
 	}
@@ -434,7 +434,7 @@ func (v *LuaASTBuilder) VisitOperatorPower(ctx *parser.OperatorPowerContext) int
 }
 
 func (v *LuaASTBuilder) VisitBoolLiteral(ctx *parser.BoolLiteralContext) interface{} {
-	b := BoolC{ctx: ctx}
+	b := BoolC{Ctx: ctx}
 	switch ctx.GetText() {
 	case "true":
 		b.True = true
@@ -452,7 +452,7 @@ func (v *LuaASTBuilder) VisitNumberLiteral(ctx *parser.NumberLiteralContext) int
 			fmt.Println("ERROR: unable to parse int")
 			return IntC{N: -1}
 		}
-		return IntC{ctx: ctx, N: n}
+		return IntC{Ctx: ctx, N: n}
 	}
 	if FLOAT := ctx.FLOAT(); FLOAT != nil {
 		n, err := strconv.ParseFloat(FLOAT.GetText(), 64)
@@ -460,7 +460,7 @@ func (v *LuaASTBuilder) VisitNumberLiteral(ctx *parser.NumberLiteralContext) int
 			fmt.Println("ERROR: unable to parse float")
 			return FloatC{N: -1}
 		}
-		return FloatC{ctx: ctx, N: n}
+		return FloatC{Ctx: ctx, N: n}
 	}
 	return StringC{S: "ERROR"}
 }
@@ -470,29 +470,5 @@ func (v *LuaASTBuilder) VisitStringLiteral(ctx *parser.StringLiteralContext) int
 	if err != nil {
 		fmt.Println("ERROR: unable to parse string", ctx.GetText())
 	}
-	return StringC{ctx: ctx, S: str}
-	/*
-		if normStr := ctx.NORMALSTRING(); normStr != nil {
-			str, err := strconv.Unquote(normStr.GetText())
-			if err != nil {
-				fmt.Println("ERROR: unable to parse string")
-			}
-			return StringC{ctx: ctx, S: str}
-		} else if charStr := ctx.CHARSTRING(); charStr != nil {
-			str, err := strconv.Unquote(charStr.GetText())
-			if err != nil {
-				fmt.Println("ERROR: unable to parse string")
-			}
-			return StringC{S: str}
-		} else if longStr := ctx.LONGSTRING(); longStr != nil {
-			str, err := strconv.Unquote(longStr.GetText())
-			if err != nil {
-				fmt.Println("ERROR: unable to parse string")
-			}
-			return StringC{S: str}
-		}
-
-		fmt.Println("ERROR: unable to parse string literal")
-		return StringC{S: "ERROR"}
-	*/
+	return StringC{Ctx: ctx, S: str}
 }
