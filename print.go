@@ -3,21 +3,23 @@ package main
 import (
 	"strconv"
 	"strings"
+
+	"github.com/ocurr/Meia-Lua/ast"
 )
 
 // PrintLua returns a properly formatted text representation of the given Lua AST.
-func PrintLua(node Node) string {
+func PrintLua(node ast.Node) string {
 
 	switch n := node.(type) {
-	case ChunkC:
+	case ast.ChunkC:
 		return PrintLua(n.Block)
-	case BlockC:
+	case ast.BlockC:
 		var sb strings.Builder
 		for _, s := range n.StatLst {
 			sb.Write([]byte(PrintLua(s) + "\n"))
 		}
 		return sb.String()
-	case CondC:
+	case ast.CondC:
 		cnd := PrintLua(n.Cnd)
 		block := PrintLua(n.Block)
 		elseifs := ""
@@ -32,12 +34,12 @@ func PrintLua(node Node) string {
 
 		return "if " + cnd + " then\n" +
 			block + elseifs + els + "end"
-	case WhileC:
+	case ast.WhileC:
 		cnd := PrintLua(n.Cnd)
 		block := PrintLua(n.Block)
 
 		return "while " + cnd + "\n" + " do\n" + block + "\n" + "end"
-	case ForC:
+	case ast.ForC:
 		def := PrintLua(n.Assign)
 		cnd := PrintLua(n.Cnd)
 		step := PrintLua(n.Step)
@@ -49,15 +51,15 @@ func PrintLua(node Node) string {
 
 		return "for " + def + ", " + cnd + step + " do\n" +
 			block + "end"
-	case DefC:
+	case ast.DefC:
 		id := PrintLua(n.Id)
 		exp := PrintLua(n.Exp)
 		scope := ""
-		if n.Scope == LOCAL {
+		if n.Scope == ast.LOCAL {
 			scope = "local "
 		}
 		return scope + id + " = " + exp
-	case DefLst:
+	case ast.DefLst:
 		defs := ""
 		exps := ""
 		sep := ""
@@ -74,24 +76,24 @@ func PrintLua(node Node) string {
 		defs = strings.TrimRight(defs, ", ")
 		exps = strings.TrimRight(exps, ", ")
 		return defs + " = " + exps
-	case IdC:
+	case ast.IdC:
 		return n.Id
-	case BinaryOpC:
+	case ast.BinaryOpC:
 		lhs := PrintLua(n.Lhs)
 		rhs := PrintLua(n.Rhs)
 		return lhs + " " + n.Op + " " + rhs
-	case IntC:
+	case ast.IntC:
 		return strconv.FormatInt(n.N, 10)
-	case FloatC:
+	case ast.FloatC:
 		return strconv.FormatFloat(n.N, 'f', -1, 64)
-	case StringC:
+	case ast.StringC:
 		return n.S
-	case BoolC:
+	case ast.BoolC:
 		if n.True {
 			return "true"
 		}
 		return "false"
-	case NilC:
+	case ast.NilC:
 		return "nil"
 	default:
 		return ""

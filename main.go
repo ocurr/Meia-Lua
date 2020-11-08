@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/ocurr/Meia-Lua/ast"
 	"github.com/ocurr/Meia-Lua/parser"
 )
 
@@ -26,14 +27,14 @@ func main() {
 	p.AddErrorListener(NewLuaErrorListener())
 	p.BuildParseTrees = true
 	tree := p.Chunk()
-	builder := NewLuaASTBuilder()
-	ast := tree.Accept(builder)
-	_, errs := LuaTypeCheck(ast.(Node))
+	builder := ast.NewLuaASTBuilder()
+	mLuaAST := tree.Accept(builder)
+	_, errs := LuaTypeCheck(mLuaAST.(ast.Node))
 	if len(errs) != 0 {
 		for _, err := range errs {
 			fmt.Println("ERROR: ", err)
 		}
 		return
 	}
-	fmt.Printf("%s", PrintLua(ast.(Node)))
+	fmt.Printf("%s", PrintLua(mLuaAST.(ast.Node)))
 }

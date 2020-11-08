@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/ocurr/Meia-Lua/ast"
 	"github.com/ocurr/Meia-Lua/types"
 )
 
@@ -33,25 +34,25 @@ func (tenv TypeEnv) Extend(id string, t types.Type) TypeEnv {
 }
 
 // LuaTypeCheck type checks root and returns the final type and a list of errors.
-func LuaTypeCheck(root Node) (types.Type, []error) {
+func LuaTypeCheck(root ast.Node) (types.Type, []error) {
 	return TypeCheck(root, NewTypeEnv())
 }
 
 // TypeCheck type checks root using tenv as the types.Type Environment.
-func TypeCheck(root Node, tenv TypeEnv) (types.Type, []error) {
+func TypeCheck(root ast.Node, tenv TypeEnv) (types.Type, []error) {
 
 	ec := new(errorCollector)
 
 	switch r := root.(type) {
-	case ChunkC:
+	case ast.ChunkC:
 		return TypeCheck(r.Block, tenv)
-	case BlockC:
+	case ast.BlockC:
 		for _, s := range r.StatLst {
 			_, err := TypeCheck(s, tenv)
 			ec.add(err...)
 		}
 		return types.Default{}, ec.errors
-	case DefC:
+	case ast.DefC:
 		idT, err := TypeCheck(r.Id, tenv)
 		ec.add(err...)
 
@@ -67,13 +68,13 @@ func TypeCheck(root Node, tenv TypeEnv) (types.Type, []error) {
 		}
 
 		return idT, ec.errors
-	case DefLst:
+	case ast.DefLst:
 		for _, d := range r.List {
 			_, err := TypeCheck(d, tenv)
 			ec.add(err...)
 		}
 		return types.Default{}, ec.errors
-	case IdC:
+	case ast.IdC:
 		if r.TypeId == nil {
 			if t, ok := tenv[r.Id]; ok {
 				return t, ec.errors
@@ -84,19 +85,19 @@ func TypeCheck(root Node, tenv TypeEnv) (types.Type, []error) {
 		}
 		tenv[r.Id] = r.TypeId
 		return r.TypeId, ec.errors
-	case IdLst:
+	case ast.IdLst:
 		for _, i := range r.List {
 			_, err := TypeCheck(i, tenv)
 			ec.add(err...)
 		}
 		return types.Default{}, ec.errors
-	case ExpLst:
+	case ast.ExpLst:
 		for _, e := range r.List {
 			_, err := TypeCheck(e, tenv)
 			ec.add(err...)
 		}
 		return types.Default{}, ec.errors
-	case CondC:
+	case ast.CondC:
 		cndT, err := TypeCheck(r.Cnd, tenv)
 		ec.add(err...)
 		if !types.IsBool(cndT) {
@@ -116,7 +117,7 @@ func TypeCheck(root Node, tenv TypeEnv) (types.Type, []error) {
 		ec.add(err...)
 
 		return types.Default{}, ec.errors
-	case WhileC:
+	case ast.WhileC:
 		cndT, err := TypeCheck(r.Cnd, tenv)
 		ec.add(err...)
 		if !types.IsBool(cndT) {
@@ -128,7 +129,7 @@ func TypeCheck(root Node, tenv TypeEnv) (types.Type, []error) {
 		ec.add(err...)
 
 		return types.Default{}, ec.errors
-	case ForC:
+	case ast.ForC:
 		var ntenv TypeEnv
 		if r.Assign.Id.TypeId == nil {
 			_, err := TypeCheck(r.Assign, tenv)
@@ -157,7 +158,7 @@ func TypeCheck(root Node, tenv TypeEnv) (types.Type, []error) {
 		ec.add(err...)
 
 		return types.Default{}, ec.errors
-	case BinaryOpC:
+	case ast.BinaryOpC:
 
 		switch r.Op {
 		case "+":
@@ -236,15 +237,15 @@ func TypeCheck(root Node, tenv TypeEnv) (types.Type, []error) {
 			}
 			return types.Bool{}, ec.errors
 		}
-	case IntC:
+	case ast.IntC:
 		return types.Int{}, ec.errors
-	case FloatC:
+	case ast.FloatC:
 		return types.Float{}, ec.errors
-	case StringC:
+	case ast.StringC:
 		return types.String{}, ec.errors
-	case BoolC:
+	case ast.BoolC:
 		return types.Bool{}, ec.errors
-	case NilC:
+	case ast.NilC:
 		return types.Nil{}, ec.errors
 	}
 
