@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/ocurr/Meia-Lua/parser"
+	"github.com/ocurr/Meia-Lua/types"
 )
 
 // LuaASTBuilder builds an abstract syntax tree from parse contexts.
@@ -170,7 +171,7 @@ func (v *LuaASTBuilder) VisitForstat(ctx *parser.ForstatContext) interface{} {
 	}
 
 	if typeL := ctx.TypeLiteral(); typeL != nil {
-		forS.Assign.Id.TypeId = typeL.Accept(v).(TypeT)
+		forS.Assign.Id.TypeId = typeL.Accept(v).(types.Type)
 	}
 
 	forS.Assign.Id.Id = ctx.NAME().GetText()
@@ -225,7 +226,7 @@ func (v *LuaASTBuilder) VisitTypedvarlist(ctx *parser.TypedvarlistContext) inter
 
 	} else if allVars := ctx.AllVarId(); len(allVars) != 0 {
 		allIdC := make([]IdC, len(allVars))
-		listType := ctx.TypeLiteral().Accept(v).(TypeT)
+		listType := ctx.TypeLiteral().Accept(v).(types.Type)
 
 		for i := 0; i < len(allVars); i++ {
 			allIdC[i] = IdC{
@@ -306,16 +307,16 @@ func (v *LuaASTBuilder) VisitExp(ctx *parser.ExpContext) interface{} {
 func (v *LuaASTBuilder) VisitTypeLiteral(ctx *parser.TypeLiteralContext) interface{} {
 	switch ctx.GetText() {
 	case "float":
-		return FloatT{}
+		return types.Float{}
 	case "int":
-		return IntT{}
+		return types.Int{}
 	case "string":
-		return StringT{}
+		return types.String{}
 	case "bool":
-		return BoolT{}
+		return types.Bool{}
 	default:
 		fmt.Printf("ERROR type %s is not supported\n", ctx.GetText())
-		return ErrorT{}
+		return types.Error{}
 	}
 }
 
@@ -353,7 +354,7 @@ func (v *LuaASTBuilder) VisitTypedvar(ctx *parser.TypedvarContext) interface{} {
 	return IdC{
 		Ctx:    ctx,
 		Id:     ctx.VarId().Accept(v).(string),
-		TypeId: ctx.TypeLiteral().Accept(v).(TypeT),
+		TypeId: ctx.TypeLiteral().Accept(v).(types.Type),
 	}
 }
 

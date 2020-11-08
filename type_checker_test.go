@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/ocurr/Meia-Lua/parser"
+	"github.com/ocurr/Meia-Lua/types"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 )
@@ -11,13 +12,13 @@ import (
 func TestTypeChecker(t *testing.T) {
 	t.Run("BasicDefinition", func(t *testing.T) {
 		input := DefC{
-			Id:  IdC{Id: "x", TypeId: IntT{}},
+			Id:  IdC{Id: "x", TypeId: types.Int{}},
 			Exp: IntC{N: 5},
 		}
 
 		got, errs := LuaTypeCheck(input)
 
-		want := IntT{}
+		want := types.Int{}
 
 		if len(errs) != 0 {
 			t.Errorf("expected no errors got: %v", errs)
@@ -32,14 +33,14 @@ func TestTypeChecker(t *testing.T) {
 			Cnd: BoolC{True: true},
 			Block: BlockC{StatLst: []Stat{
 				DefLst{List: []DefC{
-					{Id: IdC{Id: "x", TypeId: IntT{}},
+					{Id: IdC{Id: "x", TypeId: types.Int{}},
 						Exp: IntC{N: 5}}}},
 				CondC{
 					Cnd: BoolC{True: true},
 					Block: BlockC{
 						StatLst: []Stat{
 							DefLst{List: []DefC{
-								{Id: IdC{Id: "x", TypeId: IntT{}},
+								{Id: IdC{Id: "x", TypeId: types.Int{}},
 									Exp: IntC{N: 6}}}}}}},
 			}}}
 
@@ -55,14 +56,14 @@ func TestTypeChecker(t *testing.T) {
 			Cnd: BoolC{True: true},
 			Block: BlockC{StatLst: []Stat{
 				DefLst{List: []DefC{
-					{Id: IdC{Id: "x", TypeId: IntT{}},
+					{Id: IdC{Id: "x", TypeId: types.Int{}},
 						Exp: IntC{N: 5}}}},
 				CondC{
 					Cnd: BoolC{True: true},
 					Block: BlockC{
 						StatLst: []Stat{
 							DefLst{List: []DefC{
-								{Id: IdC{Id: "x", TypeId: IntT{}},
+								{Id: IdC{Id: "x", TypeId: types.Int{}},
 									Exp: IntC{N: 6}}}}}},
 					Elseifs: []CondC{
 						{
@@ -70,7 +71,7 @@ func TestTypeChecker(t *testing.T) {
 							Block: BlockC{
 								StatLst: []Stat{
 									DefLst{List: []DefC{
-										{Id: IdC{Id: "x", TypeId: IntT{}},
+										{Id: IdC{Id: "x", TypeId: types.Int{}},
 											Exp: IntC{N: 5}}}}}}},
 					},
 				}}}}
@@ -86,14 +87,14 @@ func TestTypeChecker(t *testing.T) {
 			Cnd: BoolC{True: true},
 			Block: BlockC{StatLst: []Stat{
 				DefLst{List: []DefC{
-					{Id: IdC{Id: "x", TypeId: IntT{}},
+					{Id: IdC{Id: "x", TypeId: types.Int{}},
 						Exp: IntC{N: 5}}}},
 				CondC{
 					Cnd: BoolC{True: true},
 					Block: BlockC{
 						StatLst: []Stat{
 							DefLst{List: []DefC{
-								{Id: IdC{Id: "x", TypeId: IntT{}},
+								{Id: IdC{Id: "x", TypeId: types.Int{}},
 									Exp: IntC{N: 6}}}}}},
 					Elseifs: []CondC{
 						{
@@ -101,7 +102,7 @@ func TestTypeChecker(t *testing.T) {
 							Block: BlockC{
 								StatLst: []Stat{
 									DefLst{List: []DefC{
-										{Id: IdC{Id: "x", TypeId: IntT{}},
+										{Id: IdC{Id: "x", TypeId: types.Int{}},
 											Exp: IntC{N: 5}}}}}}},
 					},
 					Else: BlockC{StatLst: []Stat{
@@ -110,7 +111,7 @@ func TestTypeChecker(t *testing.T) {
 							Block: BlockC{
 								StatLst: []Stat{
 									DefLst{List: []DefC{
-										{Id: IdC{Id: "x", TypeId: IntT{}},
+										{Id: IdC{Id: "x", TypeId: types.Int{}},
 											Exp: IntC{N: 6}}}}}},
 						}},
 					}}}}}
@@ -127,7 +128,7 @@ func TestTypeChecker(t *testing.T) {
 			Block: BlockC{
 				StatLst: []Stat{
 					DefLst{List: []DefC{
-						{Id: IdC{Id: "x", TypeId: IntT{}},
+						{Id: IdC{Id: "x", TypeId: types.Int{}},
 							Exp: IntC{N: 6}}}}}},
 		}
 
@@ -171,7 +172,7 @@ func TestTypeChecker(t *testing.T) {
 
 		_, err := LuaTypeCheck(ForC{
 			Assign: DefC{
-				Id:  IdC{Id: "x", TypeId: IntT{}},
+				Id:  IdC{Id: "x", TypeId: types.Int{}},
 				Exp: IntC{N: 5},
 			},
 			Cnd:   IntC{N: 10},

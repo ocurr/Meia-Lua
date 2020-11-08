@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/ocurr/Meia-Lua/types"
 )
 
 // Node represents a node in the abstact syntax tree.
@@ -131,7 +132,7 @@ func (dl DefLst) GetCtx() antlr.ParserRuleContext {
 type IdC struct {
 	Ctx    antlr.ParserRuleContext
 	Id     string
-	TypeId TypeT
+	TypeId types.Type
 }
 
 func (i IdC) expNode() {}

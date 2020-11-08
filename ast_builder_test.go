@@ -7,6 +7,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/ocurr/Meia-Lua/parser"
+	"github.com/ocurr/Meia-Lua/types"
 )
 
 var astCompOpts = []cmp.Option{
@@ -40,7 +41,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: IntC{N: 5}, Scope: GLOBAL}}}}}}
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: IntC{N: 5}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
 			t.Errorf("AST mismatch (-want +got):\n%s", diff)
 		}
@@ -56,7 +57,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: FloatT{}}, Exp: FloatC{N: 5.5}, Scope: GLOBAL}}}}}}
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Float{}}, Exp: FloatC{N: 5.5}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
 			t.Errorf("AST mismatch (-want +got):\n%s", diff)
 		}
@@ -72,7 +73,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "animal", TypeId: StringT{}}, Exp: StringC{S: "horse"}, Scope: GLOBAL}}}}}}
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "animal", TypeId: types.String{}}, Exp: StringC{S: "horse"}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
 			t.Errorf("AST mismatch (-want +got):\n%s", diff)
 		}
@@ -89,9 +90,9 @@ func TestASTBuilder(t *testing.T) {
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
 			StatLst: []Stat{DefLst{List: []DefC{
-				{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: IntC{N: 5}, Scope: GLOBAL},
-				{Id: IdC{Id: "y", TypeId: IntT{}}, Exp: IntC{N: 6}, Scope: GLOBAL},
-				{Id: IdC{Id: "z", TypeId: IntT{}}, Exp: IntC{N: 7}, Scope: GLOBAL},
+				{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: IntC{N: 5}, Scope: GLOBAL},
+				{Id: IdC{Id: "y", TypeId: types.Int{}}, Exp: IntC{N: 6}, Scope: GLOBAL},
+				{Id: IdC{Id: "z", TypeId: types.Int{}}, Exp: IntC{N: 7}, Scope: GLOBAL},
 			}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
 			t.Errorf("AST mismatch (-want +got):\n%s", diff)
@@ -109,9 +110,9 @@ func TestASTBuilder(t *testing.T) {
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
 			StatLst: []Stat{DefLst{List: []DefC{
-				{Id: IdC{Id: "x", TypeId: FloatT{}}, Exp: FloatC{N: 5.5}, Scope: GLOBAL},
-				{Id: IdC{Id: "y", TypeId: FloatT{}}, Exp: FloatC{N: 10.789}, Scope: GLOBAL},
-				{Id: IdC{Id: "z", TypeId: FloatT{}}, Exp: FloatC{N: 100.23}, Scope: GLOBAL},
+				{Id: IdC{Id: "x", TypeId: types.Float{}}, Exp: FloatC{N: 5.5}, Scope: GLOBAL},
+				{Id: IdC{Id: "y", TypeId: types.Float{}}, Exp: FloatC{N: 10.789}, Scope: GLOBAL},
+				{Id: IdC{Id: "z", TypeId: types.Float{}}, Exp: FloatC{N: 100.23}, Scope: GLOBAL},
 			}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
 			t.Errorf("AST mismatch (-want +got):\n%s", diff)
@@ -129,9 +130,9 @@ func TestASTBuilder(t *testing.T) {
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
 			StatLst: []Stat{DefLst{List: []DefC{
-				{Id: IdC{Id: "animal", TypeId: StringT{}}, Exp: StringC{S: "horse"}, Scope: GLOBAL},
-				{Id: IdC{Id: "dog", TypeId: StringT{}}, Exp: StringC{S: "fido"}, Scope: GLOBAL},
-				{Id: IdC{Id: "word", TypeId: StringT{}}, Exp: StringC{S: "bar"}, Scope: GLOBAL},
+				{Id: IdC{Id: "animal", TypeId: types.String{}}, Exp: StringC{S: "horse"}, Scope: GLOBAL},
+				{Id: IdC{Id: "dog", TypeId: types.String{}}, Exp: StringC{S: "fido"}, Scope: GLOBAL},
+				{Id: IdC{Id: "word", TypeId: types.String{}}, Exp: StringC{S: "bar"}, Scope: GLOBAL},
 			}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
 			t.Errorf("AST mismatch (-want +got):\n%s", diff)
@@ -148,7 +149,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "+",
@@ -168,7 +169,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "-",
@@ -188,7 +189,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "*",
@@ -208,7 +209,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "%",
@@ -228,7 +229,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "/",
@@ -248,7 +249,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BoolC{True: true}, Scope: GLOBAL}}}}}}
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Bool{}}, Exp: BoolC{True: true}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
 			t.Errorf("AST mismatch (-want +got):\n%s", diff)
 		}
@@ -264,7 +265,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Bool{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "<",
@@ -284,7 +285,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Bool{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "<=",
@@ -304,7 +305,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Bool{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  ">",
@@ -324,7 +325,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Bool{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  ">=",
@@ -344,7 +345,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Bool{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "==",
@@ -364,7 +365,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: BoolT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Bool{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "~=",
@@ -384,7 +385,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: BinaryOpC{
 				Lhs: IntC{N: 5},
 				Rhs: IntC{N: 2},
 				Op:  "//",
@@ -408,7 +409,7 @@ func TestASTBuilder(t *testing.T) {
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{
 			StatLst: []Stat{
-				DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: BinaryOpC{
+				DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: BinaryOpC{
 					Lhs: IntC{N: 5},
 					Rhs: IntC{N: 2},
 					Op:  "//",
@@ -497,7 +498,7 @@ func TestASTBuilder(t *testing.T) {
 				Assign: DefC{
 					Id: IdC{
 						Id:     "x",
-						TypeId: IntT{},
+						TypeId: types.Int{},
 					},
 					Exp:   IntC{N: 5},
 					Scope: GLOBAL,
@@ -536,7 +537,7 @@ func TestASTBuilder(t *testing.T) {
 				Assign: DefC{
 					Id: IdC{
 						Id:     "x",
-						TypeId: IntT{},
+						TypeId: types.Int{},
 					},
 					Exp:   IntC{N: 5},
 					Scope: GLOBAL,
@@ -566,7 +567,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{StatLst: []Stat{
-			DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: NilC{}, Scope: GLOBAL}}},
+			DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: NilC{}, Scope: GLOBAL}}},
 		}}}
 
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
@@ -584,7 +585,7 @@ func TestASTBuilder(t *testing.T) {
 
 		got := tree.Accept(builder)
 		want := ChunkC{Block: BlockC{StatLst: []Stat{
-			DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: IntT{}}, Exp: NilC{}, Scope: LOCAL}}},
+			DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: NilC{}, Scope: LOCAL}}},
 		}}}
 
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
