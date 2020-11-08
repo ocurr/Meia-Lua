@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"reflect"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 )
@@ -179,8 +178,7 @@ func TypeCheck(root Node, tenv TypeEnv) (TypeT, []error) {
 				ec.add(formatError(r.GetCtx(), "operator: %q expected float or int got: %s", r.Op, rhs.Name()))
 				return ErrorT{}, ec.errors
 			}
-			floatType := reflect.TypeOf(FloatT{})
-			if reflect.TypeOf(lhs) == floatType || reflect.TypeOf(rhs) == floatType {
+			if isFloat(lhs) || isFloat(rhs) {
 				return FloatT{}, ec.errors
 			}
 			return IntT{}, ec.errors
@@ -268,6 +266,14 @@ func isBool(t TypeT) bool {
 	default:
 		return false
 	}
+}
+
+func isFloat(t TypeT) bool {
+	switch t.(type) {
+	case FloatT:
+		return true
+	}
+	return false
 }
 
 func formatError(ctx antlr.ParserRuleContext, errf string, vals ...interface{}) error {
