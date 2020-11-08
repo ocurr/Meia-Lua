@@ -1,4 +1,4 @@
-package main
+package typecheck
 
 import (
 	"testing"
@@ -17,7 +17,7 @@ func TestTypeChecker(t *testing.T) {
 			Exp: ast.Int{N: 5},
 		}
 
-		got, errs := LuaTypeCheck(input)
+		got, errs := Check(input)
 
 		want := types.Int{}
 
@@ -45,7 +45,7 @@ func TestTypeChecker(t *testing.T) {
 									Exp: ast.Int{N: 6}}}}}}},
 			}}}
 
-		_, err := LuaTypeCheck(input)
+		_, err := Check(input)
 
 		if len(err) != 0 {
 			t.Errorf("expected no errors got: %v", err)
@@ -77,7 +77,7 @@ func TestTypeChecker(t *testing.T) {
 					},
 				}}}}
 
-		_, err := LuaTypeCheck(input)
+		_, err := Check(input)
 
 		if len(err) != 0 {
 			t.Errorf("expected no errors got: %v", err)
@@ -117,7 +117,7 @@ func TestTypeChecker(t *testing.T) {
 						}},
 					}}}}}
 
-		_, err := LuaTypeCheck(input)
+		_, err := Check(input)
 
 		if len(err) != 0 {
 			t.Errorf("expected no errors got: %v", err)
@@ -133,7 +133,7 @@ func TestTypeChecker(t *testing.T) {
 							Exp: ast.Int{N: 6}}}}}},
 		}
 
-		_, err := LuaTypeCheck(input)
+		_, err := Check(input)
 
 		if len(err) != 0 {
 			t.Errorf("expected no errors got: %v", err)
@@ -152,7 +152,7 @@ func TestTypeChecker(t *testing.T) {
 		end
 		`
 
-		_, err := LuaTypeCheck(buildInputTree(input))
+		_, err := Check(buildInputTree(input))
 		if len(err) != 0 {
 			t.Errorf("expected no errors got: %v", err)
 		}
@@ -164,14 +164,14 @@ func TestTypeChecker(t *testing.T) {
 		end
 		`
 
-		_, err := LuaTypeCheck(buildInputTree(input))
+		_, err := Check(buildInputTree(input))
 		if len(err) != 0 {
 			t.Errorf("expected no errors got: %v", err)
 		}
 	})
 	t.Run("ForNoBody", func(t *testing.T) {
 
-		_, err := LuaTypeCheck(ast.For{
+		_, err := Check(ast.For{
 			Assign: ast.Def{
 				Id:  ast.Id{Id: "x", TypeId: types.Int{}},
 				Exp: ast.Int{N: 5},
@@ -191,7 +191,7 @@ func TestTypeChecker(t *testing.T) {
 		end
 		`
 
-		_, err := LuaTypeCheck(buildInputTree(input))
+		_, err := Check(buildInputTree(input))
 		if len(err) != 0 {
 			t.Errorf("expected no errors got: %v", err)
 		}
@@ -202,7 +202,7 @@ func TestTypeChecker(t *testing.T) {
 		x = x + 5
 		`
 
-		_, err := LuaTypeCheck(buildInputTree(input))
+		_, err := Check(buildInputTree(input))
 		if len(err) != 0 {
 			t.Errorf("expected no errors got: %v", err)
 		}
@@ -214,7 +214,7 @@ func TestEquality(t *testing.T) {
 	bool y = 5 == "horse"
 	`
 
-	_, err := LuaTypeCheck(buildInputTree(input))
+	_, err := Check(buildInputTree(input))
 	if len(err) == 0 {
 		t.Errorf("expected errors, got no errors instead")
 	}

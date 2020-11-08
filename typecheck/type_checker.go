@@ -1,4 +1,4 @@
-package main
+package typecheck
 
 import (
 	"fmt"
@@ -8,55 +8,30 @@ import (
 	"github.com/ocurr/Meia-Lua/types"
 )
 
-// TypeEnv is a type environment representation that maps from labels to types.
-type TypeEnv map[string]types.Type
-
-// NewTypeEnv returns a new empty TypeEnv.
-func NewTypeEnv() TypeEnv {
-	return map[string]types.Type{}
+// Check type checks root and returns the final type and a list of errors.
+func Check(root ast.Node) (types.Type, []error) {
+	return CheckWithEnv(root, NewTypeEnv())
 }
 
-// Copy returns a copy of the TypeEnv.
-func (tenv TypeEnv) Copy() TypeEnv {
-	newTenv := NewTypeEnv()
-	for k, v := range tenv {
-		newTenv[k] = v
-	}
-	return newTenv
-}
-
-// Extend adds a new label -> type mapping to the TypeEnv.
-func (tenv TypeEnv) Extend(id string, t types.Type) TypeEnv {
-	ntenv := tenv.Copy()
-	ntenv[id] = t
-
-	return ntenv
-}
-
-// LuaTypeCheck type checks root and returns the final type and a list of errors.
-func LuaTypeCheck(root ast.Node) (types.Type, []error) {
-	return TypeCheck(root, NewTypeEnv())
-}
-
-// TypeCheck type checks root using tenv as the types.Type Environment.
-func TypeCheck(root ast.Node, tenv TypeEnv) (types.Type, []error) {
+// CheckWithEnv type checks root using tenv as the types.Type Environment.
+func CheckWithEnv(root ast.Node, tenv TypeEnv) (types.Type, []error) {
 
 	ec := new(errorCollector)
 
 	switch r := root.(type) {
 	case ast.Chunk:
-		return TypeCheck(r.Block, tenv)
+		return CheckWithEnv(r.Block, tenv)
 	case ast.Block:
 		for _, s := range r.StatLst {
-			_, err := TypeCheck(s, tenv)
+			_, err := CheckWithEnv(s, tenv)
 			ec.add(err...)
 		}
 		return types.Default{}, ec.errors
 	case ast.Def:
-		idT, err := TypeCheck(r.Id, tenv)
+		idT, err := CheckWithEnv(r.Id, tenv)
 		ec.add(err...)
 
-		expT, err := TypeCheck(r.Exp, tenv)
+		expT, err := CheckWithEnv(r.Exp, tenv)
 		ec.add(err...)
 
 		if idT == nil {
@@ -70,7 +45,7 @@ func TypeCheck(root ast.Node, tenv TypeEnv) (types.Type, []error) {
 		return idT, ec.errors
 	case ast.DefLst:
 		for _, d := range r.List {
-			_, err := TypeCheck(d, tenv)
+			_, err := CheckWithEnv(d, tenv)
 			ec.add(err...)
 		}
 		return types.Default{}, ec.errors
@@ -87,74 +62,74 @@ func TypeCheck(root ast.Node, tenv TypeEnv) (types.Type, []error) {
 		return r.TypeId, ec.errors
 	case ast.IdLst:
 		for _, i := range r.List {
-			_, err := TypeCheck(i, tenv)
+			_, err := CheckWithEnv(i, tenv)
 			ec.add(err...)
 		}
 		return types.Default{}, ec.errors
 	case ast.ExpLst:
 		for _, e := range r.List {
-			_, err := TypeCheck(e, tenv)
+			_, err := CheckWithEnv(e, tenv)
 			ec.add(err...)
 		}
 		return types.Default{}, ec.errors
 	case ast.Cond:
-		cndT, err := TypeCheck(r.Cnd, tenv)
+		cndT, err := CheckWithEnv(r.Cnd, tenv)
 		ec.add(err...)
 		if !types.IsBool(cndT) {
 			ec.add(formatError(r.GetCtx(), "a conditional statement must evaulate to a boolean value"))
 			return types.Error{}, ec.errors
 		}
 
-		_, err = TypeCheck(r.Block, tenv.Copy())
+		_, err = CheckWithEnv(r.Block, tenv.Copy())
 		ec.add(err...)
 
 		for _, els := range r.Elseifs {
-			_, err := TypeCheck(els, tenv)
+			_, err := CheckWithEnv(els, tenv)
 			ec.add(err...)
 		}
 
-		_, err = TypeCheck(r.Else, tenv)
+		_, err = CheckWithEnv(r.Else, tenv)
 		ec.add(err...)
 
 		return types.Default{}, ec.errors
 	case ast.While:
-		cndT, err := TypeCheck(r.Cnd, tenv)
+		cndT, err := CheckWithEnv(r.Cnd, tenv)
 		ec.add(err...)
 		if !types.IsBool(cndT) {
 			ec.add(formatError(r.GetCtx(), "a conditional statement must evaulate to a boolean value"))
 			return types.Error{}, ec.errors
 		}
 
-		_, err = TypeCheck(r.Block, tenv.Copy())
+		_, err = CheckWithEnv(r.Block, tenv.Copy())
 		ec.add(err...)
 
 		return types.Default{}, ec.errors
 	case ast.For:
 		var ntenv TypeEnv
 		if r.Assign.Id.TypeId == nil {
-			_, err := TypeCheck(r.Assign, tenv)
+			_, err := CheckWithEnv(r.Assign, tenv)
 			ec.add(err...)
 		} else {
 			ntenv = tenv.Extend(r.Assign.Id.Id, r.Assign.Id.TypeId)
-			_, err := TypeCheck(r.Assign.Exp, tenv)
+			_, err := CheckWithEnv(r.Assign.Exp, tenv)
 			ec.add(err...)
 		}
 
-		cndT, err := TypeCheck(r.Cnd, tenv)
+		cndT, err := CheckWithEnv(r.Cnd, tenv)
 		ec.add(err...)
 		if !types.IsNumber(cndT) {
 			ec.add(formatError(r.GetCtx(), "a for statement's limit must be a number"))
 			return types.Error{}, ec.errors
 		}
 
-		stpT, err := TypeCheck(r.Step, tenv)
+		stpT, err := CheckWithEnv(r.Step, tenv)
 		ec.add(err...)
 		if !types.IsNumber(stpT) {
 			ec.add(formatError(r.GetCtx(), "a for statement's step must be a number"))
 			return types.Error{}, ec.errors
 		}
 
-		_, err = TypeCheck(r.Block, ntenv)
+		_, err = CheckWithEnv(r.Block, ntenv)
 		ec.add(err...)
 
 		return types.Default{}, ec.errors
@@ -168,13 +143,13 @@ func TypeCheck(root ast.Node, tenv TypeEnv) (types.Type, []error) {
 		case "%":
 			fallthrough
 		case "-":
-			lhs, err := TypeCheck(r.Lhs, tenv)
+			lhs, err := CheckWithEnv(r.Lhs, tenv)
 			ec.add(err...)
 			if !types.IsNumber(lhs) {
 				ec.add(formatError(r.GetCtx(), "operator: %q expected float or int got: %s", r.Op, lhs.Name()))
 				return types.Error{}, ec.errors
 			}
-			rhs, err := TypeCheck(r.Rhs, tenv)
+			rhs, err := CheckWithEnv(r.Rhs, tenv)
 			ec.add(err...)
 			if !types.IsNumber(rhs) {
 				ec.add(formatError(r.GetCtx(), "operator: %q expected float or int got: %s", r.Op, rhs.Name()))
@@ -185,13 +160,13 @@ func TypeCheck(root ast.Node, tenv TypeEnv) (types.Type, []error) {
 			}
 			return types.Int{}, ec.errors
 		case "/":
-			lhs, err := TypeCheck(r.Lhs, tenv)
+			lhs, err := CheckWithEnv(r.Lhs, tenv)
 			ec.add(err...)
 			if !types.IsNumber(lhs) {
 				ec.add(formatError(r.GetCtx(), "operator: %q expected float or int got: %s", r.Op, lhs.Name()))
 				return types.Error{}, ec.errors
 			}
-			rhs, err := TypeCheck(r.Rhs, tenv)
+			rhs, err := CheckWithEnv(r.Rhs, tenv)
 			ec.add(err...)
 			if !types.IsNumber(rhs) {
 				ec.add(formatError(r.GetCtx(), "operator: %q expected float or int got: %s", r.Op, rhs.Name()))
@@ -199,13 +174,13 @@ func TypeCheck(root ast.Node, tenv TypeEnv) (types.Type, []error) {
 			}
 			return types.Float{}, ec.errors
 		case "//":
-			lhs, err := TypeCheck(r.Lhs, tenv)
+			lhs, err := CheckWithEnv(r.Lhs, tenv)
 			ec.add(err...)
 			if !types.IsNumber(lhs) {
 				ec.add(formatError(r.GetCtx(), "operator: %q expected float or int got: %s", r.Op, lhs.Name()))
 				return types.Error{}, ec.errors
 			}
-			rhs, err := TypeCheck(r.Rhs, tenv)
+			rhs, err := CheckWithEnv(r.Rhs, tenv)
 			ec.add(err...)
 			if !types.IsNumber(rhs) {
 				ec.add(formatError(r.GetCtx(), "operator: %q expected float or int got: %s", r.Op, rhs.Name()))
@@ -213,9 +188,9 @@ func TypeCheck(root ast.Node, tenv TypeEnv) (types.Type, []error) {
 			}
 			return types.Int{}, ec.errors
 		case "==", "~=":
-			lhs, err := TypeCheck(r.Lhs, tenv)
+			lhs, err := CheckWithEnv(r.Lhs, tenv)
 			ec.add(err...)
-			rhs, err := TypeCheck(r.Rhs, tenv)
+			rhs, err := CheckWithEnv(r.Rhs, tenv)
 			ec.add(err...)
 			if lhs != rhs {
 				ec.add(formatError(r.GetCtx(), "operator: %q requires that both operands have the same type", r.Op))
@@ -223,13 +198,13 @@ func TypeCheck(root ast.Node, tenv TypeEnv) (types.Type, []error) {
 			}
 			return types.Bool{}, ec.errors
 		case "<", ">", ">=", "<=":
-			lhs, err := TypeCheck(r.Lhs, tenv)
+			lhs, err := CheckWithEnv(r.Lhs, tenv)
 			ec.add(err...)
 			if !types.IsNumber(lhs) {
 				ec.add(formatError(r.GetCtx(), "operator: %q expected float or int got: %s", r.Op, lhs.Name()))
 				return types.Error{}, ec.errors
 			}
-			rhs, err := TypeCheck(r.Rhs, tenv)
+			rhs, err := CheckWithEnv(r.Rhs, tenv)
 			ec.add(err...)
 			if !types.IsNumber(rhs) {
 				ec.add(formatError(r.GetCtx(), "operator: %q expected float or int got: %s", r.Op, rhs.Name()))

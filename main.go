@@ -7,6 +7,7 @@ import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/ocurr/Meia-Lua/ast"
 	"github.com/ocurr/Meia-Lua/parser"
+	"github.com/ocurr/Meia-Lua/typecheck"
 )
 
 func main() {
@@ -29,7 +30,7 @@ func main() {
 	tree := p.Chunk()
 	builder := ast.NewBuilder()
 	mLuaAST := tree.Accept(builder)
-	_, errs := LuaTypeCheck(mLuaAST.(ast.Node))
+	_, errs := typecheck.Check(mLuaAST.(ast.Node))
 	if len(errs) != 0 {
 		for _, err := range errs {
 			fmt.Println("ERROR: ", err)
