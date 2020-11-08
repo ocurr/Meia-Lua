@@ -32,93 +32,93 @@ const (
 	GLOBAL ScopeC = "global"
 )
 
-// ChunkC is a Chunk node in the AST.
-type ChunkC struct {
+// Chunk is a Chunk node in the AST.
+type Chunk struct {
 	Ctx   antlr.ParserRuleContext
-	Block BlockC
+	Block Block
 }
 
 // GetCtx returns the context of the ChunkC.
-func (c ChunkC) GetCtx() antlr.ParserRuleContext {
+func (c Chunk) GetCtx() antlr.ParserRuleContext {
 	return c.Ctx
 }
 
-// BlockC is a Block node in the AST.
-type BlockC struct {
+// Block is a Block node in the AST.
+type Block struct {
 	Ctx     antlr.ParserRuleContext
 	StatLst []Stat
 }
 
 // GetCtx returns the context of the BlockC.
-func (b BlockC) GetCtx() antlr.ParserRuleContext {
+func (b Block) GetCtx() antlr.ParserRuleContext {
 	return b.Ctx
 }
 
-// CondC is a conditional statement node in the AST.
-type CondC struct {
+// Cond is a conditional statement node in the AST.
+type Cond struct {
 	Ctx     antlr.ParserRuleContext
 	Cnd     Exp
-	Block   BlockC
-	Elseifs []CondC
-	Else    BlockC
+	Block   Block
+	Elseifs []Cond
+	Else    Block
 }
 
-func (c CondC) statNode() {}
+func (c Cond) statNode() {}
 
 // GetCtx returns the context of the CondC.
-func (c CondC) GetCtx() antlr.ParserRuleContext {
+func (c Cond) GetCtx() antlr.ParserRuleContext {
 	return c.Ctx
 }
 
-// WhileC is a while loop node in the AST.
-type WhileC struct {
+// While is a while loop node in the AST.
+type While struct {
 	Ctx   antlr.ParserRuleContext
 	Cnd   Exp
-	Block BlockC
+	Block Block
 }
 
-func (w WhileC) statNode() {}
+func (w While) statNode() {}
 
 // GetCtx returns the context of the WhileC.
-func (w WhileC) GetCtx() antlr.ParserRuleContext {
+func (w While) GetCtx() antlr.ParserRuleContext {
 	return w.Ctx
 }
 
-// ForC is a for loop node in the AST.
-type ForC struct {
+// For is a for loop node in the AST.
+type For struct {
 	Ctx    antlr.ParserRuleContext
-	Assign DefC
+	Assign Def
 	Cnd    Exp
 	Step   Exp
-	Block  BlockC
+	Block  Block
 }
 
-func (f ForC) statNode() {}
+func (f For) statNode() {}
 
 // GetCtx returns the context of the ForC.
-func (f ForC) GetCtx() antlr.ParserRuleContext {
+func (f For) GetCtx() antlr.ParserRuleContext {
 	return f.Ctx
 }
 
-// DefC is a defined variable in the AST.
-type DefC struct {
+// Def is a defined variable in the AST.
+type Def struct {
 	Ctx   antlr.ParserRuleContext
-	Id    IdC
+	Id    Id
 	Exp   Exp
 	Scope ScopeC
 }
 
-func (d DefC) statNode() {}
+func (d Def) statNode() {}
 
 // GetCtx returns the context of the DefC.
-func (d DefC) GetCtx() antlr.ParserRuleContext {
+func (d Def) GetCtx() antlr.ParserRuleContext {
 	return d.Ctx
 }
 
 // DefLst is a list of definitions in the AST.
 type DefLst struct {
 	Ctx  antlr.ParserRuleContext
-	List []DefC
+	List []Def
 }
 
 func (dl DefLst) statNode() {}
@@ -128,24 +128,24 @@ func (dl DefLst) GetCtx() antlr.ParserRuleContext {
 	return dl.Ctx
 }
 
-// IdC is an label in the AST.
-type IdC struct {
+// Id is an label in the AST.
+type Id struct {
 	Ctx    antlr.ParserRuleContext
 	Id     string
 	TypeId types.Type
 }
 
-func (i IdC) expNode() {}
+func (i Id) expNode() {}
 
 // GetCtx returns the context of the IdC.
-func (i IdC) GetCtx() antlr.ParserRuleContext {
+func (i Id) GetCtx() antlr.ParserRuleContext {
 	return i.Ctx
 }
 
 // IdLst is a list of labels in the AST.
 type IdLst struct {
 	Ctx  antlr.ParserRuleContext
-	List []IdC
+	List []Id
 }
 
 // GetCtx returns the context of the IdLst.
@@ -164,81 +164,81 @@ func (edl ExpLst) GetCtx() antlr.ParserRuleContext {
 	return edl.Ctx
 }
 
-// BinaryOpC is a binary operation node in the AST.
-type BinaryOpC struct {
+// BinaryOp is a binary operation node in the AST.
+type BinaryOp struct {
 	Ctx antlr.ParserRuleContext
 	Lhs Exp
 	Rhs Exp
 	Op  string
 }
 
-func (bop BinaryOpC) expNode() {}
+func (bop BinaryOp) expNode() {}
 
 // GetCtx returns the context of the BinaryOpC.
-func (bop BinaryOpC) GetCtx() antlr.ParserRuleContext {
+func (bop BinaryOp) GetCtx() antlr.ParserRuleContext {
 	return bop.Ctx
 }
 
-// IntC is an integer.
-type IntC struct {
+// Int is an integer.
+type Int struct {
 	Ctx antlr.ParserRuleContext
 	N   int64
 }
 
-func (i IntC) expNode() {}
+func (i Int) expNode() {}
 
 // GetCtx returns the context of the IntC.
-func (i IntC) GetCtx() antlr.ParserRuleContext {
+func (i Int) GetCtx() antlr.ParserRuleContext {
 	return i.Ctx
 }
 
-// FloatC is a float.
-type FloatC struct {
+// Float is a float.
+type Float struct {
 	Ctx antlr.ParserRuleContext
 	N   float64
 }
 
-func (f FloatC) expNode() {}
+func (f Float) expNode() {}
 
 // GetCtx returns the context of the FloatC.
-func (f FloatC) GetCtx() antlr.ParserRuleContext {
+func (f Float) GetCtx() antlr.ParserRuleContext {
 	return f.Ctx
 }
 
-// StringC is a String.
-type StringC struct {
+// String is a String.
+type String struct {
 	Ctx antlr.ParserRuleContext
 	S   string
 }
 
-func (s StringC) expNode() {}
+func (s String) expNode() {}
 
 // GetCtx returns the context of the StringC.
-func (s StringC) GetCtx() antlr.ParserRuleContext {
+func (s String) GetCtx() antlr.ParserRuleContext {
 	return s.Ctx
 }
 
-// BoolC is a boolean.
-type BoolC struct {
+// Bool is a boolean.
+type Bool struct {
 	Ctx  antlr.ParserRuleContext
 	True bool
 }
 
-func (b BoolC) expNode() {}
+func (b Bool) expNode() {}
 
 // GetCtx returns the context of the BoolC.
-func (b BoolC) GetCtx() antlr.ParserRuleContext {
+func (b Bool) GetCtx() antlr.ParserRuleContext {
 	return b.Ctx
 }
 
-// NilC is a nil node.
-type NilC struct {
+// Nil is a nil node.
+type Nil struct {
 	Ctx antlr.ParserRuleContext
 }
 
-func (n NilC) expNode() {}
+func (n Nil) expNode() {}
 
 // GetCtx returns the context of the NilC.
-func (n NilC) GetCtx() antlr.ParserRuleContext {
+func (n Nil) GetCtx() antlr.ParserRuleContext {
 	return n.Ctx
 }

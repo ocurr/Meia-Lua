@@ -44,15 +44,15 @@ func TypeCheck(root ast.Node, tenv TypeEnv) (types.Type, []error) {
 	ec := new(errorCollector)
 
 	switch r := root.(type) {
-	case ast.ChunkC:
+	case ast.Chunk:
 		return TypeCheck(r.Block, tenv)
-	case ast.BlockC:
+	case ast.Block:
 		for _, s := range r.StatLst {
 			_, err := TypeCheck(s, tenv)
 			ec.add(err...)
 		}
 		return types.Default{}, ec.errors
-	case ast.DefC:
+	case ast.Def:
 		idT, err := TypeCheck(r.Id, tenv)
 		ec.add(err...)
 
@@ -74,7 +74,7 @@ func TypeCheck(root ast.Node, tenv TypeEnv) (types.Type, []error) {
 			ec.add(err...)
 		}
 		return types.Default{}, ec.errors
-	case ast.IdC:
+	case ast.Id:
 		if r.TypeId == nil {
 			if t, ok := tenv[r.Id]; ok {
 				return t, ec.errors
@@ -97,7 +97,7 @@ func TypeCheck(root ast.Node, tenv TypeEnv) (types.Type, []error) {
 			ec.add(err...)
 		}
 		return types.Default{}, ec.errors
-	case ast.CondC:
+	case ast.Cond:
 		cndT, err := TypeCheck(r.Cnd, tenv)
 		ec.add(err...)
 		if !types.IsBool(cndT) {
@@ -117,7 +117,7 @@ func TypeCheck(root ast.Node, tenv TypeEnv) (types.Type, []error) {
 		ec.add(err...)
 
 		return types.Default{}, ec.errors
-	case ast.WhileC:
+	case ast.While:
 		cndT, err := TypeCheck(r.Cnd, tenv)
 		ec.add(err...)
 		if !types.IsBool(cndT) {
@@ -129,7 +129,7 @@ func TypeCheck(root ast.Node, tenv TypeEnv) (types.Type, []error) {
 		ec.add(err...)
 
 		return types.Default{}, ec.errors
-	case ast.ForC:
+	case ast.For:
 		var ntenv TypeEnv
 		if r.Assign.Id.TypeId == nil {
 			_, err := TypeCheck(r.Assign, tenv)
@@ -158,7 +158,7 @@ func TypeCheck(root ast.Node, tenv TypeEnv) (types.Type, []error) {
 		ec.add(err...)
 
 		return types.Default{}, ec.errors
-	case ast.BinaryOpC:
+	case ast.BinaryOp:
 
 		switch r.Op {
 		case "+":
@@ -237,15 +237,15 @@ func TypeCheck(root ast.Node, tenv TypeEnv) (types.Type, []error) {
 			}
 			return types.Bool{}, ec.errors
 		}
-	case ast.IntC:
+	case ast.Int:
 		return types.Int{}, ec.errors
-	case ast.FloatC:
+	case ast.Float:
 		return types.Float{}, ec.errors
-	case ast.StringC:
+	case ast.String:
 		return types.String{}, ec.errors
-	case ast.BoolC:
+	case ast.Bool:
 		return types.Bool{}, ec.errors
-	case ast.NilC:
+	case ast.Nil:
 		return types.Nil{}, ec.errors
 	}
 

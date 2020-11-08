@@ -8,33 +8,33 @@ import (
 	"github.com/ocurr/Meia-Lua/types"
 )
 
-// LuaASTBuilder builds an abstract syntax tree from parse contexts.
-type LuaASTBuilder struct {
+// Builder builds an abstract syntax tree from parse contexts.
+type Builder struct {
 	parser.BaseLuaVisitor
 }
 
-// NewLuaASTBuilder returns a new LuaASTBuilder.
-func NewLuaASTBuilder() *LuaASTBuilder {
-	return new(LuaASTBuilder)
+// NewBuilder returns a new Builder.
+func NewBuilder() *Builder {
+	return new(Builder)
 }
 
 // VisitChunk visits a Chunk.
-func (v *LuaASTBuilder) VisitChunk(ctx *parser.ChunkContext) interface{} {
-	return ChunkC{Ctx: ctx, Block: ctx.Block().Accept(v).(BlockC)}
+func (v *Builder) VisitChunk(ctx *parser.ChunkContext) interface{} {
+	return Chunk{Ctx: ctx, Block: ctx.Block().Accept(v).(Block)}
 }
 
 // VisitBlock visits a Block.
-func (v *LuaASTBuilder) VisitBlock(ctx *parser.BlockContext) interface{} {
+func (v *Builder) VisitBlock(ctx *parser.BlockContext) interface{} {
 	stats := ctx.AllStat()
 	statLst := make([]Stat, len(stats))
 	for i := range stats {
 		statLst[i] = stats[i].Accept(v).(Stat)
 	}
-	return BlockC{Ctx: ctx, StatLst: statLst}
+	return Block{Ctx: ctx, StatLst: statLst}
 }
 
 // VisitStat visits a Stat.
-func (v *LuaASTBuilder) VisitStat(ctx *parser.StatContext) interface{} {
+func (v *Builder) VisitStat(ctx *parser.StatContext) interface{} {
 
 	if a := ctx.Assign(); a != nil {
 		return a.Accept(v)
@@ -52,59 +52,59 @@ func (v *LuaASTBuilder) VisitStat(ctx *parser.StatContext) interface{} {
 		return f.Accept(v)
 	}
 
-	return DefC{Ctx: ctx}
+	return Def{Ctx: ctx}
 }
 
 // VisitRetstat visits a Retstat.
-func (v *LuaASTBuilder) VisitRetstat(ctx *parser.RetstatContext) interface{} {
+func (v *Builder) VisitRetstat(ctx *parser.RetstatContext) interface{} {
 	panic("VisitRetstat not implemented")
 }
 
 // VisitLabel visits a label.
-func (v *LuaASTBuilder) VisitLabel(ctx *parser.LabelContext) interface{} {
+func (v *Builder) VisitLabel(ctx *parser.LabelContext) interface{} {
 	panic("VisitLabel not implemented")
 }
 
 // VisitFuncname visits a funcname.
-func (v *LuaASTBuilder) VisitFuncname(ctx *parser.FuncnameContext) interface{} {
+func (v *Builder) VisitFuncname(ctx *parser.FuncnameContext) interface{} {
 	panic("VisitFuncname not implemented")
 }
 
 // VisitIfstat visits an ifstat.
-func (v *LuaASTBuilder) VisitIfstat(ctx *parser.IfstatContext) interface{} {
-	cond := CondC{}
+func (v *Builder) VisitIfstat(ctx *parser.IfstatContext) interface{} {
+	cond := Cond{}
 	cond.Cnd = ctx.Exp().Accept(v).(Exp)
-	cond.Block = ctx.Block().Accept(v).(BlockC)
+	cond.Block = ctx.Block().Accept(v).(Block)
 
 	if eifs := ctx.AllElseifstat(); len(eifs) != 0 {
-		cond.Elseifs = make([]CondC, len(eifs))
+		cond.Elseifs = make([]Cond, len(eifs))
 		for i := 0; i < len(eifs); i++ {
-			cond.Elseifs[i] = eifs[i].Accept(v).(CondC)
+			cond.Elseifs[i] = eifs[i].Accept(v).(Cond)
 		}
 	}
 
 	if els := ctx.Elsestat(); els != nil {
-		cond.Else = els.Accept(v).(BlockC)
+		cond.Else = els.Accept(v).(Block)
 	}
 
 	return cond
 }
 
 // VisitElseifstat visits an elseifstat.
-func (v *LuaASTBuilder) VisitElseifstat(ctx *parser.ElseifstatContext) interface{} {
-	cond := CondC{Ctx: ctx}
+func (v *Builder) VisitElseifstat(ctx *parser.ElseifstatContext) interface{} {
+	cond := Cond{Ctx: ctx}
 	cond.Cnd = ctx.Exp().Accept(v).(Exp)
-	cond.Block = ctx.Block().Accept(v).(BlockC)
+	cond.Block = ctx.Block().Accept(v).(Block)
 	return cond
 }
 
 // VisitElsestat visits an elsestat.
-func (v *LuaASTBuilder) VisitElsestat(ctx *parser.ElsestatContext) interface{} {
+func (v *Builder) VisitElsestat(ctx *parser.ElsestatContext) interface{} {
 	return ctx.Block().Accept(v)
 }
 
 // VisitAssign visits an assign.
-func (v *LuaASTBuilder) VisitAssign(ctx *parser.AssignContext) interface{} {
+func (v *Builder) VisitAssign(ctx *parser.AssignContext) interface{} {
 
 	var allExp ExpLst
 	e := ctx.Explist()
@@ -129,7 +129,7 @@ func (v *LuaASTBuilder) VisitAssign(ctx *parser.AssignContext) interface{} {
 		return DefLst{}
 	}
 
-	lst := make([]DefC, len(allTVar.List))
+	lst := make([]Def, len(allTVar.List))
 
 	scope := GLOBAL
 	if len(allExp.List) == 0 {
@@ -137,12 +137,12 @@ func (v *LuaASTBuilder) VisitAssign(ctx *parser.AssignContext) interface{} {
 	}
 
 	for i := 0; i < len(allTVar.List); i++ {
-		lst[i] = DefC{
+		lst[i] = Def{
 			Ctx: ctx,
 			Id:  allTVar.List[i],
 			Exp: func() Exp {
 				if len(allExp.List) == 0 {
-					return NilC{}
+					return Nil{}
 				}
 				return allExp.List[i]
 			}(),
@@ -154,20 +154,20 @@ func (v *LuaASTBuilder) VisitAssign(ctx *parser.AssignContext) interface{} {
 }
 
 // VisitWhilestat visits a whilestat.
-func (v *LuaASTBuilder) VisitWhilestat(ctx *parser.WhilestatContext) interface{} {
-	return WhileC{
+func (v *Builder) VisitWhilestat(ctx *parser.WhilestatContext) interface{} {
+	return While{
 		Ctx:   ctx,
 		Cnd:   ctx.Exp().Accept(v).(Exp),
-		Block: ctx.Block().Accept(v).(BlockC),
+		Block: ctx.Block().Accept(v).(Block),
 	}
 }
 
 // VisitForstat visits a forstat.
-func (v *LuaASTBuilder) VisitForstat(ctx *parser.ForstatContext) interface{} {
+func (v *Builder) VisitForstat(ctx *parser.ForstatContext) interface{} {
 
-	forS := ForC{
+	forS := For{
 		Ctx:    ctx,
-		Assign: DefC{Id: IdC{}, Scope: GLOBAL},
+		Assign: Def{Id: Id{}, Scope: GLOBAL},
 	}
 
 	if typeL := ctx.TypeLiteral(); typeL != nil {
@@ -185,21 +185,21 @@ func (v *LuaASTBuilder) VisitForstat(ctx *parser.ForstatContext) interface{} {
 	if len(allExp) > 2 {
 		forS.Step = allExp[2].Accept(v).(Exp)
 	} else {
-		forS.Step = IntC{Ctx: ctx, N: 1}
+		forS.Step = Int{Ctx: ctx, N: 1}
 	}
 
-	forS.Block = ctx.Block().Accept(v).(BlockC)
+	forS.Block = ctx.Block().Accept(v).(Block)
 
 	return forS
 }
 
 // VisitVarlist visits a varlist.
-func (v *LuaASTBuilder) VisitVarlist(ctx *parser.VarlistContext) interface{} {
+func (v *Builder) VisitVarlist(ctx *parser.VarlistContext) interface{} {
 	if allVars := ctx.AllVarId(); len(allVars) != 0 {
-		allIdC := make([]IdC, len(allVars))
+		allIdC := make([]Id, len(allVars))
 
 		for i := 0; i < len(allVars); i++ {
-			allIdC[i] = IdC{
+			allIdC[i] = Id{
 				Ctx:    ctx,
 				Id:     allVars[i].Accept(v).(string),
 				TypeId: nil,
@@ -213,23 +213,23 @@ func (v *LuaASTBuilder) VisitVarlist(ctx *parser.VarlistContext) interface{} {
 }
 
 // VisitTypedvarlist visits a typedvarlist.
-func (v *LuaASTBuilder) VisitTypedvarlist(ctx *parser.TypedvarlistContext) interface{} {
+func (v *Builder) VisitTypedvarlist(ctx *parser.TypedvarlistContext) interface{} {
 
 	if allVars := ctx.AllTypedvar(); len(allVars) != 0 {
-		allIdC := make([]IdC, len(allVars))
+		allIdC := make([]Id, len(allVars))
 
 		for i := 0; i < len(allVars); i++ {
-			allIdC[i] = allVars[i].Accept(v).(IdC)
+			allIdC[i] = allVars[i].Accept(v).(Id)
 		}
 
 		return IdLst{Ctx: ctx, List: allIdC}
 
 	} else if allVars := ctx.AllVarId(); len(allVars) != 0 {
-		allIdC := make([]IdC, len(allVars))
+		allIdC := make([]Id, len(allVars))
 		listType := ctx.TypeLiteral().Accept(v).(types.Type)
 
 		for i := 0; i < len(allVars); i++ {
-			allIdC[i] = IdC{
+			allIdC[i] = Id{
 				Ctx:    ctx,
 				Id:     allVars[i].Accept(v).(string),
 				TypeId: listType,
@@ -243,12 +243,12 @@ func (v *LuaASTBuilder) VisitTypedvarlist(ctx *parser.TypedvarlistContext) inter
 }
 
 // VisitNamelist visits a namelist.
-func (v *LuaASTBuilder) VisitNamelist(ctx *parser.NamelistContext) interface{} {
+func (v *Builder) VisitNamelist(ctx *parser.NamelistContext) interface{} {
 	panic("VisitNamelist not implemented")
 }
 
 // VisitExplist visits an explist.
-func (v *LuaASTBuilder) VisitExplist(ctx *parser.ExplistContext) interface{} {
+func (v *Builder) VisitExplist(ctx *parser.ExplistContext) interface{} {
 
 	allExpCtx := ctx.AllExp()
 
@@ -262,7 +262,7 @@ func (v *LuaASTBuilder) VisitExplist(ctx *parser.ExplistContext) interface{} {
 }
 
 // VisitExp visits an exp.
-func (v *LuaASTBuilder) VisitExp(ctx *parser.ExpContext) interface{} {
+func (v *Builder) VisitExp(ctx *parser.ExpContext) interface{} {
 	if nl := ctx.NumberLiteral(); nl != nil {
 		return nl.Accept(v)
 	} else if sl := ctx.StringLiteral(); sl != nil {
@@ -270,21 +270,21 @@ func (v *LuaASTBuilder) VisitExp(ctx *parser.ExpContext) interface{} {
 	} else if bl := ctx.BoolLiteral(); bl != nil {
 		return bl.Accept(v)
 	} else if bop := ctx.OperatorAddSub(); bop != nil {
-		return BinaryOpC{
+		return BinaryOp{
 			Ctx: ctx,
 			Lhs: ctx.Exp(0).Accept(v).(Exp),
 			Rhs: ctx.Exp(1).Accept(v).(Exp),
 			Op:  bop.Accept(v).(string),
 		}
 	} else if bop := ctx.OperatorMulDivMod(); bop != nil {
-		return BinaryOpC{
+		return BinaryOp{
 			Ctx: ctx,
 			Lhs: ctx.Exp(0).Accept(v).(Exp),
 			Rhs: ctx.Exp(1).Accept(v).(Exp),
 			Op:  bop.Accept(v).(string),
 		}
 	} else if bop := ctx.OperatorComparison(); bop != nil {
-		return BinaryOpC{
+		return BinaryOp{
 			Ctx: ctx,
 			Lhs: ctx.Exp(0).Accept(v).(Exp),
 			Rhs: ctx.Exp(1).Accept(v).(Exp),
@@ -296,15 +296,15 @@ func (v *LuaASTBuilder) VisitExp(ctx *parser.ExpContext) interface{} {
 
 	switch ctx.GetText() {
 	case "nil":
-		return NilC{}
+		return Nil{}
 	}
 
 	fmt.Println("ERROR: Expression not supported")
-	return StringC{S: "EXPRESSION NOT SUPPORTED"}
+	return String{S: "EXPRESSION NOT SUPPORTED"}
 }
 
 // VisitTypeLiteral visits a typeLiteral.
-func (v *LuaASTBuilder) VisitTypeLiteral(ctx *parser.TypeLiteralContext) interface{} {
+func (v *Builder) VisitTypeLiteral(ctx *parser.TypeLiteralContext) interface{} {
 	switch ctx.GetText() {
 	case "float":
 		return types.Float{}
@@ -321,19 +321,19 @@ func (v *LuaASTBuilder) VisitTypeLiteral(ctx *parser.TypeLiteralContext) interfa
 }
 
 // VisitPrefixexp visits a prefixexp.
-func (v *LuaASTBuilder) VisitPrefixexp(ctx *parser.PrefixexpContext) interface{} {
+func (v *Builder) VisitPrefixexp(ctx *parser.PrefixexpContext) interface{} {
 	return ctx.VarOrExp().Accept(v)
 }
 
 // VisitFunctioncall visits a functioncall.
-func (v *LuaASTBuilder) VisitFunctioncall(ctx *parser.FunctioncallContext) interface{} {
+func (v *Builder) VisitFunctioncall(ctx *parser.FunctioncallContext) interface{} {
 	panic("VisitFunctioncall not implemented")
 }
 
 // VisitVarOrExp visits a varOrExp.
-func (v *LuaASTBuilder) VisitVarOrExp(ctx *parser.VarOrExpContext) interface{} {
+func (v *Builder) VisitVarOrExp(ctx *parser.VarOrExpContext) interface{} {
 	if i := ctx.VarId(); i != nil {
-		return IdC{Ctx: ctx, Id: i.Accept(v).(string)}
+		return Id{Ctx: ctx, Id: i.Accept(v).(string)}
 	}
 	if e := ctx.Exp(); e != nil {
 		return e.Accept(v)
@@ -344,98 +344,98 @@ func (v *LuaASTBuilder) VisitVarOrExp(ctx *parser.VarOrExpContext) interface{} {
 }
 
 // VisitVarId visits a varId.
-func (v *LuaASTBuilder) VisitVarId(ctx *parser.VarIdContext) interface{} {
+func (v *Builder) VisitVarId(ctx *parser.VarIdContext) interface{} {
 	return ctx.GetText()
 }
 
 // VisitTypedvar visits a typedvar.
-func (v *LuaASTBuilder) VisitTypedvar(ctx *parser.TypedvarContext) interface{} {
+func (v *Builder) VisitTypedvar(ctx *parser.TypedvarContext) interface{} {
 
-	return IdC{
+	return Id{
 		Ctx:    ctx,
 		Id:     ctx.VarId().Accept(v).(string),
 		TypeId: ctx.TypeLiteral().Accept(v).(types.Type),
 	}
 }
 
-func (v *LuaASTBuilder) VisitVarSuffix(ctx *parser.VarSuffixContext) interface{} {
+func (v *Builder) VisitVarSuffix(ctx *parser.VarSuffixContext) interface{} {
 	panic("VisitVarSuffix not implemented")
 }
 
-func (v *LuaASTBuilder) VisitNameAndArgs(ctx *parser.NameAndArgsContext) interface{} {
+func (v *Builder) VisitNameAndArgs(ctx *parser.NameAndArgsContext) interface{} {
 	panic("VisitNameAndArgs not implemented")
 }
 
-func (v *LuaASTBuilder) VisitArgs(ctx *parser.ArgsContext) interface{} {
+func (v *Builder) VisitArgs(ctx *parser.ArgsContext) interface{} {
 	panic("VisitArgs not implemented")
 }
 
-func (v *LuaASTBuilder) VisitFunctiondef(ctx *parser.FunctiondefContext) interface{} {
+func (v *Builder) VisitFunctiondef(ctx *parser.FunctiondefContext) interface{} {
 	panic("VisitFunctiondef not implemented")
 }
 
-func (v *LuaASTBuilder) VisitFuncbody(ctx *parser.FuncbodyContext) interface{} {
+func (v *Builder) VisitFuncbody(ctx *parser.FuncbodyContext) interface{} {
 	panic("VisitFuncbody not implemented")
 }
 
-func (v *LuaASTBuilder) VisitParlist(ctx *parser.ParlistContext) interface{} {
+func (v *Builder) VisitParlist(ctx *parser.ParlistContext) interface{} {
 	panic("VisitParlist not implemented")
 }
 
-func (v *LuaASTBuilder) VisitTableconstructor(ctx *parser.TableconstructorContext) interface{} {
+func (v *Builder) VisitTableconstructor(ctx *parser.TableconstructorContext) interface{} {
 	panic("VisitTableconstructor not implemented")
 }
 
-func (v *LuaASTBuilder) VisitFieldlist(ctx *parser.FieldlistContext) interface{} {
+func (v *Builder) VisitFieldlist(ctx *parser.FieldlistContext) interface{} {
 	panic("VisitFieldlist not implemented")
 }
 
-func (v *LuaASTBuilder) VisitField(ctx *parser.FieldContext) interface{} {
+func (v *Builder) VisitField(ctx *parser.FieldContext) interface{} {
 	panic("VisitField not implemented")
 }
 
-func (v *LuaASTBuilder) VisitFieldsep(ctx *parser.FieldsepContext) interface{} {
+func (v *Builder) VisitFieldsep(ctx *parser.FieldsepContext) interface{} {
 	panic("VisitFieldsep not implemented")
 }
 
-func (v *LuaASTBuilder) VisitOperatorOr(ctx *parser.OperatorOrContext) interface{} {
+func (v *Builder) VisitOperatorOr(ctx *parser.OperatorOrContext) interface{} {
 	panic("VisitOperatorOr not implemented")
 }
 
-func (v *LuaASTBuilder) VisitOperatorAnd(ctx *parser.OperatorAndContext) interface{} {
+func (v *Builder) VisitOperatorAnd(ctx *parser.OperatorAndContext) interface{} {
 	panic("VisitOperatorAnd not implemented")
 }
 
-func (v *LuaASTBuilder) VisitOperatorComparison(ctx *parser.OperatorComparisonContext) interface{} {
+func (v *Builder) VisitOperatorComparison(ctx *parser.OperatorComparisonContext) interface{} {
 	return ctx.GetText()
 }
 
-func (v *LuaASTBuilder) VisitOperatorStrcat(ctx *parser.OperatorStrcatContext) interface{} {
+func (v *Builder) VisitOperatorStrcat(ctx *parser.OperatorStrcatContext) interface{} {
 	panic("VisitOperatorStrcat not implemented")
 }
 
-func (v *LuaASTBuilder) VisitOperatorAddSub(ctx *parser.OperatorAddSubContext) interface{} {
+func (v *Builder) VisitOperatorAddSub(ctx *parser.OperatorAddSubContext) interface{} {
 	return ctx.GetText()
 }
 
-func (v *LuaASTBuilder) VisitOperatorMulDivMod(ctx *parser.OperatorMulDivModContext) interface{} {
+func (v *Builder) VisitOperatorMulDivMod(ctx *parser.OperatorMulDivModContext) interface{} {
 	return ctx.GetText()
 }
 
-func (v *LuaASTBuilder) VisitOperatorBitwise(ctx *parser.OperatorBitwiseContext) interface{} {
+func (v *Builder) VisitOperatorBitwise(ctx *parser.OperatorBitwiseContext) interface{} {
 	panic("VisitOperatorBitwise not implemented")
 }
 
-func (v *LuaASTBuilder) VisitOperatorUnary(ctx *parser.OperatorUnaryContext) interface{} {
+func (v *Builder) VisitOperatorUnary(ctx *parser.OperatorUnaryContext) interface{} {
 	panic("VisitOperatorUnary not implemented")
 }
 
-func (v *LuaASTBuilder) VisitOperatorPower(ctx *parser.OperatorPowerContext) interface{} {
+func (v *Builder) VisitOperatorPower(ctx *parser.OperatorPowerContext) interface{} {
 	panic("VisitOperatorPower not implemented")
 }
 
-func (v *LuaASTBuilder) VisitBoolLiteral(ctx *parser.BoolLiteralContext) interface{} {
-	b := BoolC{Ctx: ctx}
+func (v *Builder) VisitBoolLiteral(ctx *parser.BoolLiteralContext) interface{} {
+	b := Bool{Ctx: ctx}
 	switch ctx.GetText() {
 	case "true":
 		b.True = true
@@ -446,30 +446,30 @@ func (v *LuaASTBuilder) VisitBoolLiteral(ctx *parser.BoolLiteralContext) interfa
 	return b
 }
 
-func (v *LuaASTBuilder) VisitNumberLiteral(ctx *parser.NumberLiteralContext) interface{} {
+func (v *Builder) VisitNumberLiteral(ctx *parser.NumberLiteralContext) interface{} {
 	if INT := ctx.INT(); INT != nil {
 		n, err := strconv.ParseInt(INT.GetText(), 10, 64)
 		if err != nil {
 			fmt.Println("ERROR: unable to parse int")
-			return IntC{N: -1}
+			return Int{N: -1}
 		}
-		return IntC{Ctx: ctx, N: n}
+		return Int{Ctx: ctx, N: n}
 	}
 	if FLOAT := ctx.FLOAT(); FLOAT != nil {
 		n, err := strconv.ParseFloat(FLOAT.GetText(), 64)
 		if err != nil {
 			fmt.Println("ERROR: unable to parse float")
-			return FloatC{N: -1}
+			return Float{N: -1}
 		}
-		return FloatC{Ctx: ctx, N: n}
+		return Float{Ctx: ctx, N: n}
 	}
-	return StringC{S: "ERROR"}
+	return String{S: "ERROR"}
 }
 
-func (v *LuaASTBuilder) VisitStringLiteral(ctx *parser.StringLiteralContext) interface{} {
+func (v *Builder) VisitStringLiteral(ctx *parser.StringLiteralContext) interface{} {
 	str, err := strconv.Unquote(ctx.GetText())
 	if err != nil {
 		fmt.Println("ERROR: unable to parse string", ctx.GetText())
 	}
-	return StringC{Ctx: ctx, S: str}
+	return String{Ctx: ctx, S: str}
 }

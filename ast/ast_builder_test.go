@@ -11,22 +11,22 @@ import (
 )
 
 var astCompOpts = []cmp.Option{
-	cmpopts.IgnoreFields(ChunkC{}, "Ctx"),
-	cmpopts.IgnoreFields(BlockC{}, "Ctx"),
-	cmpopts.IgnoreFields(CondC{}, "Ctx"),
-	cmpopts.IgnoreFields(WhileC{}, "Ctx"),
-	cmpopts.IgnoreFields(ForC{}, "Ctx"),
-	cmpopts.IgnoreFields(DefC{}, "Ctx"),
+	cmpopts.IgnoreFields(Chunk{}, "Ctx"),
+	cmpopts.IgnoreFields(Block{}, "Ctx"),
+	cmpopts.IgnoreFields(Cond{}, "Ctx"),
+	cmpopts.IgnoreFields(While{}, "Ctx"),
+	cmpopts.IgnoreFields(For{}, "Ctx"),
+	cmpopts.IgnoreFields(Def{}, "Ctx"),
 	cmpopts.IgnoreFields(DefLst{}, "Ctx"),
-	cmpopts.IgnoreFields(IdC{}, "Ctx"),
+	cmpopts.IgnoreFields(Id{}, "Ctx"),
 	cmpopts.IgnoreFields(IdLst{}, "Ctx"),
 	cmpopts.IgnoreFields(ExpLst{}, "Ctx"),
-	cmpopts.IgnoreFields(BinaryOpC{}, "Ctx"),
-	cmpopts.IgnoreFields(IntC{}, "Ctx"),
-	cmpopts.IgnoreFields(FloatC{}, "Ctx"),
-	cmpopts.IgnoreFields(StringC{}, "Ctx"),
-	cmpopts.IgnoreFields(BoolC{}, "Ctx"),
-	cmpopts.IgnoreFields(NilC{}, "Ctx"),
+	cmpopts.IgnoreFields(BinaryOp{}, "Ctx"),
+	cmpopts.IgnoreFields(Int{}, "Ctx"),
+	cmpopts.IgnoreFields(Float{}, "Ctx"),
+	cmpopts.IgnoreFields(String{}, "Ctx"),
+	cmpopts.IgnoreFields(Bool{}, "Ctx"),
+	cmpopts.IgnoreFields(Nil{}, "Ctx"),
 }
 
 func TestASTBuilder(t *testing.T) {
@@ -37,11 +37,11 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: IntC{N: 5}, Scope: GLOBAL}}}}}}
+		want := Chunk{Block: Block{
+			StatLst: []Stat{DefLst{List: []Def{{Id: Id{Id: "x", TypeId: types.Int{}}, Exp: Int{N: 5}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
 			t.Errorf("AST mismatch (-want +got):\n%s", diff)
 		}
@@ -53,11 +53,11 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Float{}}, Exp: FloatC{N: 5.5}, Scope: GLOBAL}}}}}}
+		want := Chunk{Block: Block{
+			StatLst: []Stat{DefLst{List: []Def{{Id: Id{Id: "x", TypeId: types.Float{}}, Exp: Float{N: 5.5}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
 			t.Errorf("AST mismatch (-want +got):\n%s", diff)
 		}
@@ -69,11 +69,11 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "animal", TypeId: types.String{}}, Exp: StringC{S: "horse"}, Scope: GLOBAL}}}}}}
+		want := Chunk{Block: Block{
+			StatLst: []Stat{DefLst{List: []Def{{Id: Id{Id: "animal", TypeId: types.String{}}, Exp: String{S: "horse"}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
 			t.Errorf("AST mismatch (-want +got):\n%s", diff)
 		}
@@ -85,14 +85,14 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{
-				{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: IntC{N: 5}, Scope: GLOBAL},
-				{Id: IdC{Id: "y", TypeId: types.Int{}}, Exp: IntC{N: 6}, Scope: GLOBAL},
-				{Id: IdC{Id: "z", TypeId: types.Int{}}, Exp: IntC{N: 7}, Scope: GLOBAL},
+		want := Chunk{Block: Block{
+			StatLst: []Stat{DefLst{List: []Def{
+				{Id: Id{Id: "x", TypeId: types.Int{}}, Exp: Int{N: 5}, Scope: GLOBAL},
+				{Id: Id{Id: "y", TypeId: types.Int{}}, Exp: Int{N: 6}, Scope: GLOBAL},
+				{Id: Id{Id: "z", TypeId: types.Int{}}, Exp: Int{N: 7}, Scope: GLOBAL},
 			}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
 			t.Errorf("AST mismatch (-want +got):\n%s", diff)
@@ -105,14 +105,14 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{
-				{Id: IdC{Id: "x", TypeId: types.Float{}}, Exp: FloatC{N: 5.5}, Scope: GLOBAL},
-				{Id: IdC{Id: "y", TypeId: types.Float{}}, Exp: FloatC{N: 10.789}, Scope: GLOBAL},
-				{Id: IdC{Id: "z", TypeId: types.Float{}}, Exp: FloatC{N: 100.23}, Scope: GLOBAL},
+		want := Chunk{Block: Block{
+			StatLst: []Stat{DefLst{List: []Def{
+				{Id: Id{Id: "x", TypeId: types.Float{}}, Exp: Float{N: 5.5}, Scope: GLOBAL},
+				{Id: Id{Id: "y", TypeId: types.Float{}}, Exp: Float{N: 10.789}, Scope: GLOBAL},
+				{Id: Id{Id: "z", TypeId: types.Float{}}, Exp: Float{N: 100.23}, Scope: GLOBAL},
 			}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
 			t.Errorf("AST mismatch (-want +got):\n%s", diff)
@@ -125,14 +125,14 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{
-				{Id: IdC{Id: "animal", TypeId: types.String{}}, Exp: StringC{S: "horse"}, Scope: GLOBAL},
-				{Id: IdC{Id: "dog", TypeId: types.String{}}, Exp: StringC{S: "fido"}, Scope: GLOBAL},
-				{Id: IdC{Id: "word", TypeId: types.String{}}, Exp: StringC{S: "bar"}, Scope: GLOBAL},
+		want := Chunk{Block: Block{
+			StatLst: []Stat{DefLst{List: []Def{
+				{Id: Id{Id: "animal", TypeId: types.String{}}, Exp: String{S: "horse"}, Scope: GLOBAL},
+				{Id: Id{Id: "dog", TypeId: types.String{}}, Exp: String{S: "fido"}, Scope: GLOBAL},
+				{Id: Id{Id: "word", TypeId: types.String{}}, Exp: String{S: "bar"}, Scope: GLOBAL},
 			}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
 			t.Errorf("AST mismatch (-want +got):\n%s", diff)
@@ -145,13 +145,13 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: BinaryOpC{
-				Lhs: IntC{N: 5},
-				Rhs: IntC{N: 2},
+		want := Chunk{Block: Block{
+			StatLst: []Stat{DefLst{List: []Def{{Id: Id{Id: "x", TypeId: types.Int{}}, Exp: BinaryOp{
+				Lhs: Int{N: 5},
+				Rhs: Int{N: 2},
 				Op:  "+",
 			}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
@@ -165,13 +165,13 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: BinaryOpC{
-				Lhs: IntC{N: 5},
-				Rhs: IntC{N: 2},
+		want := Chunk{Block: Block{
+			StatLst: []Stat{DefLst{List: []Def{{Id: Id{Id: "x", TypeId: types.Int{}}, Exp: BinaryOp{
+				Lhs: Int{N: 5},
+				Rhs: Int{N: 2},
 				Op:  "-",
 			}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
@@ -185,13 +185,13 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: BinaryOpC{
-				Lhs: IntC{N: 5},
-				Rhs: IntC{N: 2},
+		want := Chunk{Block: Block{
+			StatLst: []Stat{DefLst{List: []Def{{Id: Id{Id: "x", TypeId: types.Int{}}, Exp: BinaryOp{
+				Lhs: Int{N: 5},
+				Rhs: Int{N: 2},
 				Op:  "*",
 			}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
@@ -205,13 +205,13 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: BinaryOpC{
-				Lhs: IntC{N: 5},
-				Rhs: IntC{N: 2},
+		want := Chunk{Block: Block{
+			StatLst: []Stat{DefLst{List: []Def{{Id: Id{Id: "x", TypeId: types.Int{}}, Exp: BinaryOp{
+				Lhs: Int{N: 5},
+				Rhs: Int{N: 2},
 				Op:  "%",
 			}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
@@ -225,13 +225,13 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: BinaryOpC{
-				Lhs: IntC{N: 5},
-				Rhs: IntC{N: 2},
+		want := Chunk{Block: Block{
+			StatLst: []Stat{DefLst{List: []Def{{Id: Id{Id: "x", TypeId: types.Int{}}, Exp: BinaryOp{
+				Lhs: Int{N: 5},
+				Rhs: Int{N: 2},
 				Op:  "/",
 			}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
@@ -245,11 +245,11 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Bool{}}, Exp: BoolC{True: true}, Scope: GLOBAL}}}}}}
+		want := Chunk{Block: Block{
+			StatLst: []Stat{DefLst{List: []Def{{Id: Id{Id: "x", TypeId: types.Bool{}}, Exp: Bool{True: true}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
 			t.Errorf("AST mismatch (-want +got):\n%s", diff)
 		}
@@ -261,13 +261,13 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Bool{}}, Exp: BinaryOpC{
-				Lhs: IntC{N: 5},
-				Rhs: IntC{N: 2},
+		want := Chunk{Block: Block{
+			StatLst: []Stat{DefLst{List: []Def{{Id: Id{Id: "x", TypeId: types.Bool{}}, Exp: BinaryOp{
+				Lhs: Int{N: 5},
+				Rhs: Int{N: 2},
 				Op:  "<",
 			}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
@@ -281,13 +281,13 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Bool{}}, Exp: BinaryOpC{
-				Lhs: IntC{N: 5},
-				Rhs: IntC{N: 2},
+		want := Chunk{Block: Block{
+			StatLst: []Stat{DefLst{List: []Def{{Id: Id{Id: "x", TypeId: types.Bool{}}, Exp: BinaryOp{
+				Lhs: Int{N: 5},
+				Rhs: Int{N: 2},
 				Op:  "<=",
 			}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
@@ -301,13 +301,13 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Bool{}}, Exp: BinaryOpC{
-				Lhs: IntC{N: 5},
-				Rhs: IntC{N: 2},
+		want := Chunk{Block: Block{
+			StatLst: []Stat{DefLst{List: []Def{{Id: Id{Id: "x", TypeId: types.Bool{}}, Exp: BinaryOp{
+				Lhs: Int{N: 5},
+				Rhs: Int{N: 2},
 				Op:  ">",
 			}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
@@ -321,13 +321,13 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Bool{}}, Exp: BinaryOpC{
-				Lhs: IntC{N: 5},
-				Rhs: IntC{N: 2},
+		want := Chunk{Block: Block{
+			StatLst: []Stat{DefLst{List: []Def{{Id: Id{Id: "x", TypeId: types.Bool{}}, Exp: BinaryOp{
+				Lhs: Int{N: 5},
+				Rhs: Int{N: 2},
 				Op:  ">=",
 			}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
@@ -341,13 +341,13 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Bool{}}, Exp: BinaryOpC{
-				Lhs: IntC{N: 5},
-				Rhs: IntC{N: 2},
+		want := Chunk{Block: Block{
+			StatLst: []Stat{DefLst{List: []Def{{Id: Id{Id: "x", TypeId: types.Bool{}}, Exp: BinaryOp{
+				Lhs: Int{N: 5},
+				Rhs: Int{N: 2},
 				Op:  "==",
 			}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
@@ -361,13 +361,13 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Bool{}}, Exp: BinaryOpC{
-				Lhs: IntC{N: 5},
-				Rhs: IntC{N: 2},
+		want := Chunk{Block: Block{
+			StatLst: []Stat{DefLst{List: []Def{{Id: Id{Id: "x", TypeId: types.Bool{}}, Exp: BinaryOp{
+				Lhs: Int{N: 5},
+				Rhs: Int{N: 2},
 				Op:  "~=",
 			}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
@@ -381,13 +381,13 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
-			StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: BinaryOpC{
-				Lhs: IntC{N: 5},
-				Rhs: IntC{N: 2},
+		want := Chunk{Block: Block{
+			StatLst: []Stat{DefLst{List: []Def{{Id: Id{Id: "x", TypeId: types.Int{}}, Exp: BinaryOp{
+				Lhs: Int{N: 5},
+				Rhs: Int{N: 2},
 				Op:  "//",
 			}, Scope: GLOBAL}}}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
@@ -404,19 +404,19 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{
+		want := Chunk{Block: Block{
 			StatLst: []Stat{
-				DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: BinaryOpC{
-					Lhs: IntC{N: 5},
-					Rhs: IntC{N: 2},
+				DefLst{List: []Def{{Id: Id{Id: "x", TypeId: types.Int{}}, Exp: BinaryOp{
+					Lhs: Int{N: 5},
+					Rhs: Int{N: 2},
 					Op:  "//",
 				}, Scope: GLOBAL}}},
-				DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: nil}, Exp: BinaryOpC{
-					Lhs: IntC{N: 1},
-					Rhs: IntC{N: 1},
+				DefLst{List: []Def{{Id: Id{Id: "x", TypeId: nil}, Exp: BinaryOp{
+					Lhs: Int{N: 1},
+					Rhs: Int{N: 1},
 					Op:  "+",
 				}, Scope: GLOBAL}}},
 			}}}
@@ -435,16 +435,16 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
 
-		want := ChunkC{Block: BlockC{
+		want := Chunk{Block: Block{
 			StatLst: []Stat{
-				CondC{
-					Cnd: BoolC{True: true},
-					Block: BlockC{StatLst: []Stat{
-						DefLst{List: []DefC{{Id: IdC{Id: "x"}, Exp: IntC{N: 5}, Scope: GLOBAL}}}},
+				Cond{
+					Cnd: Bool{True: true},
+					Block: Block{StatLst: []Stat{
+						DefLst{List: []Def{{Id: Id{Id: "x"}, Exp: Int{N: 5}, Scope: GLOBAL}}}},
 					},
 				}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
@@ -462,16 +462,16 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
 
-		want := ChunkC{Block: BlockC{
+		want := Chunk{Block: Block{
 			StatLst: []Stat{
-				WhileC{
-					Cnd: BoolC{True: true},
-					Block: BlockC{StatLst: []Stat{
-						DefLst{List: []DefC{{Id: IdC{Id: "x"}, Exp: IntC{N: 5}, Scope: GLOBAL}}}},
+				While{
+					Cnd: Bool{True: true},
+					Block: Block{StatLst: []Stat{
+						DefLst{List: []Def{{Id: Id{Id: "x"}, Exp: Int{N: 5}, Scope: GLOBAL}}}},
 					},
 				}}}}
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
@@ -489,27 +489,27 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
 
-		want := ChunkC{Block: BlockC{StatLst: []Stat{
-			ForC{
-				Assign: DefC{
-					Id: IdC{
+		want := Chunk{Block: Block{StatLst: []Stat{
+			For{
+				Assign: Def{
+					Id: Id{
 						Id:     "x",
 						TypeId: types.Int{},
 					},
-					Exp:   IntC{N: 5},
+					Exp:   Int{N: 5},
 					Scope: GLOBAL,
 				},
-				Cnd: BinaryOpC{
-					Lhs: IdC{Id: "x"},
-					Rhs: IntC{N: 5},
+				Cnd: BinaryOp{
+					Lhs: Id{Id: "x"},
+					Rhs: Int{N: 5},
 					Op:  "<",
 				},
-				Step:  IntC{N: 1},
-				Block: BlockC{StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "y"}, Exp: IntC{N: 5}, Scope: GLOBAL}}}}},
+				Step:  Int{N: 1},
+				Block: Block{StatLst: []Stat{DefLst{List: []Def{{Id: Id{Id: "y"}, Exp: Int{N: 5}, Scope: GLOBAL}}}}},
 			},
 		}}}
 
@@ -528,27 +528,27 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
 
-		want := ChunkC{Block: BlockC{StatLst: []Stat{
-			ForC{
-				Assign: DefC{
-					Id: IdC{
+		want := Chunk{Block: Block{StatLst: []Stat{
+			For{
+				Assign: Def{
+					Id: Id{
 						Id:     "x",
 						TypeId: types.Int{},
 					},
-					Exp:   IntC{N: 5},
+					Exp:   Int{N: 5},
 					Scope: GLOBAL,
 				},
-				Cnd: BinaryOpC{
-					Lhs: IdC{Id: "x"},
-					Rhs: IntC{N: 5},
+				Cnd: BinaryOp{
+					Lhs: Id{Id: "x"},
+					Rhs: Int{N: 5},
 					Op:  "<",
 				},
-				Step:  IntC{N: 1},
-				Block: BlockC{StatLst: []Stat{DefLst{List: []DefC{{Id: IdC{Id: "y"}, Exp: IntC{N: 5}, Scope: GLOBAL}}}}},
+				Step:  Int{N: 1},
+				Block: Block{StatLst: []Stat{DefLst{List: []Def{{Id: Id{Id: "y"}, Exp: Int{N: 5}, Scope: GLOBAL}}}}},
 			},
 		}}}
 
@@ -563,11 +563,11 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{StatLst: []Stat{
-			DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: NilC{}, Scope: GLOBAL}}},
+		want := Chunk{Block: Block{StatLst: []Stat{
+			DefLst{List: []Def{{Id: Id{Id: "x", TypeId: types.Int{}}, Exp: Nil{}, Scope: GLOBAL}}},
 		}}}
 
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {
@@ -581,11 +581,11 @@ func TestASTBuilder(t *testing.T) {
 		p := parser.NewLuaParser(tokenStream)
 		tree := p.Chunk()
 		p.BuildParseTrees = true
-		builder := NewLuaASTBuilder()
+		builder := NewBuilder()
 
 		got := tree.Accept(builder)
-		want := ChunkC{Block: BlockC{StatLst: []Stat{
-			DefLst{List: []DefC{{Id: IdC{Id: "x", TypeId: types.Int{}}, Exp: NilC{}, Scope: LOCAL}}},
+		want := Chunk{Block: Block{StatLst: []Stat{
+			DefLst{List: []Def{{Id: Id{Id: "x", TypeId: types.Int{}}, Exp: Nil{}, Scope: LOCAL}}},
 		}}}
 
 		if diff := cmp.Diff(want, got, astCompOpts...); diff != "" {

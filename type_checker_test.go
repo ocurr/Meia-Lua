@@ -12,9 +12,9 @@ import (
 
 func TestTypeChecker(t *testing.T) {
 	t.Run("BasicDefinition", func(t *testing.T) {
-		input := ast.DefC{
-			Id:  ast.IdC{Id: "x", TypeId: types.Int{}},
-			Exp: ast.IntC{N: 5},
+		input := ast.Def{
+			Id:  ast.Id{Id: "x", TypeId: types.Int{}},
+			Exp: ast.Int{N: 5},
 		}
 
 		got, errs := LuaTypeCheck(input)
@@ -30,19 +30,19 @@ func TestTypeChecker(t *testing.T) {
 	})
 
 	t.Run("If", func(t *testing.T) {
-		input := ast.CondC{
-			Cnd: ast.BoolC{True: true},
-			Block: ast.BlockC{StatLst: []ast.Stat{
-				ast.DefLst{List: []ast.DefC{
-					{Id: ast.IdC{Id: "x", TypeId: types.Int{}},
-						Exp: ast.IntC{N: 5}}}},
-				ast.CondC{
-					Cnd: ast.BoolC{True: true},
-					Block: ast.BlockC{
+		input := ast.Cond{
+			Cnd: ast.Bool{True: true},
+			Block: ast.Block{StatLst: []ast.Stat{
+				ast.DefLst{List: []ast.Def{
+					{Id: ast.Id{Id: "x", TypeId: types.Int{}},
+						Exp: ast.Int{N: 5}}}},
+				ast.Cond{
+					Cnd: ast.Bool{True: true},
+					Block: ast.Block{
 						StatLst: []ast.Stat{
-							ast.DefLst{List: []ast.DefC{
-								{Id: ast.IdC{Id: "x", TypeId: types.Int{}},
-									Exp: ast.IntC{N: 6}}}}}}},
+							ast.DefLst{List: []ast.Def{
+								{Id: ast.Id{Id: "x", TypeId: types.Int{}},
+									Exp: ast.Int{N: 6}}}}}}},
 			}}}
 
 		_, err := LuaTypeCheck(input)
@@ -53,27 +53,27 @@ func TestTypeChecker(t *testing.T) {
 	})
 
 	t.Run("IfElseIf", func(t *testing.T) {
-		input := ast.CondC{
-			Cnd: ast.BoolC{True: true},
-			Block: ast.BlockC{StatLst: []ast.Stat{
-				ast.DefLst{List: []ast.DefC{
-					{Id: ast.IdC{Id: "x", TypeId: types.Int{}},
-						Exp: ast.IntC{N: 5}}}},
-				ast.CondC{
-					Cnd: ast.BoolC{True: true},
-					Block: ast.BlockC{
+		input := ast.Cond{
+			Cnd: ast.Bool{True: true},
+			Block: ast.Block{StatLst: []ast.Stat{
+				ast.DefLst{List: []ast.Def{
+					{Id: ast.Id{Id: "x", TypeId: types.Int{}},
+						Exp: ast.Int{N: 5}}}},
+				ast.Cond{
+					Cnd: ast.Bool{True: true},
+					Block: ast.Block{
 						StatLst: []ast.Stat{
-							ast.DefLst{List: []ast.DefC{
-								{Id: ast.IdC{Id: "x", TypeId: types.Int{}},
-									Exp: ast.IntC{N: 6}}}}}},
-					Elseifs: []ast.CondC{
+							ast.DefLst{List: []ast.Def{
+								{Id: ast.Id{Id: "x", TypeId: types.Int{}},
+									Exp: ast.Int{N: 6}}}}}},
+					Elseifs: []ast.Cond{
 						{
-							Cnd: ast.BoolC{True: false},
-							Block: ast.BlockC{
+							Cnd: ast.Bool{True: false},
+							Block: ast.Block{
 								StatLst: []ast.Stat{
-									ast.DefLst{List: []ast.DefC{
-										{Id: ast.IdC{Id: "x", TypeId: types.Int{}},
-											Exp: ast.IntC{N: 5}}}}}}},
+									ast.DefLst{List: []ast.Def{
+										{Id: ast.Id{Id: "x", TypeId: types.Int{}},
+											Exp: ast.Int{N: 5}}}}}}},
 					},
 				}}}}
 
@@ -84,36 +84,36 @@ func TestTypeChecker(t *testing.T) {
 		}
 	})
 	t.Run("IfElseIfElse", func(t *testing.T) {
-		input := ast.CondC{
-			Cnd: ast.BoolC{True: true},
-			Block: ast.BlockC{StatLst: []ast.Stat{
-				ast.DefLst{List: []ast.DefC{
-					{Id: ast.IdC{Id: "x", TypeId: types.Int{}},
-						Exp: ast.IntC{N: 5}}}},
-				ast.CondC{
-					Cnd: ast.BoolC{True: true},
-					Block: ast.BlockC{
+		input := ast.Cond{
+			Cnd: ast.Bool{True: true},
+			Block: ast.Block{StatLst: []ast.Stat{
+				ast.DefLst{List: []ast.Def{
+					{Id: ast.Id{Id: "x", TypeId: types.Int{}},
+						Exp: ast.Int{N: 5}}}},
+				ast.Cond{
+					Cnd: ast.Bool{True: true},
+					Block: ast.Block{
 						StatLst: []ast.Stat{
-							ast.DefLst{List: []ast.DefC{
-								{Id: ast.IdC{Id: "x", TypeId: types.Int{}},
-									Exp: ast.IntC{N: 6}}}}}},
-					Elseifs: []ast.CondC{
+							ast.DefLst{List: []ast.Def{
+								{Id: ast.Id{Id: "x", TypeId: types.Int{}},
+									Exp: ast.Int{N: 6}}}}}},
+					Elseifs: []ast.Cond{
 						{
-							Cnd: ast.BoolC{True: false},
-							Block: ast.BlockC{
+							Cnd: ast.Bool{True: false},
+							Block: ast.Block{
 								StatLst: []ast.Stat{
-									ast.DefLst{List: []ast.DefC{
-										{Id: ast.IdC{Id: "x", TypeId: types.Int{}},
-											Exp: ast.IntC{N: 5}}}}}}},
+									ast.DefLst{List: []ast.Def{
+										{Id: ast.Id{Id: "x", TypeId: types.Int{}},
+											Exp: ast.Int{N: 5}}}}}}},
 					},
-					Else: ast.BlockC{StatLst: []ast.Stat{
-						ast.CondC{
-							Cnd: ast.BoolC{True: true},
-							Block: ast.BlockC{
+					Else: ast.Block{StatLst: []ast.Stat{
+						ast.Cond{
+							Cnd: ast.Bool{True: true},
+							Block: ast.Block{
 								StatLst: []ast.Stat{
-									ast.DefLst{List: []ast.DefC{
-										{Id: ast.IdC{Id: "x", TypeId: types.Int{}},
-											Exp: ast.IntC{N: 6}}}}}},
+									ast.DefLst{List: []ast.Def{
+										{Id: ast.Id{Id: "x", TypeId: types.Int{}},
+											Exp: ast.Int{N: 6}}}}}},
 						}},
 					}}}}}
 
@@ -124,13 +124,13 @@ func TestTypeChecker(t *testing.T) {
 		}
 	})
 	t.Run("While", func(t *testing.T) {
-		input := ast.WhileC{
-			Cnd: ast.BoolC{True: true},
-			Block: ast.BlockC{
+		input := ast.While{
+			Cnd: ast.Bool{True: true},
+			Block: ast.Block{
 				StatLst: []ast.Stat{
-					ast.DefLst{List: []ast.DefC{
-						{Id: ast.IdC{Id: "x", TypeId: types.Int{}},
-							Exp: ast.IntC{N: 6}}}}}},
+					ast.DefLst{List: []ast.Def{
+						{Id: ast.Id{Id: "x", TypeId: types.Int{}},
+							Exp: ast.Int{N: 6}}}}}},
 		}
 
 		_, err := LuaTypeCheck(input)
@@ -171,14 +171,14 @@ func TestTypeChecker(t *testing.T) {
 	})
 	t.Run("ForNoBody", func(t *testing.T) {
 
-		_, err := LuaTypeCheck(ast.ForC{
-			Assign: ast.DefC{
-				Id:  ast.IdC{Id: "x", TypeId: types.Int{}},
-				Exp: ast.IntC{N: 5},
+		_, err := LuaTypeCheck(ast.For{
+			Assign: ast.Def{
+				Id:  ast.Id{Id: "x", TypeId: types.Int{}},
+				Exp: ast.Int{N: 5},
 			},
-			Cnd:   ast.IntC{N: 10},
-			Step:  ast.IntC{N: 1},
-			Block: ast.BlockC{StatLst: []ast.Stat{}},
+			Cnd:   ast.Int{N: 10},
+			Step:  ast.Int{N: 1},
+			Block: ast.Block{StatLst: []ast.Stat{}},
 		})
 		if len(err) != 0 {
 			t.Errorf("expected no errors got: %v", err)
@@ -220,14 +220,14 @@ func TestEquality(t *testing.T) {
 	}
 }
 
-func buildInputTree(input string) ast.ChunkC {
+func buildInputTree(input string) ast.Chunk {
 	inputStream := antlr.NewInputStream(input)
 	lexer := parser.NewLuaLexer(inputStream)
 	tokenStream := antlr.NewCommonTokenStream(lexer, 0)
 	p := parser.NewLuaParser(tokenStream)
 	tree := p.Chunk()
 	p.BuildParseTrees = true
-	builder := ast.NewLuaASTBuilder()
+	builder := ast.NewBuilder()
 
-	return tree.Accept(builder).(ast.ChunkC)
+	return tree.Accept(builder).(ast.Chunk)
 }

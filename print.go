@@ -11,15 +11,15 @@ import (
 func PrintLua(node ast.Node) string {
 
 	switch n := node.(type) {
-	case ast.ChunkC:
+	case ast.Chunk:
 		return PrintLua(n.Block)
-	case ast.BlockC:
+	case ast.Block:
 		var sb strings.Builder
 		for _, s := range n.StatLst {
 			sb.Write([]byte(PrintLua(s) + "\n"))
 		}
 		return sb.String()
-	case ast.CondC:
+	case ast.Cond:
 		cnd := PrintLua(n.Cnd)
 		block := PrintLua(n.Block)
 		elseifs := ""
@@ -34,12 +34,12 @@ func PrintLua(node ast.Node) string {
 
 		return "if " + cnd + " then\n" +
 			block + elseifs + els + "end"
-	case ast.WhileC:
+	case ast.While:
 		cnd := PrintLua(n.Cnd)
 		block := PrintLua(n.Block)
 
 		return "while " + cnd + "\n" + " do\n" + block + "\n" + "end"
-	case ast.ForC:
+	case ast.For:
 		def := PrintLua(n.Assign)
 		cnd := PrintLua(n.Cnd)
 		step := PrintLua(n.Step)
@@ -51,7 +51,7 @@ func PrintLua(node ast.Node) string {
 
 		return "for " + def + ", " + cnd + step + " do\n" +
 			block + "end"
-	case ast.DefC:
+	case ast.Def:
 		id := PrintLua(n.Id)
 		exp := PrintLua(n.Exp)
 		scope := ""
@@ -76,24 +76,24 @@ func PrintLua(node ast.Node) string {
 		defs = strings.TrimRight(defs, ", ")
 		exps = strings.TrimRight(exps, ", ")
 		return defs + " = " + exps
-	case ast.IdC:
+	case ast.Id:
 		return n.Id
-	case ast.BinaryOpC:
+	case ast.BinaryOp:
 		lhs := PrintLua(n.Lhs)
 		rhs := PrintLua(n.Rhs)
 		return lhs + " " + n.Op + " " + rhs
-	case ast.IntC:
+	case ast.Int:
 		return strconv.FormatInt(n.N, 10)
-	case ast.FloatC:
+	case ast.Float:
 		return strconv.FormatFloat(n.N, 'f', -1, 64)
-	case ast.StringC:
+	case ast.String:
 		return n.S
-	case ast.BoolC:
+	case ast.Bool:
 		if n.True {
 			return "true"
 		}
 		return "false"
-	case ast.NilC:
+	case ast.Nil:
 		return "nil"
 	default:
 		return ""

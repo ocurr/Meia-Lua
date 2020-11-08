@@ -27,7 +27,7 @@ func main() {
 	p.AddErrorListener(NewLuaErrorListener())
 	p.BuildParseTrees = true
 	tree := p.Chunk()
-	builder := ast.NewLuaASTBuilder()
+	builder := ast.NewBuilder()
 	mLuaAST := tree.Accept(builder)
 	_, errs := LuaTypeCheck(mLuaAST.(ast.Node))
 	if len(errs) != 0 {
