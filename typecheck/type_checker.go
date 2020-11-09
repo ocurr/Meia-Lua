@@ -55,7 +55,7 @@ func CheckWithEnv(root ast.Node, tenv TypeEnv) (types.Type, []error) {
 				return t, ec.errors
 			}
 
-			ec.add(formatError(r.GetCtx(), "variable %s does is used without being declared", r.Id))
+			ec.add(formatError(r.GetCtx(), "variable %s is used without being declared", r.Id))
 			return types.Nil{}, ec.errors
 		}
 		tenv[r.Id] = r.TypeId
