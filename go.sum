@@ -1,7 +1,6 @@
-github.com/antlr/antlr4 v0.0.0-20190207013812-1c6c62afc7cb h1:1booXx+tBFKsERUPa/OP6whFI929I55awrC8RjWiSu8=
-github.com/antlr/antlr4 v0.0.0-20190207013812-1c6c62afc7cb/go.mod h1:T7PbCXFs94rrTttyxjbyT5+/1V8T2TYDejxUfHJjw1Y=
+github.com/antlr/antlr4 v0.0.0-20201029161626-9a95f0cc3d7c h1:j/C2kxPfyE0d87/ggAjIsCV5Cdkqmjb+O0W8W+1J+IY=
+github.com/antlr/antlr4 v0.0.0-20201029161626-9a95f0cc3d7c/go.mod h1:T7PbCXFs94rrTttyxjbyT5+/1V8T2TYDejxUfHJjw1Y=
 github.com/google/go-cmp v0.5.2 h1:X2ev0eStA3AbceY54o37/0PQ/UWqKEiiO2dKL5OPaFM=
 github.com/google/go-cmp v0.5.2/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
-github.com/ocurr/Meia-Lua v0.0.0-20190902225248-cbbdcb28de8a h1:f0e+ynBza/d1zDlrgOQ1aAJMKrjEHDtNmETHfYH+2gg=
 golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543 h1:E7g+9GITq07hpfrRu66IVDexMakfv52eLZ2CXBWiKr4=
 golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
